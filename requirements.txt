@@ -1,2 +1,9 @@
+einops
+h5py
+libigl
+matplotlib
 numpy
+pandas
 torch
+trimesh
+tqdm
