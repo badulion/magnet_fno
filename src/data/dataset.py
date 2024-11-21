@@ -18,7 +18,7 @@ from einops import reduce, pack
 
 sys.path.append("../../")
 
-from src.preprocessing.preprocessing import (
+from magnet_pinn.preprocessing.preprocessing import (
     VOXEL_SIZE_OUT_KEY,
     ANTENNA_MASKS_OUT_KEY,
     MIN_EXTENT_OUT_KEY,
