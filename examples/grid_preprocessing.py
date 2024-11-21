@@ -1,4 +1,4 @@
-from magnet_pinn.preprocessing.preprocessing import GridPreprocessing
+from src.preprocessing.preprocessing import GridPreprocessing
 import numpy as np
 
 preprocessor = GridPreprocessing(
