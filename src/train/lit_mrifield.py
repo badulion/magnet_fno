@@ -1,5 +1,6 @@
 import torch
 import pytorch_lightning as pl
+import einops
 
 from torch.utils.data import DataLoader
 from src.utils import StandardNormalizer
@@ -15,14 +16,12 @@ class LitMRIField(pl.LightningModule):
                  space_lambda: float = 0.01):
         super(LitMRIField, self).__init__()
         
-        self.dataset = MagnetGridIterator(data_path, phase_samples_per_simulation=100)
+        self.dataset = MagnetGridIterator(data_path, phase_samples_per_simulation=3)
         self.model = model
         self.input_normalizer=input_normalizer
         self.target_normalizer=target_normalizer
         self.subject_lambda = subject_lambda
         self.space_lambda = space_lambda
-
-        self.save_hyperparameters()
 
     def train_dataloader(self):
         return DataLoader(self.dataset, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
@@ -34,7 +33,7 @@ class LitMRIField(pl.LightningModule):
         inputs, coils, field, subject = batch['input'], batch['coils'], batch['field'], batch['subject']
 
         x = self.input_normalizer(torch.cat([inputs, coils], dim=1))
-        y = self.target_normalizer(field.view((4, 12, 121, 111, 126)))
+        y = self.target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
 
         y_hat = self.model(x)
 
