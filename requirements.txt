@@ -4,6 +4,8 @@ libigl
 matplotlib
 numpy
 pandas
+pytorch_lightning
+tensorboard
 torch
 trimesh
 tqdm

@@ -1,7 +1,7 @@
-from magnet_pinn.models import UNet3D
-from magnet_pinn.data.grid import MagnetGridIterator
-from magnet_pinn.utils import StandardNormalizer
-from magnet_pinn.data.utils import worker_init_fn
+from src.models import UNet3D
+from src.data.grid import MagnetGridIterator
+from src.utils import StandardNormalizer
+from src.data.utils import worker_init_fn
 import einops
 
 import pytorch_lightning as pl
