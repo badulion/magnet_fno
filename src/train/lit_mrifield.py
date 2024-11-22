@@ -34,7 +34,7 @@ class LitMRIField(pl.LightningModule):
         inputs, coils, field, subject = batch['input'], batch['coils'], batch['field'], batch['subject']
 
         x = self.input_normalizer(torch.cat([inputs, coils], dim=1))
-        y = self.target_normalizer(field.view((5, 12, 121, 111, 126)))
+        y = self.target_normalizer(field.view((4, 12, 121, 111, 126)))
 
         y_hat = self.model(x)
 
