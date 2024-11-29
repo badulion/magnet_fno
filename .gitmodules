@@ -1,0 +1,3 @@
+[submodule "magnet-pinn"]
+	path = magnet-pinn
+	url = git@github.com:MAGNET4Cardiac7T/magnet-pinn.git

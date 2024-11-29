@@ -15,6 +15,7 @@ class LitMRIField(pl.LightningModule):
                  subject_lambda: float = 10.0,
                  space_lambda: float = 0.01):
         super(LitMRIField, self).__init__()
+        self.save_hyperparameters()
         
         self.dataset = MagnetGridIterator(data_path, phase_samples_per_simulation=3)
         self.model = model
