@@ -3,9 +3,9 @@ import pytorch_lightning as pl
 import einops
 
 from torch.utils.data import DataLoader
-from src.utils import StandardNormalizer
-from src.data.grid import MagnetGridIterator
-from src.data.utils import worker_init_fn
+from magnet_pinn.utils import StandardNormalizer
+from magnet_pinn.data.grid import MagnetGridIterator
+from magnet_pinn.data.utils import worker_init_fn
 
 class LitMRIField(pl.LightningModule):
     def __init__(self, data_path: str,
