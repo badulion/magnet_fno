@@ -5,6 +5,7 @@ matplotlib
 numpy
 pandas
 pytorch_lightning
+rtree
 tensorboard
 torch
 trimesh
