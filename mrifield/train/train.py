@@ -1,7 +1,7 @@
 import pytorch_lightning as pl
 from magnet_pinn.utils import StandardNormalizer
-from src.models import UNet3D
-from src.train.lit_mrifield import LitMRIField
+from mrifield.models import UNet3D
+from mrifield.train.lit_mrifield import LitMRIField
 
 #BASE_DIR = "../data/processed/batch_6/grid_voxel_size_4_data_type_float32"
 BASE_DIR = "/anvme/workspace/b190cb11-magnet/data/processed/train/grid_voxel_size_4_data_type_float32"
