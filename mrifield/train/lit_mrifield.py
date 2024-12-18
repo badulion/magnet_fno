@@ -2,30 +2,30 @@ import torch
 import pytorch_lightning as pl
 import einops
 
-from torch.utils.data import DataLoader
 from magnet_pinn.utils import StandardNormalizer
-from magnet_pinn.data.grid import MagnetGridIterator
-from magnet_pinn.data.utils import worker_init_fn
+from magnet_pinn.losses import MSELoss
 
 class LitMRIField(pl.LightningModule):
-    def __init__(self, data_path: str,
+    def __init__(self,
                  model: torch.nn.Module,
-                 input_normalizer: StandardNormalizer,
-                 target_normalizer: StandardNormalizer,
+                 train_input_normalizer: StandardNormalizer,
+                 train_target_normalizer: StandardNormalizer,
+                 val_input_normalizer: StandardNormalizer,
+                 val_target_normalizer: StandardNormalizer,
                  subject_lambda: float = 10.0,
                  space_lambda: float = 0.01):
         super(LitMRIField, self).__init__()
-        self.save_hyperparameters()
         
-        self.dataset = MagnetGridIterator(data_path, phase_samples_per_simulation=3)
         self.model = model
-        self.input_normalizer=input_normalizer
-        self.target_normalizer=target_normalizer
+
+        self.train_input_normalizer=train_input_normalizer
+        self.train_target_normalizer=train_target_normalizer
+        self.val_input_normalizer=val_input_normalizer
+        self.val_target_normalizer=val_target_normalizer
+        
         self.subject_lambda = subject_lambda
         self.space_lambda = space_lambda
-
-    def train_dataloader(self):
-        return DataLoader(self.dataset, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
+        self.loss_fn = MSELoss()
 
     def forward(self, x):
         return self.model(x)
@@ -33,14 +33,13 @@ class LitMRIField(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         inputs, coils, field, subject = batch['input'], batch['coils'], batch['field'], batch['subject']
 
-        x = self.input_normalizer(torch.cat([inputs, coils], dim=1))
-        y = self.target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
+        x = self.train_input_normalizer(torch.cat([inputs, coils], dim=1))
+        y = self.train_target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
 
         y_hat = self.model(x)
 
-        mse = torch.mean((y_hat - y) ** 2, dim=1)
-        subject_loss = torch.mean(mse * subject)
-        space_loss = torch.mean(mse * (~subject))
+        subject_loss = self.loss_fn(y_hat, y, subject)
+        space_loss = self.loss_fn(y_hat, y, ~subject)
         loss = subject_loss*self.subject_lambda + space_loss*self.space_lambda
 
         self.log('train_loss', loss, prog_bar=True)
@@ -48,6 +47,20 @@ class LitMRIField(pl.LightningModule):
         self.log('space_loss', space_loss, prog_bar=True)
 
         return loss
+    
+    def validation_step(self, batch, batch_idx):
+        inputs, coils, field, subject = batch['input'], batch['coils'], batch['field'], batch['subject']
+
+        x = self.val_input_normalizer(torch.cat([inputs, coils], dim=1))
+        y = self.val_target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
+
+        y_hat = self.model(x)
+
+        subject_loss = self.loss_fn(y_hat, y, subject)
+        space_loss = self.loss_fn(y_hat, y, ~subject)
+        loss = subject_loss*self.subject_lambda + space_loss*self.space_lambda
+
+        self.log("val_loss", loss)
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
