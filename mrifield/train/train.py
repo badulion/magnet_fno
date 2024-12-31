@@ -12,8 +12,7 @@ from magnet_pinn.data.utils import worker_init_fn
 from mrifield.models import UNet3D
 from mrifield.train.lit_mrifield import LitMRIField
 
-
-os.environ['WANDB_MODE'] = 'offline'
+os.environ['HTTPS_PROXY'] = 'http://proxy:80'
 
 TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
@@ -40,8 +39,7 @@ val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=100)
 train_loader = DataLoader(train_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 
-wandb_logger = WandbLogger(project='baseline_unet')
-wandb_logger.experiment.config["batch_size"] = 4
+wandb_logger = WandbLogger(project='baseline_unet', name='Training')
 
 trainer = pl.Trainer(accelerator="gpu", devices=1, log_every_n_steps=5, max_epochs=9, logger=wandb_logger)
 trainer.fit(model=lit_model, train_dataloaders=train_loader, val_dataloaders=val_loader)
