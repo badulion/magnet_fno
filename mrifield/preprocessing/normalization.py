@@ -35,10 +35,19 @@ class Iterator:
                 'target': target,
             }
 
-BASE_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
-
-iterator = Iterator(BASE_DIR)
+TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
+VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
 
 normalizer = StandardNormalizer()
-normalizer.fit_params(iterator, key='input', axis=0)
-normalizer.save_as_json(f"{BASE_DIR}/normalization/input_normalization.json")
+
+normalizer.fit_params(Iterator(TRAIN_DIR), key='input', axis=0)
+normalizer.save_as_json(f"{TRAIN_DIR}/normalization/input_normalization.json")
+
+normalizer.fit_params(Iterator(TRAIN_DIR), key='target', axis=0)
+normalizer.save_as_json(f"{TRAIN_DIR}/normalization/target_normalization.json")
+
+normalizer.fit_params(Iterator(VAL_DIR), key='input', axis=0)
+normalizer.save_as_json(f"{VAL_DIR}/normalization/input_normalization.json")
+
+normalizer.fit_params(Iterator(VAL_DIR), key='target', axis=0)
+normalizer.save_as_json(f"{VAL_DIR}/normalization/target_normalization.json")
