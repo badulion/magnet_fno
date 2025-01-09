@@ -9,7 +9,9 @@ from magnet_pinn.utils import StandardNormalizer
 from magnet_pinn.data.transforms import Compose, Crop, GridPhaseShift
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
+
 from mrifield.models import UNet3D
+#from neuralop.models import FNO
 from mrifield.train.lit_mrifield import LitMRIField
 
 os.environ['HTTPS_PROXY'] = 'http://proxy:80'
@@ -18,6 +20,7 @@ TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
 
 model = UNet3D(in_channels=5, out_channels=12)
+#model = FNO(n_modes=(16, 16), hidden_channels=64, in_channels=5, out_channels=12)
 
 train_input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/input_normalization.json")
 train_target_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/target_normalization.json")
@@ -41,5 +44,5 @@ val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=wo
 
 wandb_logger = WandbLogger(project='baseline_unet', name='Training')
 
-trainer = pl.Trainer(accelerator="gpu", devices=1, log_every_n_steps=5, max_epochs=9, logger=wandb_logger)
+trainer = pl.Trainer(accelerator="gpu", devices=1, log_every_n_steps=50, max_epochs=9, logger=wandb_logger)
 trainer.fit(model=lit_model, train_dataloaders=train_loader, val_dataloaders=val_loader)

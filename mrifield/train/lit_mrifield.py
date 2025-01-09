@@ -42,9 +42,9 @@ class LitMRIField(pl.LightningModule):
         space_loss = self.loss_fn(y_hat, y, ~subject)
         loss = subject_loss*self.subject_lambda + space_loss*self.space_lambda
 
-        self.log('train_loss', loss, prog_bar=True)
-        self.log('subject_loss', subject_loss, prog_bar=True)
-        self.log('space_loss', space_loss, prog_bar=True)
+        self.log('tr_loss', loss, prog_bar=True)
+        self.log('tr_subject_loss', subject_loss, prog_bar=True)
+        self.log('tr_space_loss', space_loss, prog_bar=True)
 
         return loss
     
@@ -61,6 +61,8 @@ class LitMRIField(pl.LightningModule):
         loss = subject_loss*self.subject_lambda + space_loss*self.space_lambda
 
         self.log("val_loss", loss)
+        self.log('val_subject_loss', subject_loss, prog_bar=True)
+        self.log('val_space_loss', space_loss, prog_bar=True)
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
