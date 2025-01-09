@@ -2,6 +2,7 @@ einops
 h5py
 libigl
 matplotlib
+natsort
 numpy
 pandas
 pytorch_lightning
