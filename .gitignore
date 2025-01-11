@@ -163,4 +163,4 @@ cython_debug/
 .vscode
 .DS_Store
 /data/
-/examples/baseline_unet/
+/results/baseline_unet/
