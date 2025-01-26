@@ -15,7 +15,7 @@ from mrifield.train.lit_mrifield import LitMRIField
 TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
 
-CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/baseline_unet/qvnx449u/checkpoints/epoch=9-step=173750.ckpt"
+CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/baseline_unet/tkqjcw1e/checkpoints/epoch=9-step=173750.ckpt"
 
 model = UNet3D(in_channels=5, out_channels=12)
 
