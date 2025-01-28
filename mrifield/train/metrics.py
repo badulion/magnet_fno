@@ -5,7 +5,7 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 
 from magnet_pinn.utils import StandardNormalizer
-from magnet_pinn.data.transforms import Compose, Crop, GridPhaseShift
+from magnet_pinn.data.transforms import Compose, Crop, SingleCoilZeroPhaseShift
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
 
@@ -39,11 +39,11 @@ trained_model.eval()
 augmentation = Compose(
     [
         Crop(crop_size=(100, 100, 100)),
-        GridPhaseShift(num_coils=8)
+        SingleCoilZeroPhaseShift(num_coils=8)
     ]
 )
 
-val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=100)
+val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=8)
 val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 
 batches = 0
