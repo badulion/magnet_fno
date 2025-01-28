@@ -4,11 +4,15 @@ libigl
 matplotlib
 natsort
 numpy
+opt_einsum
 pandas
 pytorch_lightning
 rtree
 tensorboard
+tensorly
+tensorly-torch
 torch
+torch_harmonics
 trimesh
 tqdm
 wandb
