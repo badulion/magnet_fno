@@ -27,6 +27,10 @@ class LitMRIField(pl.LightningModule):
         self.space_lambda = space_lambda
         self.loss_fn = MSELoss()
 
+    def load_state_dict(self, state_dict, strict=True):
+        state_dict.pop('_metadata', None)
+        return super().load_state_dict(state_dict, strict=strict)
+
     def forward(self, x):
         return self.model(x)
     
