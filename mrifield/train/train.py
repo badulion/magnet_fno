@@ -10,7 +10,7 @@ from magnet_pinn.data.transforms import Compose, Crop, GridPhaseShift
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
 
-#from mrifield.models import UNet3D
+from mrifield.models import UNet3D
 from neuralop.models import FNO
 from mrifield.train.lit_mrifield import LitMRIField
 
@@ -42,7 +42,7 @@ val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=100)
 train_loader = DataLoader(train_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 
-wandb_logger = WandbLogger(project='fno', name='Training 16M')
+wandb_logger = WandbLogger(project='fno', name='Training 37M')
 
 trainer = pl.Trainer(accelerator="gpu", devices=1, log_every_n_steps=100, max_epochs=10, logger=wandb_logger)
 trainer.fit(model=lit_model, train_dataloaders=train_loader, val_dataloaders=val_loader)
