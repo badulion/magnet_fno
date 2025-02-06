@@ -84,6 +84,7 @@ for batch in tqdm(val_loader):
 err_efield /= batches
 err_hfield /= batches
 
+plt.figure(figsize=(10, 6), dpi=300)
 plt.plot(np.arange(0, 101), err_efield, "r-", label="E-field (Subject)")
 plt.plot(np.arange(0, 101), err_hfield, "b-", label="H-field (Subject)")
 
