@@ -1,6 +1,9 @@
 import einops
 import torch
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 from tqdm import tqdm
 from torch.utils.data import DataLoader
 
@@ -49,16 +52,12 @@ val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=8)
 val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 
 batches = 0
-mse_efield = 0.0
-mse_hfield = 0.0
-mse_efield_space = 0.0
-mse_hfield_space = 0.0
-mse_efield_subject = 0.0
-mse_hfield_subject = 0.0
+err_efield = np.zeros(101)
+err_hfield = np.zeros(101)
 
-for batch in tqdm(val_loader, desc="Inference"):
+for batch in tqdm(val_loader):
+    batches += 1
     with torch.no_grad():
-        batches += 1
         inputs, coils, field, subject = batch['input'].cuda(), batch['coils'].cuda(), batch['field'].cuda(), batch['subject'].cuda()
 
         x = val_input_normalizer(torch.cat([inputs, coils], dim=1))
@@ -72,18 +71,27 @@ for batch in tqdm(val_loader, desc="Inference"):
         y_hat_e = einops.rearrange(y_hat[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
         y_hat_h = einops.rearrange(y_hat[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
 
-        mse_efield += trained_model.loss_fn(y_hat_e, y_e)
-        mse_hfield += trained_model.loss_fn(y_hat_h, y_h)
+        batch_err_efield = torch.clamp(torch.abs(y_hat_e - y_e) / torch.clamp(torch.abs(y_e), min=1e-9), max=1) * 100
+        batch_err_hfield = torch.clamp(torch.abs(y_hat_h - y_h) / torch.clamp(torch.abs(y_h), min=1e-9), max=1) * 100
 
-        mse_efield_space += trained_model.loss_fn(y_hat_e, y_e, ~subject)
-        mse_hfield_space += trained_model.loss_fn(y_hat_h, y_h, ~subject)
+        batch_err_efield = torch.mean(batch_err_efield, dim=1)[subject].flatten().cpu().numpy()
+        batch_err_hfield = torch.mean(batch_err_hfield, dim=1)[subject].flatten().cpu().numpy()
 
-        mse_efield_subject += trained_model.loss_fn(y_hat_e, y_e, subject)
-        mse_hfield_subject += trained_model.loss_fn(y_hat_h, y_h, subject)
+        for i in range(101):
+            err_efield[i] += np.sum(batch_err_efield <= i) / len(batch_err_efield)
+            err_hfield[i] += np.sum(batch_err_hfield <= i) / len(batch_err_hfield)
 
-print(f"mse_efield: {mse_efield / batches}")
-print(f"mse_hfield: {mse_hfield / batches}")
-print(f"mse_efield_space: {mse_efield_space / batches}")
-print(f"mse_hfield_space: {mse_hfield_space / batches}")
-print(f"mse_efield_subject: {mse_efield_subject / batches}")
-print(f"mse_hfield_subject: {mse_hfield_subject / batches}")
+err_efield /= batches
+err_hfield /= batches
+
+plt.plot(np.arange(0, 101), err_efield, "r-", label="E-field (Subject)")
+plt.plot(np.arange(0, 101), err_hfield, "b-", label="H-field (Subject)")
+
+plt.xlim(0, 100)
+plt.grid(True)
+plt.title("Cumulative Error Distribution")
+plt.xlabel("Cumulative Error [%]")
+plt.ylabel("Fraction of Voxels [-]")
+plt.legend()
+
+plt.savefig("./err")
