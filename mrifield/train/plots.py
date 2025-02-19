@@ -13,16 +13,17 @@ from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
 
 from mrifield.models import UNet3D
-from neuralop.models import FNO
+from neuralop.models import FNO, UNO
 from mrifield.train.lit_mrifield import LitMRIField
 
 TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
 
-CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/baseline_unet/tkqjcw1e/checkpoints/epoch=9-step=173750.ckpt"
+CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/7hqhtfvz/checkpoints/epoch=9-step=173750.ckpt"
 
-model = UNet3D(in_channels=5, out_channels=12)
-#model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=42, positional_embedding=None)
+#model = UNet3D(in_channels=5, out_channels=12)
+model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=64, positional_embedding=None)
+#model = UNO(in_channels=5, out_channels=12, hidden_channels=16, uno_out_channels=[32,64,64,32], uno_n_modes=[[16,16,16],[16,16,16],[16,16,16],[16,16,16]], uno_scalings=[[1,1,1],[0.5,0.5,0.5],[1,1,1],[2,2,2]], channel_mlp_skip='linear')
 
 train_input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/input_normalization.json")
 train_target_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/target_normalization.json")
@@ -49,7 +50,7 @@ augmentation = Compose(
 )
 
 val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=8)
-val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
+val_loader = DataLoader(val_set, batch_size=8, num_workers=16, worker_init_fn=worker_init_fn)
 
 batches = 0
 
@@ -81,8 +82,8 @@ for batch in tqdm(val_loader):
         batch_err_efield = batch_err_efield[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
         batch_err_hfield = batch_err_hfield[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
 
-        res_e.extend((y_hat_e - y_e)[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
-        res_h.extend((y_hat_h - y_h)[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
+        res_e = (y_hat_e - y_e)[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
+        res_h = (y_hat_h - y_h)[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
 
         for i in range(101):
             err_e[i] += np.sum(batch_err_efield <= i) / len(batch_err_efield)
