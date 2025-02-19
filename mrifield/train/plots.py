@@ -60,6 +60,11 @@ err_h = np.zeros(101)
 res_e = []
 res_h = []
 
+gt_e = []
+pr_e = []
+gt_h = []
+pr_h = []
+
 for batch in tqdm(val_loader):
     batches += 1
     with torch.no_grad():
@@ -89,10 +94,15 @@ for batch in tqdm(val_loader):
             err_e[i] += np.sum(batch_err_efield <= i) / len(batch_err_efield)
             err_h[i] += np.sum(batch_err_hfield <= i) / len(batch_err_hfield)
 
+        gt_e = (y_e[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
+        pr_e = (y_hat_e[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
+        gt_h = (y_h[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
+        pr_h = (y_hat_h[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
+
 err_e /= batches
 err_h /= batches
 
-_, (cdf, hist_e, hist_h) = plt.subplots(1, 3, figsize=(20, 6))
+_, (cdf, hist_e, hist_h, vs_e, vs_h) = plt.subplots(1, 5, figsize=(34, 6))
 
 cdf.plot(np.arange(0, 101), err_e, "r-", label="E-field (Subject)")
 cdf.plot(np.arange(0, 101), err_h, "b-", label="H-field (Subject)")
@@ -122,5 +132,19 @@ hist_e.set_ylabel("Frequency [-]")
 hist_h.set_title("Residual Histogram (H-field)")
 hist_h.set_xlabel("Residual [-]")
 hist_h.set_ylabel("Frequency [-]")
+
+vs_e.scatter(gt_e, pr_e, s=0.5, marker=".")
+vs_h.scatter(gt_h, pr_h, s=0.5, marker=".")
+
+vs_e.plot([0, 1], [0, 1], c="black", linestyle="dashed", transform=vs_e.transAxes)
+vs_h.plot([0, 1], [0, 1], c="black", linestyle="dashed", transform=vs_h.transAxes)
+
+vs_e.set_title("Ground Truth vs. Predictions (E-field)")
+vs_e.set_xlabel("Ground Truth [-]")
+vs_e.set_ylabel("Predictions [-]")
+
+vs_h.set_title("Ground Truth vs. Predictions (E-field)")
+vs_h.set_xlabel("Ground Truth [-]")
+vs_h.set_ylabel("Predictions [-]")
 
 plt.savefig("./plots")
