@@ -122,4 +122,4 @@ hist_h.set_title("Residual Histogram (H-field)")
 hist_h.set_xlabel("Residual [-]")
 hist_h.set_ylabel("Frequency [-]")
 
-plt.savefig("./err")
+plt.savefig("./plots")
