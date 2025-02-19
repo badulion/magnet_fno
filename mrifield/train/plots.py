@@ -143,7 +143,7 @@ vs_e.set_title("Ground Truth vs. Predictions (E-field)")
 vs_e.set_xlabel("Ground Truth [-]")
 vs_e.set_ylabel("Predictions [-]")
 
-vs_h.set_title("Ground Truth vs. Predictions (E-field)")
+vs_h.set_title("Ground Truth vs. Predictions (H-field)")
 vs_h.set_xlabel("Ground Truth [-]")
 vs_h.set_ylabel("Predictions [-]")
 
