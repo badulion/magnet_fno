@@ -165,4 +165,5 @@ cython_debug/
 /data/
 /results/baseline_unet/
 /results/fno/
+/results/uno/
 /results/wandb/
