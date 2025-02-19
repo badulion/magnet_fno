@@ -74,8 +74,8 @@ for batch in tqdm(val_loader):
         batch_err_efield = torch.clamp(torch.abs(y_hat_e - y_e) / torch.clamp(torch.abs(y_e), min=1e-9), max=1) * 100
         batch_err_hfield = torch.clamp(torch.abs(y_hat_h - y_h) / torch.clamp(torch.abs(y_h), min=1e-9), max=1) * 100
 
-        batch_err_efield = torch.mean(batch_err_efield, dim=1)[subject].flatten().cpu().numpy()
-        batch_err_hfield = torch.mean(batch_err_hfield, dim=1)[subject].flatten().cpu().numpy()
+        batch_err_efield = batch_err_efield[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
+        batch_err_hfield = batch_err_hfield[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
 
         for i in range(101):
             err_efield[i] += np.sum(batch_err_efield <= i) / len(batch_err_efield)
@@ -89,7 +89,9 @@ plt.plot(np.arange(0, 101), err_efield, "r-", label="E-field (Subject)")
 plt.plot(np.arange(0, 101), err_hfield, "b-", label="H-field (Subject)")
 
 plt.xlim(0, 100)
+plt.ylim(0, 1)
 plt.grid(True)
+
 plt.title("Cumulative Error Distribution")
 plt.xlabel("Cumulative Error [%]")
 plt.ylabel("Fraction of Voxels [-]")
