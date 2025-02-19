@@ -52,8 +52,12 @@ val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=8)
 val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 
 batches = 0
-err_efield = np.zeros(101)
-err_hfield = np.zeros(101)
+
+err_e = np.zeros(101)
+err_h = np.zeros(101)
+
+res_e = []
+res_h = []
 
 for batch in tqdm(val_loader):
     batches += 1
@@ -71,30 +75,51 @@ for batch in tqdm(val_loader):
         y_hat_e = einops.rearrange(y_hat[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
         y_hat_h = einops.rearrange(y_hat[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
 
-        batch_err_efield = torch.clamp(torch.abs(y_hat_e - y_e) / torch.clamp(torch.abs(y_e), min=1e-9), max=1) * 100
-        batch_err_hfield = torch.clamp(torch.abs(y_hat_h - y_h) / torch.clamp(torch.abs(y_h), min=1e-9), max=1) * 100
+        batch_err_efield = torch.abs(y_hat_e - y_e) / torch.clamp(torch.abs(y_e), min=1e-9) * 100
+        batch_err_hfield = torch.abs(y_hat_h - y_h) / torch.clamp(torch.abs(y_h), min=1e-9) * 100
 
         batch_err_efield = batch_err_efield[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
         batch_err_hfield = batch_err_hfield[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
 
+        res_e.extend((y_hat_e - y_e)[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
+        res_h.extend((y_hat_h - y_h)[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
+
         for i in range(101):
-            err_efield[i] += np.sum(batch_err_efield <= i) / len(batch_err_efield)
-            err_hfield[i] += np.sum(batch_err_hfield <= i) / len(batch_err_hfield)
+            err_e[i] += np.sum(batch_err_efield <= i) / len(batch_err_efield)
+            err_h[i] += np.sum(batch_err_hfield <= i) / len(batch_err_hfield)
 
-err_efield /= batches
-err_hfield /= batches
+err_e /= batches
+err_h /= batches
 
-plt.figure(figsize=(10, 6), dpi=300)
-plt.plot(np.arange(0, 101), err_efield, "r-", label="E-field (Subject)")
-plt.plot(np.arange(0, 101), err_hfield, "b-", label="H-field (Subject)")
+_, (cdf, hist_e, hist_h) = plt.subplots(1, 3, figsize=(20, 6))
 
-plt.xlim(0, 100)
-plt.ylim(0, 1)
-plt.grid(True)
+cdf.plot(np.arange(0, 101), err_e, "r-", label="E-field (Subject)")
+cdf.plot(np.arange(0, 101), err_h, "b-", label="H-field (Subject)")
 
-plt.title("Cumulative Error Distribution")
-plt.xlabel("Cumulative Error [%]")
-plt.ylabel("Fraction of Voxels [-]")
-plt.legend()
+cdf.set_xlim(0, 100)
+cdf.set_ylim(0, 1)
+cdf.grid(True)
+
+cdf.set_title("Cumulative Error Distribution")
+cdf.set_xlabel("Cumulative Error [%]")
+cdf.set_ylabel("Fraction of Voxels [-]")
+cdf.legend()
+
+hist_e.hist(res_e, bins=100, density=True, color="r")
+hist_h.hist(res_h, bins=100, density=True, color="b")
+
+hist_e.text(0.97, 0.97, f"μ = {np.mean(res_e):.3f}\nσ = {np.std(res_e):.3f}", ha="right", va="top", transform=hist_e.transAxes)
+hist_h.text(0.97, 0.97, f"μ = {np.mean(res_h):.3f}\nσ = {np.std(res_h):.3f}", ha="right", va="top", transform=hist_h.transAxes)
+
+hist_e.axvline(x=0, linestyle="dashed")
+hist_h.axvline(x=0, linestyle="dashed")
+
+hist_e.set_title("Residual Histogram (E-field)")
+hist_e.set_xlabel("Residual [-]")
+hist_e.set_ylabel("Frequency [-]")
+
+hist_h.set_title("Residual Histogram (H-field)")
+hist_h.set_xlabel("Residual [-]")
+hist_h.set_ylabel("Frequency [-]")
 
 plt.savefig("./err")
