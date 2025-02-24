@@ -15,6 +15,7 @@ from magnet_pinn.data.utils import worker_init_fn
 from mrifield.models import UNet3D
 from neuralop.models import FNO, UNO
 from mrifield.train.lit_mrifield import LitMRIField
+from mrifield.train.mask_padding import SubjectMaskPadding
 
 TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
@@ -53,6 +54,7 @@ val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=8)
 val_loader = DataLoader(val_set, batch_size=8, num_workers=16, worker_init_fn=worker_init_fn)
 
 batches = 0
+mask_padding = SubjectMaskPadding()
 
 err_e = np.zeros(101)
 err_h = np.zeros(101)
@@ -69,6 +71,7 @@ for batch in tqdm(val_loader):
     batches += 1
     with torch.no_grad():
         inputs, coils, field, subject = batch['input'].cuda(), batch['coils'].cuda(), batch['field'].cuda(), batch['subject'].cuda()
+        subject = mask_padding(subject.unsqueeze(1)).squeeze(1)
 
         x = val_input_normalizer(torch.cat([inputs, coils], dim=1))
 
@@ -118,6 +121,9 @@ cdf.legend()
 
 hist_e.hist(res_e, bins=100, density=True, color="r")
 hist_h.hist(res_h, bins=100, density=True, color="b")
+
+hist_e.set_yscale("log")
+hist_h.set_yscale("log")
 
 hist_e.text(0.97, 0.97, f"μ = {np.mean(res_e):.3f}\nσ = {np.std(res_e):.3f}", ha="right", va="top", transform=hist_e.transAxes)
 hist_h.text(0.97, 0.97, f"μ = {np.mean(res_h):.3f}\nσ = {np.std(res_h):.3f}", ha="right", va="top", transform=hist_h.transAxes)

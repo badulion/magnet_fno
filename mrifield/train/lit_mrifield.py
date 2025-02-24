@@ -5,6 +5,8 @@ import einops
 from magnet_pinn.utils import StandardNormalizer
 from magnet_pinn.losses import MSELoss
 
+from mrifield.train.mask_padding import SubjectMaskPadding
+
 class LitMRIField(pl.LightningModule):
     def __init__(self,
                  model: torch.nn.Module,
@@ -25,6 +27,8 @@ class LitMRIField(pl.LightningModule):
         
         self.subject_lambda = subject_lambda
         self.space_lambda = space_lambda
+
+        self.mask_padding = SubjectMaskPadding()
         self.loss_fn = MSELoss()
 
     def load_state_dict(self, state_dict, strict=True):
@@ -36,6 +40,7 @@ class LitMRIField(pl.LightningModule):
     
     def training_step(self, batch, batch_idx):
         inputs, coils, field, subject = batch['input'], batch['coils'], batch['field'], batch['subject']
+        subject = self.mask_padding(subject.unsqueeze(1)).squeeze(1)
 
         x = self.train_input_normalizer(torch.cat([inputs, coils], dim=1))
         y = self.train_target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
@@ -54,6 +59,7 @@ class LitMRIField(pl.LightningModule):
     
     def validation_step(self, batch, batch_idx):
         inputs, coils, field, subject = batch['input'], batch['coils'], batch['field'], batch['subject']
+        subject = self.mask_padding(subject.unsqueeze(1)).squeeze(1)
 
         x = self.val_input_normalizer(torch.cat([inputs, coils], dim=1))
         y = self.val_target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))

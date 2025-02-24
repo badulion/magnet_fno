@@ -17,6 +17,7 @@ from magnet_pinn.losses import MSELoss, MAELoss
 from mrifield.models import UNet3D
 from neuralop.models import FNO
 from mrifield.train.lit_mrifield import LitMRIField
+from mrifield.train.mask_padding import SubjectMaskPadding
 
 TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
@@ -55,7 +56,8 @@ val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=wo
 
 mse = MSELoss()
 mae = MAELoss()
-ssim = SSIM(data_range=1, size_average=True, channel=2)
+mask_padding = SubjectMaskPadding()
+ssim = SSIM(data_range=1, size_average=True, channel=12)
 
 mse_efield = []
 mse_hfield = []
@@ -76,6 +78,7 @@ print(ModelSummary(trained_model, max_depth=-1))
 for batch in tqdm(val_loader, desc="Metrics"):
     with torch.no_grad():
         inputs, coils, field, subject = batch['input'].cuda(), batch['coils'].cuda(), batch['field'].cuda(), batch['subject'].cuda()
+        subject = mask_padding(subject.unsqueeze(1)).squeeze(1)
 
         x = val_input_normalizer(torch.cat([inputs, coils], dim=1))
 
@@ -83,26 +86,17 @@ for batch in tqdm(val_loader, desc="Metrics"):
         torch.cuda.synchronize()
         start = time.perf_counter()
 
-        y_hat = trained_model(x)
+        y_hat = val_target_normalizer.inverse(trained_model(x))
 
         torch.cuda.synchronize()
         end = time.perf_counter()
         inf_times.append((end - start) / x.shape[0])
 
         # Compute SSIM
-        y_re = field[:, :, 0, :, :, :, :]
-        y_im = field[:, :, 1, :, :, :, :]
+        y = einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...')
 
-        y_norm = torch.norm(torch.complex(y_re, y_im), dim=2)
-        y_norm = (y_norm - y_norm.min()) / (y_norm.max() - y_norm.min())
-
-        y_hat = einops.rearrange(val_target_normalizer.inverse(y_hat), 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
-
-        y_hat_re = y_hat[:, :, 0, :, :, :, :]
-        y_hat_im = y_hat[:, :, 1, :, :, :, :]
-
-        y_hat_norm = torch.norm(torch.complex(y_hat_re, y_hat_im), dim=2)
-        y_hat_norm = (y_hat_norm - y_hat_norm.min()) / (y_hat_norm.max() - y_hat_norm.min())
+        y_norm = (y - y.min()) / (y.max() - y.min())
+        y_hat_norm = (y_hat - y_hat.min()) / (y_hat.max() - y_hat.min())
 
         ssim_x = ssim(y_hat_norm[:, :, 50, :, :], y_norm[:, :, 50, :, :]).cpu()
         ssim_y = ssim(y_hat_norm[:, :, :, 50, :], y_norm[:, :, :, 50, :]).cpu()
@@ -112,7 +106,8 @@ for batch in tqdm(val_loader, desc="Metrics"):
         # Compute MSE and MAE
         y_e = einops.rearrange(field[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
         y_h = einops.rearrange(field[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
-
+        
+        y_hat = einops.rearrange(y_hat, 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
         y_hat_e = einops.rearrange(y_hat[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
         y_hat_h = einops.rearrange(y_hat[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
 
