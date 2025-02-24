@@ -54,20 +54,24 @@ augmentation = Compose(
 val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=8)
 val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 
-mse = MSELoss()
-mae = MAELoss()
 mask_padding = SubjectMaskPadding()
 ssim = SSIM(data_range=1, size_average=True, channel=12)
 
-mse_efield = []
-mse_hfield = []
-mse_efield_space = []
-mse_hfield_space = []
-mse_efield_subject = []
-mse_hfield_subject = []
+mse = MSELoss()
+mae = MAELoss()
 
-mae_efield_subject = []
-mae_hfield_subject = []
+mse_e = []
+mse_h = []
+mse_e_space = []
+mse_h_space = []
+mse_e_subject = []
+mse_h_subject = []
+
+mae_e_subject = []
+mae_h_subject = []
+
+y_hats_e_subject = []
+y_hats_h_subject = []
 
 ssim_values = []
 
@@ -103,7 +107,7 @@ for batch in tqdm(val_loader, desc="Metrics"):
         ssim_z = ssim(y_hat_norm[:, :, :, :, 50], y_norm[:, :, :, :, 50]).cpu()
         ssim_values.append(np.mean([ssim_x, ssim_y, ssim_z]))
 
-        # Compute MSE and MAE
+        # Compute MSE, MAE, and MAD
         y_e = einops.rearrange(field[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
         y_h = einops.rearrange(field[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
         
@@ -111,30 +115,36 @@ for batch in tqdm(val_loader, desc="Metrics"):
         y_hat_e = einops.rearrange(y_hat[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
         y_hat_h = einops.rearrange(y_hat[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
 
-        mse_efield.append(mse(y_hat_e, y_e).cpu())
-        mse_hfield.append(mse(y_hat_h, y_h).cpu())
+        mse_e.append(mse(y_hat_e, y_e).cpu())
+        mse_h.append(mse(y_hat_h, y_h).cpu())
 
-        mse_efield_space.append(mse(y_hat_e, y_e, ~subject).cpu())
-        mse_hfield_space.append(mse(y_hat_h, y_h, ~subject).cpu())
+        mse_e_space.append(mse(y_hat_e, y_e, ~subject).cpu())
+        mse_h_space.append(mse(y_hat_h, y_h, ~subject).cpu())
 
-        mae_efield_subject.append(mae(y_hat_e, y_e, subject).cpu())
-        mae_hfield_subject.append(mae(y_hat_h, y_h, subject).cpu())
+        mse_e_subject.append(mse(y_hat_e, y_e, subject).cpu())
+        mse_h_subject.append(mse(y_hat_h, y_h, subject).cpu())
 
-        mse_efield_subject.append(mse(y_hat_e, y_e, subject).cpu())
-        mse_hfield_subject.append(mse(y_hat_h, y_h, subject).cpu())
+        mae_e_subject.append(mae(y_hat_e, y_e, subject).cpu())
+        mae_h_subject.append(mae(y_hat_h, y_h, subject).cpu())
 
-print(f"mse_efield: {np.mean(mse_efield)}")
-print(f"mse_hfield: {np.mean(mse_hfield)}")
-print(f"mse_efield_space: {np.mean(mse_efield_space)}")
-print(f"mse_hfield_space: {np.mean(mse_hfield_space)}")
-print(f"mse_efield_subject: {np.mean(mse_efield_subject)}")
-print(f"mse_hfield_subject: {np.mean(mse_hfield_subject)}")
+        y_hats_e_subject.extend(y_hat_e[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].flatten().cpu().numpy())
+        y_hats_h_subject.extend(y_hat_h[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].flatten().cpu().numpy())
 
-print(f"rmse_efield_subject: {np.sqrt(np.mean(mse_efield_subject))}")
-print(f"rmse_hfield_subject: {np.sqrt(np.mean(mse_hfield_subject))}")
+print(f"mse_efield: {np.mean(mse_e)}")
+print(f"mse_hfield: {np.mean(mse_h)}")
+print(f"mse_efield_space: {np.mean(mse_e_space)}")
+print(f"mse_hfield_space: {np.mean(mse_h_space)}")
+print(f"mse_efield_subject: {np.mean(mse_e_subject)}")
+print(f"mse_hfield_subject: {np.mean(mse_h_subject)}")
 
-print(f"mae_efield_subject: {np.mean(mae_efield_subject)}")
-print(f"mae_hfield_subject: {np.mean(mae_hfield_subject)}")
+print(f"rmse_efield_subject: {np.sqrt(np.mean(mse_e_subject))}")
+print(f"rmse_hfield_subject: {np.sqrt(np.mean(mse_h_subject))}")
+
+print(f"mae_efield_subject: {np.mean(mae_e_subject)}")
+print(f"mae_hfield_subject: {np.mean(mae_h_subject)}")
+
+print(f"mad_efield_subject: {np.median(np.abs(y_hats_e_subject - np.median(y_hats_e_subject)))}")
+print(f"mad_hfield_subject: {np.median(np.abs(y_hats_h_subject - np.median(y_hats_h_subject)))}")
 
 print(f"ssim_mean: {np.mean(ssim_values)}")
 

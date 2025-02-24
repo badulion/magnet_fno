@@ -53,11 +53,12 @@ augmentation = Compose(
 val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=8)
 val_loader = DataLoader(val_set, batch_size=8, num_workers=16, worker_init_fn=worker_init_fn)
 
-batches = 0
 mask_padding = SubjectMaskPadding()
 
-err_e = np.zeros(101)
-err_h = np.zeros(101)
+batches = 0
+
+rel_errs_e = np.zeros(101)
+rel_errs_h = np.zeros(101)
 
 res_e = []
 res_h = []
@@ -71,7 +72,7 @@ for batch in tqdm(val_loader):
     batches += 1
     with torch.no_grad():
         inputs, coils, field, subject = batch['input'].cuda(), batch['coils'].cuda(), batch['field'].cuda(), batch['subject'].cuda()
-        subject = mask_padding(subject.unsqueeze(1)).squeeze(1)
+        subject = mask_padding(subject.unsqueeze(1)).expand(-1, 6, -1, -1, -1)
 
         x = val_input_normalizer(torch.cat([inputs, coils], dim=1))
 
@@ -84,31 +85,28 @@ for batch in tqdm(val_loader):
         y_hat_e = einops.rearrange(y_hat[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
         y_hat_h = einops.rearrange(y_hat[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
 
-        batch_err_efield = torch.abs(y_hat_e - y_e) / torch.clamp(torch.abs(y_e), min=1e-9) * 100
-        batch_err_hfield = torch.abs(y_hat_h - y_h) / torch.clamp(torch.abs(y_h), min=1e-9) * 100
+        rel_err_e = (torch.abs(y_hat_e - y_e) / torch.clamp(torch.abs(y_e), min=1e-9) * 100)[subject].cpu().numpy()
+        rel_err_h = (torch.abs(y_hat_h - y_h) / torch.clamp(torch.abs(y_h), min=1e-9) * 100)[subject].cpu().numpy()
 
-        batch_err_efield = batch_err_efield[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
-        batch_err_hfield = batch_err_hfield[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
-
-        res_e = (y_hat_e - y_e)[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
-        res_h = (y_hat_h - y_h)[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy()
+        res_e = (y_hat_e - y_e)[subject].cpu().numpy()
+        res_h = (y_hat_h - y_h)[subject].cpu().numpy()
 
         for i in range(101):
-            err_e[i] += np.sum(batch_err_efield <= i) / len(batch_err_efield)
-            err_h[i] += np.sum(batch_err_hfield <= i) / len(batch_err_hfield)
+            rel_errs_e[i] += np.sum(rel_err_e <= i) / len(rel_err_e)
+            rel_errs_h[i] += np.sum(rel_err_h <= i) / len(rel_err_h)
 
-        gt_e = (y_e[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
-        pr_e = (y_hat_e[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
-        gt_h = (y_h[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
-        pr_h = (y_hat_h[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].cpu().numpy())
+        gt_e = (y_e[subject].cpu().numpy())
+        gt_h = (y_h[subject].cpu().numpy())
+        pr_e = (y_hat_e[subject].cpu().numpy())
+        pr_h = (y_hat_h[subject].cpu().numpy())
 
-err_e /= batches
-err_h /= batches
+rel_errs_e /= batches
+rel_errs_h /= batches
 
 _, (cdf, hist_e, hist_h, vs_e, vs_h) = plt.subplots(1, 5, figsize=(34, 6))
 
-cdf.plot(np.arange(0, 101), err_e, "r-", label="E-field (Subject)")
-cdf.plot(np.arange(0, 101), err_h, "b-", label="H-field (Subject)")
+cdf.plot(np.arange(0, 101), rel_errs_e, "r-", label="E-field (Subject)")
+cdf.plot(np.arange(0, 101), rel_errs_h, "b-", label="H-field (Subject)")
 
 cdf.set_xlim(0, 100)
 cdf.set_ylim(0, 1)
