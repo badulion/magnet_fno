@@ -5,8 +5,6 @@ import einops
 from magnet_pinn.utils import StandardNormalizer
 from magnet_pinn.losses import MSELoss
 
-from mrifield.train.mask_padding import SubjectMaskPadding
-
 class LitMRIField(pl.LightningModule):
     def __init__(self,
                  model: torch.nn.Module,
@@ -24,11 +22,10 @@ class LitMRIField(pl.LightningModule):
         self.train_target_normalizer=train_target_normalizer
         self.val_input_normalizer=val_input_normalizer
         self.val_target_normalizer=val_target_normalizer
-        
+
         self.subject_lambda = subject_lambda
         self.space_lambda = space_lambda
 
-        self.mask_padding = SubjectMaskPadding()
         self.loss_fn = MSELoss()
 
     def load_state_dict(self, state_dict, strict=True):
@@ -37,10 +34,9 @@ class LitMRIField(pl.LightningModule):
 
     def forward(self, x):
         return self.model(x)
-    
+
     def training_step(self, batch, batch_idx):
         inputs, coils, field, subject = batch['input'], batch['coils'], batch['field'], batch['subject']
-        subject = self.mask_padding(subject.unsqueeze(1)).squeeze(1)
 
         x = self.train_input_normalizer(torch.cat([inputs, coils], dim=1))
         y = self.train_target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
@@ -56,10 +52,9 @@ class LitMRIField(pl.LightningModule):
         self.log('tr_space_loss', space_loss, prog_bar=True)
 
         return loss
-    
+
     def validation_step(self, batch, batch_idx):
         inputs, coils, field, subject = batch['input'], batch['coils'], batch['field'], batch['subject']
-        subject = self.mask_padding(subject.unsqueeze(1)).squeeze(1)
 
         x = self.val_input_normalizer(torch.cat([inputs, coils], dim=1))
         y = self.val_target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
@@ -75,5 +70,15 @@ class LitMRIField(pl.LightningModule):
         self.log('val_space_loss', space_loss, prog_bar=True)
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
-        return optimizer
+        optimizer = torch.optim.AdamW(self.parameters(), lr=5e-5)
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=15, eta_min=1e-6)
+
+        return {
+        "optimizer": optimizer,
+        "lr_scheduler": {
+            "scheduler": scheduler,
+            "interval": "epoch",
+            "frequency": 1,
+            "name": "lr_scheduler"
+        }
+    }
