@@ -70,14 +70,14 @@ class LitMRIField(pl.LightningModule):
         self.log('val_space_loss', space_loss, prog_bar=True)
 
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.parameters(), lr=5e-5)
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=15, eta_min=1e-6)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=1e-4)
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=260625, eta_min=5e-5)
 
         return {
         "optimizer": optimizer,
         "lr_scheduler": {
             "scheduler": scheduler,
-            "interval": "epoch",
+            "interval": "step",
             "frequency": 1,
             "name": "lr_scheduler"
         }

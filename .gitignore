@@ -163,6 +163,7 @@ cython_debug/
 .vscode
 .DS_Store
 /data/
+/results/old_data/
 /results/baseline_unet/
 /results/fno/
 /results/uno/

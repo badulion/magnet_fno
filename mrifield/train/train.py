@@ -7,7 +7,7 @@ from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks import LearningRateMonitor
 
 from magnet_pinn.utils import StandardNormalizer
-from magnet_pinn.data.transforms import Compose, Crop, GridPhaseShift
+from magnet_pinn.data.transforms import Compose, Rotate, Crop, GridPhaseShift
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
 
@@ -32,7 +32,8 @@ val_target_normalizer = StandardNormalizer.load_from_json(f"{VAL_DIR}/normalizat
 augmentation = Compose(
     [
         Crop(crop_size=(100, 100, 100), crop_position="random"),
-        GridPhaseShift(num_coils=8)
+        GridPhaseShift(num_coils=8),
+        Rotate()
     ]
 )
 
@@ -44,7 +45,7 @@ val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=100)
 train_loader = DataLoader(train_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 
-wandb_logger = WandbLogger(project="fno", name="Training 16M - 16M, 42H, LR")
+wandb_logger = WandbLogger(project="fno", name="Training 16M - 16M, 42H")
 lr_monitor = LearningRateMonitor(logging_interval="step")
 
 trainer = pl.Trainer(accelerator="gpu", devices=1, log_every_n_steps=100, max_epochs=15, logger=wandb_logger, callbacks=lr_monitor)
