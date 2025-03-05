@@ -17,7 +17,6 @@ from magnet_pinn.losses import MSELoss, MAELoss
 from mrifield.models import UNet3D
 from neuralop.models import FNO
 from mrifield.train.lit_mrifield import LitMRIField
-from mrifield.train.mask_padding import SubjectMaskPadding
 
 TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
@@ -54,7 +53,6 @@ augmentation = Compose(
 val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=8)
 val_loader = DataLoader(val_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 
-mask_padding = SubjectMaskPadding()
 ssim = SSIM(data_range=1, size_average=True, channel=12)
 
 mse = MSELoss()
@@ -82,7 +80,6 @@ print(ModelSummary(trained_model, max_depth=-1))
 for batch in tqdm(val_loader, desc="Metrics"):
     with torch.no_grad():
         inputs, coils, field, subject = batch['input'].cuda(), batch['coils'].cuda(), batch['field'].cuda(), batch['subject'].cuda()
-        subject = mask_padding(subject.unsqueeze(1)).squeeze(1)
 
         x = val_input_normalizer(torch.cat([inputs, coils], dim=1))
 
