@@ -18,6 +18,7 @@ from mrifield.train.lit_mrifield import LitMRIField
 
 TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
+TEST_DIR = "/anvme/workspace/b190cb19-magnet/processed/test/grid_voxel_size_4_data_type_float32"
 
 CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/7hqhtfvz/checkpoints/epoch=9-step=173750.ckpt"
 
@@ -29,6 +30,8 @@ train_input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normali
 train_target_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/target_normalization.json")
 val_input_normalizer = StandardNormalizer.load_from_json(f"{VAL_DIR}/normalization/input_normalization.json")
 val_target_normalizer = StandardNormalizer.load_from_json(f"{VAL_DIR}/normalization/target_normalization.json")
+test_input_normalizer = StandardNormalizer.load_from_json(f"{TEST_DIR}/normalization/input_normalization.json")
+test_target_normalizer = StandardNormalizer.load_from_json(f"{TEST_DIR}/normalization/target_normalization.json")
 
 trained_model = LitMRIField.load_from_checkpoint(
     CKPT,
@@ -49,8 +52,8 @@ augmentation = Compose(
     ]
 )
 
-val_set = MagnetGridIterator(VAL_DIR, transforms=augmentation, num_samples=8)
-val_loader = DataLoader(val_set, batch_size=8, num_workers=16, worker_init_fn=worker_init_fn)
+test_set = MagnetGridIterator(TEST_DIR, transforms=augmentation, num_samples=8)
+test_loader = DataLoader(test_set, batch_size=4, num_workers=16, worker_init_fn=worker_init_fn)
 
 batches = 0
 
@@ -65,18 +68,18 @@ pr_e = []
 gt_h = []
 pr_h = []
 
-for batch in tqdm(val_loader):
+for batch in tqdm(test_loader):
     batches += 1
     with torch.no_grad():
         inputs, coils, field, subject = batch['input'].cuda(), batch['coils'].cuda(), batch['field'].cuda(), batch['subject'].cuda()
         subject = subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)
 
-        x = val_input_normalizer(torch.cat([inputs, coils], dim=1))
+        x = test_input_normalizer(torch.cat([inputs, coils], dim=1))
 
         y_e = einops.rearrange(field[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
         y_h = einops.rearrange(field[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
 
-        y_hat = val_target_normalizer.inverse(trained_model(x))
+        y_hat = test_target_normalizer.inverse(trained_model(x))
         y_hat = einops.rearrange(y_hat, 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
 
         y_hat_e = einops.rearrange(y_hat[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
