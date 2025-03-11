@@ -140,8 +140,10 @@ hist_h.set_ylabel("Frequency [-]")
 vs_e.scatter(gt_e, pr_e, s=0.5, marker=".")
 vs_h.scatter(gt_h, pr_h, s=0.5, marker=".")
 
-vs_e.plot([0, 1], [0, 1], c="black", linestyle="dashed", transform=vs_e.transAxes)
-vs_h.plot([0, 1], [0, 1], c="black", linestyle="dashed", transform=vs_h.transAxes)
+vs_e.axline((0, 0), slope=1.0, c="black", linestyle="dashed")
+vs_h.axline((0, 0), slope=1.0, c="black", linestyle="dashed")
+vs_e.grid(True)
+vs_h.grid(True)
 
 vs_e.set_title("Ground Truth vs. Predictions (E-field)")
 vs_e.set_xlabel("Ground Truth [-]")

@@ -1,4 +1,5 @@
 einops
+findiff
 h5py
 libigl
 matplotlib
