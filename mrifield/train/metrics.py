@@ -1,6 +1,7 @@
 import einops
 import torch
 import time
+
 import numpy as np
 
 from tqdm import tqdm
@@ -8,7 +9,7 @@ from torch.utils.data import DataLoader
 from pytorch_lightning.utilities.model_summary import ModelSummary
 from pytorch_msssim import SSIM
 
-from magnet_pinn.utils import StandardNormalizer
+from magnet_pinn.utils import StandardNormalizer, arcsinhStandardNormalizer
 from magnet_pinn.data.transforms import Compose, Crop, CoilEnumeratorPhaseShift
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
@@ -29,18 +30,16 @@ model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channel
 
 train_input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/input_normalization.json")
 train_target_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/target_normalization.json")
-val_input_normalizer = StandardNormalizer.load_from_json(f"{VAL_DIR}/normalization/input_normalization.json")
-val_target_normalizer = StandardNormalizer.load_from_json(f"{VAL_DIR}/normalization/target_normalization.json")
-test_input_normalizer = StandardNormalizer.load_from_json(f"{TEST_DIR}/normalization/input_normalization.json")
-test_target_normalizer = StandardNormalizer.load_from_json(f"{TEST_DIR}/normalization/target_normalization.json")
+#val_input_normalizer = StandardNormalizer.load_from_json(f"{VAL_DIR}/normalization/input_normalization.json")
+#val_target_normalizer = StandardNormalizer.load_from_json(f"{VAL_DIR}/normalization/target_normalization.json")
 
 trained_model = LitMRIField.load_from_checkpoint(
     CKPT,
     model=model,
     train_input_normalizer=train_input_normalizer,
     train_target_normalizer=train_target_normalizer,
-    val_input_normalizer=val_input_normalizer,
-    val_target_normalizer=val_target_normalizer
+    #val_input_normalizer=val_input_normalizer,
+    #val_target_normalizer=val_target_normalizer
 )
 
 trained_model.cuda()
@@ -84,13 +83,13 @@ for batch in tqdm(test_loader, desc="Metrics"):
     with torch.no_grad():
         inputs, coils, field, subject = batch['input'].cuda(), batch['coils'].cuda(), batch['field'].cuda(), batch['subject'].cuda()
 
-        x = test_input_normalizer(torch.cat([inputs, coils], dim=1))
+        x = train_input_normalizer(torch.cat([inputs, coils], dim=1))
 
         # Measure inference time
         torch.cuda.synchronize()
         start = time.perf_counter()
 
-        y_hat = test_target_normalizer.inverse(trained_model(x))
+        y_hat = train_target_normalizer.inverse(trained_model(x))
 
         torch.cuda.synchronize()
         end = time.perf_counter()

@@ -2,26 +2,22 @@ import torch
 import pytorch_lightning as pl
 import einops
 
-from magnet_pinn.utils import StandardNormalizer
+from magnet_pinn.utils import arcsinhStandardNormalizer
 from magnet_pinn.losses import MSELoss
 
 class LitMRIField(pl.LightningModule):
     def __init__(self,
                  model: torch.nn.Module,
-                 train_input_normalizer: StandardNormalizer,
-                 train_target_normalizer: StandardNormalizer,
-                 val_input_normalizer: StandardNormalizer,
-                 val_target_normalizer: StandardNormalizer,
+                 input_normalizer: arcsinhStandardNormalizer,
+                 target_normalizer: arcsinhStandardNormalizer,
                  subject_lambda: float = 10.0,
                  space_lambda: float = 0.01):
         super(LitMRIField, self).__init__()
         
         self.model = model
 
-        self.train_input_normalizer=train_input_normalizer
-        self.train_target_normalizer=train_target_normalizer
-        self.val_input_normalizer=val_input_normalizer
-        self.val_target_normalizer=val_target_normalizer
+        self.input_normalizer=input_normalizer
+        self.target_normalizer=target_normalizer
 
         self.subject_lambda = subject_lambda
         self.space_lambda = space_lambda
@@ -38,8 +34,8 @@ class LitMRIField(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         inputs, coils, field, subject = batch['input'], batch['coils'], batch['field'], batch['subject']
 
-        x = self.train_input_normalizer(torch.cat([inputs, coils], dim=1))
-        y = self.train_target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
+        x = self.input_normalizer(torch.cat([inputs, coils], dim=1))
+        y = self.target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
 
         y_hat = self.model(x)
 
@@ -56,8 +52,8 @@ class LitMRIField(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         inputs, coils, field, subject = batch['input'], batch['coils'], batch['field'], batch['subject']
 
-        x = self.val_input_normalizer(torch.cat([inputs, coils], dim=1))
-        y = self.val_target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
+        x = self.input_normalizer(torch.cat([inputs, coils], dim=1))
+        y = self.target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
 
         y_hat = self.model(x)
 

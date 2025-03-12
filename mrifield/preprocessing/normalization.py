@@ -1,4 +1,4 @@
-from magnet_pinn.utils import MinMaxNormalizer, StandardNormalizer
+from magnet_pinn.utils import arcsinhStandardNormalizer
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.transforms import Crop, GridPhaseShift, Compose
 
@@ -14,9 +14,7 @@ class Iterator:
                 GridPhaseShift(num_coils=8)
             ]
         )
-
-
-
+    
         self.iterator = MagnetGridIterator(
             path,
             transforms=augmentation,
@@ -36,25 +34,11 @@ class Iterator:
             }
 
 TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
-VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
-TEST_DIR = "/anvme/workspace/b190cb19-magnet/processed/test/grid_voxel_size_4_data_type_float32"
 
-normalizer = StandardNormalizer()
+normalizer = arcsinhStandardNormalizer()
 
 normalizer.fit_params(Iterator(TRAIN_DIR), key='input', axis=0)
 normalizer.save_as_json(f"{TRAIN_DIR}/normalization/input_normalization.json")
 
 normalizer.fit_params(Iterator(TRAIN_DIR), key='target', axis=0)
 normalizer.save_as_json(f"{TRAIN_DIR}/normalization/target_normalization.json")
-
-normalizer.fit_params(Iterator(VAL_DIR), key='input', axis=0)
-normalizer.save_as_json(f"{VAL_DIR}/normalization/input_normalization.json")
-
-normalizer.fit_params(Iterator(VAL_DIR), key='target', axis=0)
-normalizer.save_as_json(f"{VAL_DIR}/normalization/target_normalization.json")
-
-normalizer.fit_params(Iterator(TEST_DIR), key='input', axis=0)
-normalizer.save_as_json(f"{TEST_DIR}/normalization/input_normalization.json")
-
-normalizer.fit_params(Iterator(TEST_DIR), key='target', axis=0)
-normalizer.save_as_json(f"{TEST_DIR}/normalization/target_normalization.json")
