@@ -2,13 +2,13 @@ import torch
 import pytorch_lightning as pl
 import einops
 
-from magnet_pinn.utils import arcsinhStandardNormalizer
+from magnet_pinn.utils import StandardNormalizer, arcsinhStandardNormalizer
 from magnet_pinn.losses import MSELoss
 
 class LitMRIField(pl.LightningModule):
     def __init__(self,
                  model: torch.nn.Module,
-                 input_normalizer: arcsinhStandardNormalizer,
+                 input_normalizer: StandardNormalizer,
                  target_normalizer: arcsinhStandardNormalizer,
                  subject_lambda: float = 10.0,
                  space_lambda: float = 0.01):
