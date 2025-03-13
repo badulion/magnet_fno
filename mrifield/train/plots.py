@@ -86,37 +86,45 @@ for batch in tqdm(test_loader):
         rel_err_e = (torch.abs(y_hat_e - y_e) / torch.clamp(torch.abs(y_e), min=1e-9) * 100)[subject].cpu().numpy()
         rel_err_h = (torch.abs(y_hat_h - y_h) / torch.clamp(torch.abs(y_h), min=1e-9) * 100)[subject].cpu().numpy()
 
-        res_e = (y_hat_e - y_e)[subject].cpu().numpy()
-        res_h = (y_hat_h - y_h)[subject].cpu().numpy()
-
         for i in range(101):
             rel_errs_e[i] += np.sum(rel_err_e <= i) / len(rel_err_e)
             rel_errs_h[i] += np.sum(rel_err_h <= i) / len(rel_err_h)
 
-        gt_e = (y_e[subject].cpu().numpy())
-        gt_h = (y_h[subject].cpu().numpy())
-        pr_e = (y_hat_e[subject].cpu().numpy())
-        pr_h = (y_hat_h[subject].cpu().numpy())
+        if batches < 5:
+            res_e.extend((y_hat_e - y_e)[subject].cpu().numpy())
+            res_h.extend((y_hat_h - y_h)[subject].cpu().numpy())
+            
+            gt_e.extend(y_e[subject].cpu().numpy())
+            gt_h.extend(y_h[subject].cpu().numpy())
+            pr_e.extend(y_hat_e[subject].cpu().numpy())
+            pr_h.extend(y_hat_h[subject].cpu().numpy())
 
 rel_errs_e /= batches
 rel_errs_h /= batches
 
-_, (cdf, hist_e, hist_h, vs_e, vs_h) = plt.subplots(1, 5, figsize=(34, 6))
+# Cumulative Error Distribution
+plt.figure(figsize=(10, 6), dpi=300)
 
-cdf.plot(np.arange(0, 101), rel_errs_e, "r-", label="E-field (Subject)")
-cdf.plot(np.arange(0, 101), rel_errs_h, "b-", label="H-field (Subject)")
+plt.plot(np.arange(0, 101), rel_errs_e, "r-", label="E-field (Subject)")
+plt.plot(np.arange(0, 101), rel_errs_h, "b-", label="H-field (Subject)")
 
-cdf.set_xlim(0, 100)
-cdf.set_ylim(0, 1)
-cdf.grid(True)
+plt.xlim(0, 100)
+plt.ylim(0, 1)
+plt.grid(True)
 
-cdf.set_title("Cumulative Error Distribution")
-cdf.set_xlabel("Cumulative Error [%]")
-cdf.set_ylabel("Fraction of Voxels [-]")
-cdf.legend()
+plt.title("Cumulative Error Distribution", fontsize=18)
+plt.xlabel("Cumulative Error [%]", fontsize=14)
+plt.ylabel("Fraction of Voxels [-]", fontsize=14)
+plt.legend()
 
-hist_e.hist(res_e, bins=100, density=True, color="r")
-hist_h.hist(res_h, bins=100, density=True, color="b")
+plt.savefig("./plots_cdf")
+plt.cla()
+
+# Residual Histogram
+_, (hist_e, hist_h) = plt.subplots(1, 2, figsize=(20, 6), dpi=300)
+
+hist_e.hist(res_e, bins=100, density=True, color="r", alpha=0.7)
+hist_h.hist(res_h, bins=100, density=True, color="b", alpha=0.7)
 
 hist_e.set_yscale("log")
 hist_h.set_yscale("log")
@@ -124,31 +132,37 @@ hist_h.set_yscale("log")
 hist_e.text(0.97, 0.97, f"μ = {np.mean(res_e):.3f}\nσ = {np.std(res_e):.3f}", ha="right", va="top", transform=hist_e.transAxes)
 hist_h.text(0.97, 0.97, f"μ = {np.mean(res_h):.3f}\nσ = {np.std(res_h):.3f}", ha="right", va="top", transform=hist_h.transAxes)
 
-hist_e.axvline(x=0, linestyle="dashed")
-hist_h.axvline(x=0, linestyle="dashed")
+hist_e.axvline(x=0, c="black", linestyle="dashed")
+hist_h.axvline(x=0, c="black", linestyle="dashed")
 
-hist_e.set_title("Residual Histogram (E-field)")
-hist_e.set_xlabel("Residual [-]")
-hist_e.set_ylabel("Frequency [-]")
+hist_e.set_title("Residual Histogram (E-field)", fontsize=18)
+hist_e.set_xlabel("Residual [V/m]", fontsize=14)
+hist_e.set_ylabel("Frequency [-]", fontsize=14)
 
-hist_h.set_title("Residual Histogram (H-field)")
-hist_h.set_xlabel("Residual [-]")
-hist_h.set_ylabel("Frequency [-]")
+hist_h.set_title("Residual Histogram (H-field)", fontsize=18)
+hist_h.set_xlabel("Residual [A/m]", fontsize=14)
+hist_h.set_ylabel("Frequency [-]", fontsize=14)
 
-vs_e.scatter(gt_e, pr_e, s=0.5, marker=".")
-vs_h.scatter(gt_h, pr_h, s=0.5, marker=".")
+plt.savefig("./plots_hist")
+plt.cla()
+
+# Ground Truth vs. Predictions
+_, (vs_e, vs_h) = plt.subplots(1, 2, figsize=(20, 6), dpi=300)
+
+vs_e.scatter(gt_e, pr_e, s=0.5, alpha=0.05, marker=".")
+vs_h.scatter(gt_h, pr_h, s=0.5, alpha=0.05, marker=".")
 
 vs_e.axline((0, 0), slope=1.0, c="black", linestyle="dashed")
 vs_h.axline((0, 0), slope=1.0, c="black", linestyle="dashed")
 vs_e.grid(True)
 vs_h.grid(True)
 
-vs_e.set_title("Ground Truth vs. Predictions (E-field)")
-vs_e.set_xlabel("Ground Truth [-]")
-vs_e.set_ylabel("Predictions [-]")
+vs_e.set_title("Ground Truth vs. Predictions (E-field)", fontsize=18)
+vs_e.set_xlabel("Ground Truth [V/m]", fontsize=14)
+vs_e.set_ylabel("Predictions [V/m]", fontsize=14)
 
-vs_h.set_title("Ground Truth vs. Predictions (H-field)")
-vs_h.set_xlabel("Ground Truth [-]")
-vs_h.set_ylabel("Predictions [-]")
+vs_h.set_title("Ground Truth vs. Predictions (H-field)", fontsize=18)
+vs_h.set_xlabel("Ground Truth [A/m]", fontsize=14)
+vs_h.set_ylabel("Predictions [A/m]", fontsize=14)
 
-plt.savefig("./plots")
+plt.savefig("./plots_vs")

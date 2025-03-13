@@ -73,6 +73,9 @@ mae_h_subject = []
 y_hats_e_subject = []
 y_hats_h_subject = []
 
+sar_subject_gt = []
+sar_subject_pr = []
+
 ssim_values = []
 
 inf_times = []
@@ -129,6 +132,19 @@ for batch in tqdm(test_loader, desc="Metrics"):
         y_hats_e_subject.extend(y_hat_e[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].flatten().cpu().numpy())
         y_hats_h_subject.extend(y_hat_h[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].flatten().cpu().numpy())
 
+        # Compute Specific Absorption Rate (SAR)
+        y_e_norm = torch.norm(field[:, 0, :, :, :, :, :], dim=1)
+        y_hat_e_norm = torch.norm(y_hat[:, 0, :, :, :, :, :], dim=1)
+
+        sigma = inputs[:, 0, :, :, :]
+        rho = inputs[:, 2, :, :, :]
+        
+        sar_gt = sigma * torch.sum(y_e_norm**2, dim=1) / (2 * rho)
+        sar_pr = sigma * torch.sum(y_hat_e_norm**2, dim=1) / (2 * rho)
+
+        sar_subject_gt.append(torch.mean(sar_gt[subject]).cpu().numpy())
+        sar_subject_pr.append(torch.mean(sar_pr[subject]).cpu().numpy())
+
 print(f"mse_efield: {np.mean(mse_e)}")
 print(f"mse_hfield: {np.mean(mse_h)}")
 print(f"mse_efield_space: {np.mean(mse_e_space)}")
@@ -144,6 +160,9 @@ print(f"mae_hfield_subject: {np.mean(mae_h_subject)}")
 
 print(f"mad_efield_subject: {np.median(np.abs(y_hats_e_subject - np.median(y_hats_e_subject)))}")
 print(f"mad_hfield_subject: {np.median(np.abs(y_hats_h_subject - np.median(y_hats_h_subject)))}")
+
+print(f"sar_subject_gt: {np.mean(sar_subject_gt)}")
+print(f"sar_subject_pr: {np.mean(sar_subject_pr)}")
 
 print(f"ssim_mean: {np.mean(ssim_values)}")
 
