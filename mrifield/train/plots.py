@@ -28,16 +28,14 @@ model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channel
 
 train_input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/input_normalization.json")
 train_target_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/target_normalization.json")
-#val_input_normalizer = StandardNormalizer.load_from_json(f"{VAL_DIR}/normalization/input_normalization.json")
-#val_target_normalizer = StandardNormalizer.load_from_json(f"{VAL_DIR}/normalization/target_normalization.json")
 
 trained_model = LitMRIField.load_from_checkpoint(
     CKPT,
     model=model,
     train_input_normalizer=train_input_normalizer,
     train_target_normalizer=train_target_normalizer,
-    #val_input_normalizer=val_input_normalizer,
-    #val_target_normalizer=val_target_normalizer
+    #val_input_normalizer=train_input_normalizer,
+    #val_target_normalizer=train_target_normalizer
 )
 
 trained_model.cuda()
