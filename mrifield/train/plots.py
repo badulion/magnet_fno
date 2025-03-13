@@ -72,14 +72,14 @@ for batch in tqdm(test_loader):
 
         x = train_input_normalizer(torch.cat([inputs, coils], dim=1))
 
-        y_e = einops.rearrange(field[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
-        y_h = einops.rearrange(field[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
+        y_e = einops.rearrange(field[:, 0], 'b reim xyz ... -> b (reim xyz) ...')
+        y_h = einops.rearrange(field[:, 1], 'b reim xyz ... -> b (reim xyz) ...')
 
         y_hat = train_target_normalizer.inverse(trained_model(x))
         y_hat = einops.rearrange(y_hat, 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
 
-        y_hat_e = einops.rearrange(y_hat[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
-        y_hat_h = einops.rearrange(y_hat[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
+        y_hat_e = einops.rearrange(y_hat[:, 0], 'b reim xyz ... -> b (reim xyz) ...')
+        y_hat_h = einops.rearrange(y_hat[:, 1], 'b reim xyz ... -> b (reim xyz) ...')
 
         rel_err_e = (torch.abs(y_hat_e - y_e) / torch.clamp(torch.abs(y_e), min=1e-9) * 100)[subject].cpu().numpy()
         rel_err_h = (torch.abs(y_hat_h - y_h) / torch.clamp(torch.abs(y_h), min=1e-9) * 100)[subject].cpu().numpy()

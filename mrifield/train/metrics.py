@@ -131,11 +131,11 @@ for batch in tqdm(test_loader, desc="Metrics"):
         y_hats_h_subject.extend(y_hat_h[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].flatten().cpu().numpy())
 
         # Compute Specific Absorption Rate (SAR)
-        y_e_norm = torch.norm(field[:, 0, :, :, :, :, :], dim=1)
-        y_hat_e_norm = torch.norm(y_hat[:, 0, :, :, :, :, :], dim=1)
+        y_e_norm = torch.norm(field[:, 0], dim=1)
+        y_hat_e_norm = torch.norm(y_hat[:, 0], dim=1)
 
-        sigma = inputs[:, 0, :, :, :]
-        rho = inputs[:, 2, :, :, :]
+        sigma = inputs[:, 0]
+        rho = inputs[:, 2]
         
         sar_gt = sigma * torch.sum(y_e_norm**2, dim=1) / (2 * rho)
         sar_pr = sigma * torch.sum(y_hat_e_norm**2, dim=1) / (2 * rho)
