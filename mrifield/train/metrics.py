@@ -137,8 +137,8 @@ for batch in tqdm(test_loader, desc="Metrics"):
         sigma = inputs[:, 0]
         rho = inputs[:, 2]
         
-        sar_gt = sigma * torch.sum(y_e_norm**2, dim=1) / (2 * rho)
-        sar_pr = sigma * torch.sum(y_hat_e_norm**2, dim=1) / (2 * rho)
+        sar_gt = sigma * torch.sum(y_e_norm**2, dim=1) / rho
+        sar_pr = sigma * torch.sum(y_hat_e_norm**2, dim=1) / rho
 
         sar_subject_gt.append(torch.mean(sar_gt[subject]).cpu().numpy())
         sar_subject_pr.append(torch.mean(sar_pr[subject]).cpu().numpy())
