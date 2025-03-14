@@ -24,8 +24,8 @@ VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data
 model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=42, positional_embedding=None)
 #model = UNO(in_channels=5, out_channels=12, hidden_channels=16, uno_out_channels=[32,64,64,32], uno_n_modes=[[16,16,16],[16,16,16],[16,16,16],[16,16,16]], uno_scalings=[[1,1,1],[0.5,0.5,0.5],[1,1,1],[2,2,2]], channel_mlp_skip='linear')
 
-input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/input_normalization.json")
-target_normalizer = arcsinhStandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/target_normalization.json")
+input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/std/input_normalization.json")
+target_normalizer = arcsinhStandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/std/target_normalization.json")
 
 augmentation = Compose(
     [

@@ -32,8 +32,8 @@ train_target_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normal
 trained_model = LitMRIField.load_from_checkpoint(
     CKPT,
     model=model,
-    train_input_normalizer=train_input_normalizer,
-    train_target_normalizer=train_target_normalizer,
+    input_normalizer=train_input_normalizer,
+    target_normalizer=train_target_normalizer,
     #val_input_normalizer=train_input_normalizer,
     #val_target_normalizer=train_target_normalizer
 )
