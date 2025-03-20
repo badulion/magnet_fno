@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 from pytorch_lightning.utilities.model_summary import ModelSummary
 from pytorch_msssim import SSIM
 
-from magnet_pinn.utils import StandardNormalizer, arcsinhStandardNormalizer
+from magnet_pinn.utils import StandardNormalizer, StandardNormalizerSqrt
 from magnet_pinn.data.transforms import Compose, Crop, CoilEnumeratorPhaseShift
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
@@ -28,8 +28,8 @@ CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/7hqhtfvz/checkpoints/epoch=9-step=
 #model = UNet3D(in_channels=5, out_channels=12)
 model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=64, positional_embedding=None)
 
-train_input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/input_normalization.json")
-train_target_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/target_normalization.json")
+train_input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/std/input_normalization.json")
+train_target_normalizer = StandardNormalizerSqrt.load_from_json(f"{TRAIN_DIR}/normalization/std/target_normalization.json")
 
 trained_model = LitMRIField.load_from_checkpoint(
     CKPT,

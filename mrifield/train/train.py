@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks import LearningRateMonitor
 
-from magnet_pinn.utils import StandardNormalizer, arcsinhStandardNormalizer
+from magnet_pinn.utils import StandardNormalizer, StandardNormalizerSqrt
 from magnet_pinn.data.transforms import Compose, Rotate, Crop, GridPhaseShift
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
@@ -25,7 +25,7 @@ model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channel
 #model = UNO(in_channels=5, out_channels=12, hidden_channels=16, uno_out_channels=[32,64,64,32], uno_n_modes=[[16,16,16],[16,16,16],[16,16,16],[16,16,16]], uno_scalings=[[1,1,1],[0.5,0.5,0.5],[1,1,1],[2,2,2]], channel_mlp_skip='linear')
 
 input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/std/input_normalization.json")
-target_normalizer = arcsinhStandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/std/target_normalization.json")
+target_normalizer = StandardNormalizerSqrt.load_from_json(f"{TRAIN_DIR}/normalization/std/target_normalization.json")
 
 augmentation = Compose(
     [
