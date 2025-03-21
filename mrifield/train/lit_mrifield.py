@@ -1,17 +1,21 @@
 import torch
-import pytorch_lightning as pl
 import einops
+
+from pytorch_lightning import LightningModule
 
 from magnet_pinn.utils import Normalizer
 from magnet_pinn.losses import MSELoss
+from magnet_pinn.losses.physics import BasePhysicsLoss
 
-class LitMRIField(pl.LightningModule):
+class LitMRIField(LightningModule):
     def __init__(self,
                  model: torch.nn.Module,
                  input_normalizer: Normalizer,
                  target_normalizer: Normalizer,
                  subject_lambda: float = 10.0,
-                 space_lambda: float = 0.01):
+                 space_lambda: float = 0.01,
+                 model_to_boost: LightningModule = None,
+                 pi_loss: BasePhysicsLoss = None):
         super(LitMRIField, self).__init__()
         
         self.model = model
@@ -21,6 +25,9 @@ class LitMRIField(pl.LightningModule):
 
         self.subject_lambda = subject_lambda
         self.space_lambda = space_lambda
+
+        self.model_to_boost = model_to_boost
+        self.pi_loss = pi_loss
 
         self.loss_fn = MSELoss()
 
@@ -37,10 +44,32 @@ class LitMRIField(pl.LightningModule):
         x = self.input_normalizer(torch.cat([inputs, coils], dim=1))
         y = self.target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
 
+        # Spectral Boost
+        if self.model_to_boost is not None:
+            y_hat_to_boost = self.model_to_boost(x)
+
+            x = torch.cat([x, y_hat_to_boost], dim=1)
+            y = y - y_hat_to_boost
+        
         y_hat = self.model(x)
+
+        y_hat_denorm = einops.rearrange(self.target_normalizer.inverse(y_hat), 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
+        y_denorm = einops.rearrange(self.target_normalizer.inverse(y), 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
+
+        y_hat_b_re = y_hat_denorm[:,1,0]
+        y_hat_b_im = y_hat_denorm[:,1,1]
+
+        y_b_re = field[:,1,0] if self.model_to_boost is None else y_denorm[:,1,0]
+        y_b_im = field[:,1,1] if self.model_to_boost is None else y_denorm[:,1,1]
 
         subject_loss = self.loss_fn(y_hat, y, subject)
         space_loss = self.loss_fn(y_hat, y, ~subject)
+
+        # Physics-Informed Loss
+        if self.pi_loss is not None:
+            subject_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, subject) + self.pi_loss(y_hat_b_im, y_b_im, subject))
+            space_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, ~subject) + self.pi_loss(y_hat_b_im, y_b_im, ~subject))
+
         loss = subject_loss*self.subject_lambda + space_loss*self.space_lambda
 
         self.log('tr_loss', loss, prog_bar=True)

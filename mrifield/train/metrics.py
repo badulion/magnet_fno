@@ -85,20 +85,26 @@ for batch in tqdm(test_loader, desc="Metrics"):
         inputs, coils, field, subject = batch['input'].cuda(), batch['coils'].cuda(), batch['field'].cuda(), batch['subject'].cuda()
 
         x = train_input_normalizer(torch.cat([inputs, coils], dim=1))
+        y = einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...')
 
         # Measure inference time
         torch.cuda.synchronize()
         start = time.perf_counter()
 
-        y_hat = train_target_normalizer.inverse(trained_model(x))
+        # Spectral Boost
+        y_hat = torch.zeros_like(y).cuda() if trained_model.model_to_boost is None else trained_model.model_to_boost(x)
+
+        if trained_model.model_to_boost is not None:
+            x = torch.cat([x, y_hat], dim=1)
+
+        y_hat += trained_model(x)
+        y_hat = train_target_normalizer.inverse(y_hat)
 
         torch.cuda.synchronize()
         end = time.perf_counter()
         inf_times.append((end - start) / x.shape[0])
 
         # Compute SSIM
-        y = einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...')
-
         y_norm = (y - y.min()) / (y.max() - y.min())
         y_hat_norm = (y_hat - y_hat.min()) / (y_hat.max() - y_hat.min())
 

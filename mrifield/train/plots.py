@@ -71,13 +71,21 @@ for batch in tqdm(test_loader):
         subject = subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)
 
         x = train_input_normalizer(torch.cat([inputs, coils], dim=1))
+        y = einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...')
 
         y_e = einops.rearrange(field[:, 0], 'b reim xyz ... -> b (reim xyz) ...')
         y_h = einops.rearrange(field[:, 1], 'b reim xyz ... -> b (reim xyz) ...')
 
-        y_hat = train_target_normalizer.inverse(trained_model(x))
-        y_hat = einops.rearrange(y_hat, 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
+        # Spectral Boost
+        y_hat = torch.zeros_like(y).cuda() if trained_model.model_to_boost is None else trained_model.model_to_boost(x)
 
+        if trained_model.model_to_boost is not None:
+            x = torch.cat([x, y_hat], dim=1)
+
+        y_hat += trained_model(x)
+        y_hat = train_target_normalizer.inverse(y_hat)
+
+        y_hat = einops.rearrange(y_hat, 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
         y_hat_e = einops.rearrange(y_hat[:, 0], 'b reim xyz ... -> b (reim xyz) ...')
         y_hat_h = einops.rearrange(y_hat[:, 1], 'b reim xyz ... -> b (reim xyz) ...')
 
