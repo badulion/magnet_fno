@@ -9,7 +9,7 @@ from einops import rearrange
 import torch.fft
 
 
-class Mlp(nn.Module):
+class MLP(nn.Module):
     def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.GELU, drop=0.):
         super().__init__()
         out_features = out_features or in_features
@@ -28,7 +28,7 @@ class Mlp(nn.Module):
         return x
 
 
-class AFNO2D(nn.Module):
+class AFNO3D(nn.Module):
     def __init__(self, hidden_size, num_blocks=8, sparsity_threshold=0.01, hard_thresholding_fraction=1, hidden_size_factor=1):
         super().__init__()
         assert hidden_size % num_blocks == 0, f"hidden_size {hidden_size} should be divisble by num_blocks {num_blocks}"
@@ -51,49 +51,50 @@ class AFNO2D(nn.Module):
 
         dtype = x.dtype
         x = x.float()
-        B, H, W, C = x.shape
+        B, H, W, D, C = x.shape
 
-        x = torch.fft.rfft2(x, dim=(1, 2), norm="ortho")
-        x = x.reshape(B, H, W // 2 + 1, self.num_blocks, self.block_size)
+        x = torch.fft.rfftn(x, dim=(1, 2, 3), norm="ortho")
+        x = x.reshape(B, H, W, D // 2 + 1, self.num_blocks, self.block_size)
 
-        o1_real = torch.zeros([B, H, W // 2 + 1, self.num_blocks, self.block_size * self.hidden_size_factor], device=x.device)
-        o1_imag = torch.zeros([B, H, W // 2 + 1, self.num_blocks, self.block_size * self.hidden_size_factor], device=x.device)
+        o1_real = torch.zeros([B, H, W, D // 2 + 1, self.num_blocks, self.block_size * self.hidden_size_factor], device=x.device)
+        o1_imag = torch.zeros([B, H, W, D // 2 + 1, self.num_blocks, self.block_size * self.hidden_size_factor], device=x.device)
         o2_real = torch.zeros(x.shape, device=x.device)
         o2_imag = torch.zeros(x.shape, device=x.device)
 
 
         total_modes = H // 2 + 1
         kept_modes = int(total_modes * self.hard_thresholding_fraction)
+        mode_range = slice(total_modes-kept_modes, total_modes+kept_modes)
 
-        o1_real[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes] = F.relu(
-            torch.einsum('...bi,bio->...bo', x[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes].real, self.w1[0]) - \
-            torch.einsum('...bi,bio->...bo', x[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes].imag, self.w1[1]) + \
+        o1_real[:, mode_range, mode_range, :kept_modes] = F.relu(
+            torch.einsum('...bi,bio->...bo', x[:, mode_range, mode_range, :kept_modes].real, self.w1[0]) - \
+            torch.einsum('...bi,bio->...bo', x[:, mode_range, mode_range, :kept_modes].imag, self.w1[1]) + \
             self.b1[0]
         )
 
-        o1_imag[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes] = F.relu(
-            torch.einsum('...bi,bio->...bo', x[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes].imag, self.w1[0]) + \
-            torch.einsum('...bi,bio->...bo', x[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes].real, self.w1[1]) + \
+        o1_imag[:, mode_range, mode_range, :kept_modes] = F.relu(
+            torch.einsum('...bi,bio->...bo', x[:, mode_range, mode_range, :kept_modes].imag, self.w1[0]) + \
+            torch.einsum('...bi,bio->...bo', x[:, mode_range, mode_range, :kept_modes].real, self.w1[1]) + \
             self.b1[1]
         )
 
-        o2_real[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes]  = (
-            torch.einsum('...bi,bio->...bo', o1_real[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes], self.w2[0]) - \
-            torch.einsum('...bi,bio->...bo', o1_imag[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes], self.w2[1]) + \
+        o2_real[:, mode_range, mode_range, :kept_modes]  = (
+            torch.einsum('...bi,bio->...bo', o1_real[:, mode_range, mode_range, :kept_modes], self.w2[0]) - \
+            torch.einsum('...bi,bio->...bo', o1_imag[:, mode_range, mode_range, :kept_modes], self.w2[1]) + \
             self.b2[0]
         )
 
-        o2_imag[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes]  = (
-            torch.einsum('...bi,bio->...bo', o1_imag[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes], self.w2[0]) + \
-            torch.einsum('...bi,bio->...bo', o1_real[:, total_modes-kept_modes:total_modes+kept_modes, :kept_modes], self.w2[1]) + \
+        o2_imag[:, mode_range, mode_range, :kept_modes]  = (
+            torch.einsum('...bi,bio->...bo', o1_imag[:, mode_range, mode_range, :kept_modes], self.w2[0]) + \
+            torch.einsum('...bi,bio->...bo', o1_real[:, mode_range, mode_range, :kept_modes], self.w2[1]) + \
             self.b2[1]
         )
 
         x = torch.stack([o2_real, o2_imag], dim=-1)
         x = F.softshrink(x, lambd=self.sparsity_threshold)
         x = torch.view_as_complex(x)
-        x = x.reshape(B, H, W // 2 + 1, C)
-        x = torch.fft.irfft2(x, s=(H, W), dim=(1,2), norm="ortho")
+        x = x.reshape(B, H, W, D // 2 + 1, C)
+        x = torch.fft.irfftn(x, s=(H, W, D), dim=(1, 2, 3), norm="ortho")
         x = x.type(dtype)
 
         return x + bias
@@ -115,12 +116,12 @@ class Block(nn.Module):
         ):
         super().__init__()
         self.norm1 = norm_layer(dim)
-        self.filter = AFNO2D(dim, num_blocks, sparsity_threshold, hard_thresholding_fraction) 
+        self.filter = AFNO3D(dim, num_blocks, sparsity_threshold, hard_thresholding_fraction) 
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
         #self.drop_path = nn.Identity()
         self.norm2 = norm_layer(dim)
         mlp_hidden_dim = int(dim * mlp_ratio)
-        self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop)
+        self.mlp = MLP(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop)
         self.double_skip = double_skip
 
     def forward(self, x):
@@ -138,15 +139,30 @@ class Block(nn.Module):
         x = x + residual
         return x
 
+class PatchEmbed(nn.Module):
+    def __init__(self, img_size=(100, 100, 100), patch_size=(10, 10, 10), in_chans=5, embed_dim=768):
+        super().__init__()
+        num_patches = (img_size[2] // patch_size[2]) * (img_size[1] // patch_size[1]) * (img_size[0] // patch_size[0])
+        self.img_size = img_size
+        self.patch_size = patch_size
+        self.num_patches = num_patches
+        self.proj = nn.Conv3d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size)
+
+    def forward(self, x):
+        B, C, H, W, D = x.shape
+        assert H == self.img_size[0] and W == self.img_size[1] and D == self.img_size[2], f"Input image size ({H}*{W}*{D}) doesn't match model ({self.img_size[0]}*{self.img_size[1]}*{self.img_size[2]})."
+        x = self.proj(x).flatten(2).transpose(1, 2)
+        return x
+
 class AFNONet(nn.Module):
     def __init__(
             self,
-            img_size=(720, 1440),
-            patch_size=(16, 16),
-            in_chans=2,
-            out_chans=2,
+            img_size=(100, 100, 100),
+            patch_size=(10, 10, 10),
+            in_chans=5,
+            out_chans=12,
             embed_dim=768,
-            depth=12,
+            depth=1,
             mlp_ratio=4.,
             drop_rate=0.,
             drop_path_rate=0.,
@@ -173,6 +189,7 @@ class AFNONet(nn.Module):
 
         self.h = img_size[0] // self.patch_size[0]
         self.w = img_size[1] // self.patch_size[1]
+        self.d = img_size[2] // self.patch_size[2]
 
         self.blocks = nn.ModuleList([
             Block(dim=embed_dim, mlp_ratio=mlp_ratio, drop=drop_rate, drop_path=dpr[i], norm_layer=norm_layer,
@@ -181,7 +198,7 @@ class AFNONet(nn.Module):
 
         self.norm = norm_layer(embed_dim)
 
-        self.head = nn.Linear(embed_dim, self.out_chans*self.patch_size[0]*self.patch_size[1], bias=False)
+        self.head = nn.Linear(embed_dim, self.out_chans*self.patch_size[0]*self.patch_size[1]*self.patch_size[2], bias=False)
 
         trunc_normal_(self.pos_embed, std=.02)
         self.apply(self._init_weights)
@@ -205,7 +222,7 @@ class AFNONet(nn.Module):
         x = x + self.pos_embed
         x = self.pos_drop(x)
         
-        x = x.reshape(B, self.h, self.w, self.embed_dim)
+        x = x.reshape(B, self.h, self.w, self.d, self.embed_dim)
         for blk in self.blocks:
             x = blk(x)
 
@@ -216,35 +233,12 @@ class AFNONet(nn.Module):
         x = self.head(x)
         x = rearrange(
             x,
-            "b h w (p1 p2 c_out) -> b c_out (h p1) (w p2)",
+            "b h w d (p1 p2 p3 c_out) -> b c_out (h p1) (w p2) (d p3)",
             p1=self.patch_size[0],
             p2=self.patch_size[1],
+            p3=self.patch_size[2],
             h=self.img_size[0] // self.patch_size[0],
             w=self.img_size[1] // self.patch_size[1],
+            d=self.img_size[2] // self.patch_size[2],
         )
         return x
-
-
-class PatchEmbed(nn.Module):
-    def __init__(self, img_size=(224, 224), patch_size=(16, 16), in_chans=3, embed_dim=768):
-        super().__init__()
-        num_patches = (img_size[1] // patch_size[1]) * (img_size[0] // patch_size[0])
-        self.img_size = img_size
-        self.patch_size = patch_size
-        self.num_patches = num_patches
-        self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size)
-
-    def forward(self, x):
-        B, C, H, W = x.shape
-        assert H == self.img_size[0] and W == self.img_size[1], f"Input image size ({H}*{W}) doesn't match model ({self.img_size[0]}*{self.img_size[1]})."
-        x = self.proj(x).flatten(2).transpose(1, 2)
-        return x
-
-
-if __name__ == "__main__":
-    model = AFNONet(img_size=(720, 1440), patch_size=(4,4), in_chans=3, out_chans=10)
-    sample = torch.randn(1, 3, 720, 1440)
-    result = model(sample)
-    print(result.shape)
-    print(torch.norm(result))
-
