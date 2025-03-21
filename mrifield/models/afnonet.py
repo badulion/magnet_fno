@@ -1,23 +1,12 @@
-#reference: https://github.com/NVlabs/AFNO-transformer
+#References: https://github.com/NVlabs/AFNO-transformer, https://github.com/NVlabs/FourCastNet
 
-import math
 from functools import partial
-from collections import OrderedDict
-from copy import Error, deepcopy
-from re import S
-from numpy.lib.arraypad import pad
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-#from timm.data import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from timm.models.layers import DropPath, trunc_normal_
+from einops import rearrange
 import torch.fft
-from torch.nn.modules.container import Sequential
-from torch.utils.checkpoint import checkpoint_sequential
-from einops import rearrange, repeat
-from einops.layers.torch import Rearrange
-from utils.img_utils import PeriodicPad2d
 
 
 class Mlp(nn.Module):
@@ -149,29 +138,9 @@ class Block(nn.Module):
         x = x + residual
         return x
 
-class PrecipNet(nn.Module):
-    def __init__(self, params, backbone):
-        super().__init__()
-        self.params = params
-        self.patch_size = (params.patch_size, params.patch_size)
-        self.in_chans = params.N_in_channels
-        self.out_chans = params.N_out_channels
-        self.backbone = backbone
-        self.ppad = PeriodicPad2d(1)
-        self.conv = nn.Conv2d(self.out_chans, self.out_chans, kernel_size=3, stride=1, padding=0, bias=True)
-        self.act = nn.ReLU()
-
-    def forward(self, x):
-        x = self.backbone(x)
-        x = self.ppad(x)
-        x = self.conv(x)
-        x = self.act(x)
-        return x
-
 class AFNONet(nn.Module):
     def __init__(
             self,
-            params,
             img_size=(720, 1440),
             patch_size=(16, 16),
             in_chans=2,
@@ -186,13 +155,12 @@ class AFNONet(nn.Module):
             hard_thresholding_fraction=1.0,
         ):
         super().__init__()
-        self.params = params
         self.img_size = img_size
-        self.patch_size = (params.patch_size, params.patch_size)
-        self.in_chans = params.N_in_channels
-        self.out_chans = params.N_out_channels
+        self.patch_size = patch_size
+        self.in_chans = in_chans
+        self.out_chans = out_chans
         self.num_features = self.embed_dim = embed_dim
-        self.num_blocks = params.num_blocks 
+        self.num_blocks = num_blocks
         norm_layer = partial(nn.LayerNorm, eps=1e-6)
 
         self.patch_embed = PatchEmbed(img_size=img_size, patch_size=self.patch_size, in_chans=self.in_chans, embed_dim=embed_dim)
