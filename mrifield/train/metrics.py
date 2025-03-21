@@ -108,12 +108,12 @@ for batch in tqdm(test_loader, desc="Metrics"):
         ssim_values.append(np.mean([ssim_x, ssim_y, ssim_z]))
 
         # Compute MSE, MAE, and MAD
-        y_e = einops.rearrange(field[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
-        y_h = einops.rearrange(field[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
+        y_e = einops.rearrange(field[:, 0], 'b reim xyz ... -> b (reim xyz) ...')
+        y_h = einops.rearrange(field[:, 1], 'b reim xyz ... -> b (reim xyz) ...')
         
         y_hat = einops.rearrange(y_hat, 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
-        y_hat_e = einops.rearrange(y_hat[:, 0, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
-        y_hat_h = einops.rearrange(y_hat[:, 1, :, :, :, :, :], 'b reim xyz ... -> b (reim xyz) ...')
+        y_hat_e = einops.rearrange(y_hat[:, 0], 'b reim xyz ... -> b (reim xyz) ...')
+        y_hat_h = einops.rearrange(y_hat[:, 1], 'b reim xyz ... -> b (reim xyz) ...')
 
         mse_e.append(mse(y_hat_e, y_e).cpu())
         mse_h.append(mse(y_hat_h, y_h).cpu())
