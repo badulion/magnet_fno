@@ -11,8 +11,9 @@ from magnet_pinn.utils import StandardNormalizer, StandardNormalizerSqrt
 from magnet_pinn.data.transforms import Compose, Crop, CoilEnumeratorPhaseShift
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
+from magnet_pinn.losses.physics import DivergenceLoss
 
-from mrifield.models import UNet3D
+from mrifield.models import UNet3D, AFNONet
 from neuralop.models import FNO, UNO
 from mrifield.train.lit_mrifield import LitMRIField
 
@@ -24,7 +25,8 @@ CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/7hqhtfvz/checkpoints/epoch=9-step=
 
 #model = UNet3D(in_channels=5, out_channels=12)
 model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=64, positional_embedding=None)
-#model = UNO(in_channels=5, out_channels=12, hidden_channels=16, uno_out_channels=[32,64,64,32], uno_n_modes=[[16,16,16],[16,16,16],[16,16,16],[16,16,16]], uno_scalings=[[1,1,1],[0.5,0.5,0.5],[1,1,1],[2,2,2]], channel_mlp_skip='linear')
+#model = UNO(in_channels=5, out_channels=12, hidden_channels=16, uno_out_channels=[32,64,64,32], uno_n_modes=[[13,13,13],[13,13,13],[13,13,13],[13,13,13]], uno_scalings=[[1,1,1],[0.5,0.5,0.5],[1,1,1],[2,2,2]], channel_mlp_skip='linear')
+#model = AFNONet()
 
 train_input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/std/input_normalization.json")
 train_target_normalizer = StandardNormalizerSqrt.load_from_json(f"{TRAIN_DIR}/normalization/std/target_normalization.json")
@@ -96,7 +98,7 @@ for batch in tqdm(test_loader):
             rel_errs_e[i] += np.sum(rel_err_e <= i) / len(rel_err_e)
             rel_errs_h[i] += np.sum(rel_err_h <= i) / len(rel_err_h)
 
-        if batches < 5:
+        if batches <= 5:
             res_e.extend((y_hat_e - y_e)[subject].cpu().numpy())
             res_h.extend((y_hat_h - y_h)[subject].cpu().numpy())
             
@@ -120,7 +122,7 @@ plt.grid(True)
 
 plt.title("Cumulative Error Distribution", fontsize=18)
 plt.xlabel("Cumulative Error [%]", fontsize=14)
-plt.ylabel("Fraction of Voxels [-]", fontsize=14)
+plt.ylabel("Fraction of Values [-]", fontsize=14)
 plt.legend()
 
 plt.savefig("./plots_cdf")
