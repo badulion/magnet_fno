@@ -166,7 +166,7 @@ class AFNONet(nn.Module):
             mlp_ratio=4.,
             drop_rate=0.,
             drop_path_rate=0.,
-            num_blocks=16,
+            num_blocks=8,
             sparsity_threshold=0.01,
             hard_thresholding_fraction=1.0,
         ):
