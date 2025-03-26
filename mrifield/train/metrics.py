@@ -8,6 +8,7 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 from pytorch_lightning.utilities.model_summary import ModelSummary
 from pytorch_msssim import SSIM
+from sklearn.metrics import r2_score
 
 from magnet_pinn.utils import StandardNormalizer, StandardNormalizerSqrt
 from magnet_pinn.data.transforms import Compose, Crop, CoilEnumeratorPhaseShift
@@ -74,6 +75,9 @@ mae_h_subject = []
 y_hats_e_subject = []
 y_hats_h_subject = []
 
+r2_e_subject = []
+r2_h_subject = []
+
 sar_subject_gt = []
 sar_subject_pr = []
 
@@ -101,11 +105,12 @@ for batch in tqdm(test_loader, desc="Metrics"):
             x = torch.cat([x, y_hat], dim=1)
 
         y_hat += trained_model(x)
-        y_hat = train_target_normalizer.inverse(y_hat)
 
         torch.cuda.synchronize()
         end = time.perf_counter()
         inf_times.append((end - start) / x.shape[0])
+        
+        y_hat = train_target_normalizer.inverse(y_hat)
 
         # Compute SSIM
         y_norm = (y - y.min()) / (y.max() - y.min())
@@ -116,7 +121,7 @@ for batch in tqdm(test_loader, desc="Metrics"):
         ssim_z = ssim(y_hat_norm[:, :, :, :, 50], y_norm[:, :, :, :, 50]).cpu()
         ssim_values.append(np.mean([ssim_x, ssim_y, ssim_z]))
 
-        # Compute MSE, MAE, and MAD
+        # Compute MSE, MAE, MAD, and R2
         y_e = einops.rearrange(field[:, 0], 'b reim xyz ... -> b (reim xyz) ...')
         y_h = einops.rearrange(field[:, 1], 'b reim xyz ... -> b (reim xyz) ...')
         
@@ -136,8 +141,19 @@ for batch in tqdm(test_loader, desc="Metrics"):
         mae_e_subject.append(mae(y_hat_e, y_e, subject).cpu())
         mae_h_subject.append(mae(y_hat_h, y_h, subject).cpu())
 
-        y_hats_e_subject.extend(y_hat_e[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].flatten().cpu().numpy())
-        y_hats_h_subject.extend(y_hat_h[subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)].flatten().cpu().numpy())
+        subject_exp = subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)
+
+        y_hat_e_sub = y_hat_e[subject_exp].flatten().cpu().numpy()
+        y_hat_h_sub = y_hat_h[subject_exp].flatten().cpu().numpy()
+
+        y_e_sub = y_e[subject_exp].flatten().cpu().numpy()
+        y_h_sub = y_h[subject_exp].flatten().cpu().numpy()
+
+        y_hats_e_subject.extend(y_hat_e_sub)
+        y_hats_h_subject.extend(y_hat_h_sub)
+
+        r2_e_subject.append(r2_score(y_e_sub, y_hat_e_sub))
+        r2_h_subject.append(r2_score(y_h_sub, y_hat_h_sub))
 
         # Compute Specific Absorption Rate (SAR)
         y_e_norm = torch.norm(field[:, 0], dim=1)
@@ -167,6 +183,9 @@ print(f"mae_hfield_subject: {np.mean(mae_h_subject)}")
 
 print(f"mad_efield_subject: {np.median(np.abs(y_hats_e_subject - np.median(y_hats_e_subject)))}")
 print(f"mad_hfield_subject: {np.median(np.abs(y_hats_h_subject - np.median(y_hats_h_subject)))}")
+
+print(f"r2_efield_subject: {np.mean(r2_e_subject)}")
+print(f"r2_hfield_subject: {np.mean(r2_h_subject)}")
 
 print(f"sar_subject_gt: {np.mean(sar_subject_gt)}")
 print(f"sar_subject_pr: {np.mean(sar_subject_pr)}")

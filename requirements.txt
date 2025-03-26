@@ -9,6 +9,7 @@ opt_einsum
 pandas
 pytorch_lightning
 rtree
+scikit-learn
 tensorboard
 tensorly
 tensorly-torch
