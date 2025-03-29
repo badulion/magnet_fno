@@ -25,6 +25,7 @@ TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
 TEST_DIR = "/anvme/workspace/b190cb19-magnet/processed/test/grid_voxel_size_4_data_type_float32"
 
+BOOST_CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/7hqhtfvz/checkpoints/epoch=9-step=173750.ckpt"
 CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/7hqhtfvz/checkpoints/epoch=9-step=173750.ckpt"
 
 #model = UNet3D(in_channels=5, out_channels=12)
@@ -35,13 +36,16 @@ model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channel
 train_input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/std/input_normalization.json")
 train_target_normalizer = StandardNormalizerSqrt.load_from_json(f"{TRAIN_DIR}/normalization/std/target_normalization.json")
 
+#model_to_boost = LitMRIField.load_from_checkpoint(BOOST_CKPT, model=AFNONet(depth=5), input_normalizer=train_input_normalizer, target_normalizer=train_target_normalizer)
+
 trained_model = LitMRIField.load_from_checkpoint(
     CKPT,
     model=model,
     input_normalizer=train_input_normalizer,
     target_normalizer=train_target_normalizer,
     #val_input_normalizer=train_input_normalizer,
-    #val_target_normalizer=train_target_normalizer
+    #val_target_normalizer=train_target_normalizer,
+    #model_to_boost=model_to_boost
 )
 
 trained_model.cuda()
