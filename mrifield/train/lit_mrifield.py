@@ -27,8 +27,13 @@ class LitMRIField(LightningModule):
         self.space_lambda = space_lambda
 
         self.model_to_boost = model_to_boost
-        self.pi_loss = pi_loss
+        
+        if self.model_to_boost is not None:
+            self.model_to_boost.eval()
+            for p in self.model_to_boost.parameters():
+                p.requires_grad = False
 
+        self.pi_loss = pi_loss
         self.loss_fn = MSELoss()
 
     def load_state_dict(self, state_dict, strict=True):
@@ -67,8 +72,8 @@ class LitMRIField(LightningModule):
             y_b_re = y_denorm[:,1,0]
             y_b_im = y_denorm[:,1,1]
 
-            subject_loss += 1000 * (self.pi_loss(y_hat_b_re, y_b_re, subject) + self.pi_loss(y_hat_b_im, y_b_im, subject))
-            space_loss += 1000 * (self.pi_loss(y_hat_b_re, y_b_re, ~subject) + self.pi_loss(y_hat_b_im, y_b_im, ~subject))
+            subject_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, subject) + self.pi_loss(y_hat_b_im, y_b_im, subject))
+            space_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, ~subject) + self.pi_loss(y_hat_b_im, y_b_im, ~subject))
 
         loss = subject_loss*self.subject_lambda + space_loss*self.space_lambda
 
@@ -84,10 +89,32 @@ class LitMRIField(LightningModule):
         x = self.input_normalizer(torch.cat([inputs, coils], dim=1))
         y = self.target_normalizer(einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...'))
 
+        # Spectral Boost
+        if self.model_to_boost is not None:
+            y_hat_to_boost = self.model_to_boost(x)
+
+            x = torch.cat([x, y_hat_to_boost], dim=1)
+            y = y - y_hat_to_boost
+
         y_hat = self.model(x)
 
         subject_loss = self.loss_fn(y_hat, y, subject)
         space_loss = self.loss_fn(y_hat, y, ~subject)
+
+        # Physics-Informed Loss
+        if isinstance(self.pi_loss, DivergenceLoss):
+            y_hat_denorm = einops.rearrange(self.target_normalizer.inverse(y_hat), 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
+            y_denorm = einops.rearrange(self.target_normalizer.inverse(y), 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
+
+            y_hat_b_re = y_hat_denorm[:,1,0]
+            y_hat_b_im = y_hat_denorm[:,1,1]
+
+            y_b_re = y_denorm[:,1,0]
+            y_b_im = y_denorm[:,1,1]
+
+            subject_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, subject) + self.pi_loss(y_hat_b_im, y_b_im, subject))
+            space_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, ~subject) + self.pi_loss(y_hat_b_im, y_b_im, ~subject))
+
         loss = subject_loss*self.subject_lambda + space_loss*self.space_lambda
 
         self.log("val_loss", loss)
