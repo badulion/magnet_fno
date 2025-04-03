@@ -73,7 +73,6 @@ class LitMRIField(LightningModule):
             y_b_im = y_denorm[:,1,1]
 
             subject_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, subject) + self.pi_loss(y_hat_b_im, y_b_im, subject))
-            space_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, ~subject) + self.pi_loss(y_hat_b_im, y_b_im, ~subject))
 
         loss = subject_loss*self.subject_lambda + space_loss*self.space_lambda
 
