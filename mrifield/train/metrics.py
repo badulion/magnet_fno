@@ -65,6 +65,7 @@ ssim = SSIM(data_range=1, size_average=True, channel=12)
 
 mse = MSELoss()
 mae = MAELoss()
+div = DivergenceLoss()
 
 mse_e = []
 mse_h = []
@@ -84,6 +85,9 @@ r2_h_subject = []
 
 sar_subject_gt = []
 sar_subject_pr = []
+
+div_subject_gt = []
+div_subject_pr = []
 
 ssim_values = []
 
@@ -172,6 +176,16 @@ for batch in tqdm(test_loader, desc="Metrics"):
         sar_subject_gt.append(torch.mean(sar_gt[subject]).cpu().numpy())
         sar_subject_pr.append(torch.mean(sar_pr[subject]).cpu().numpy())
 
+        # Compute divergence
+        y_hat_b_re = y_hat[:,1,0]
+        y_hat_b_im = y_hat[:,1,1]
+
+        y_b_re = field[:,1,0]
+        y_b_im = field[:,1,1]
+
+        div_subject_gt.append((div(y_b_re, y_b_re, subject) + div(y_b_im, y_b_im, subject)).cpu().numpy())
+        div_subject_pr.append((div(y_hat_b_re, y_b_re, subject) + div(y_hat_b_im, y_b_im, subject)).cpu().numpy())
+
 print(f"mse_efield: {np.mean(mse_e)}")
 print(f"mse_hfield: {np.mean(mse_h)}")
 print(f"mse_efield_space: {np.mean(mse_e_space)}")
@@ -193,6 +207,9 @@ print(f"r2_hfield_subject: {np.mean(r2_h_subject)}")
 
 print(f"sar_subject_gt: {np.mean(sar_subject_gt)}")
 print(f"sar_subject_pr: {np.mean(sar_subject_pr)}")
+
+print(f"div_subject_gt: {np.mean(div_subject_gt)}")
+print(f"div_subject_pr: {np.mean(div_subject_pr)}")
 
 print(f"ssim_mean: {np.mean(ssim_values)}")
 
