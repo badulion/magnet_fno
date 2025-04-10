@@ -25,11 +25,11 @@ TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
 TEST_DIR = "/anvme/workspace/b190cb19-magnet/processed/test/grid_voxel_size_4_data_type_float32"
 
-BOOST_CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/7hqhtfvz/checkpoints/epoch=9-step=173750.ckpt"
-CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/7hqhtfvz/checkpoints/epoch=9-step=173750.ckpt"
+BOOST_CKPT = "/home/vault/b190cb/b190cb19/fno/u0byloyd/checkpoints/epoch=14-step=260625.ckpt"
+CKPT = "/home/vault/b190cb/b190cb19/fno/u0byloyd/checkpoints/epoch=14-step=260625.ckpt"
 
 #model = UNet3D(in_channels=5, out_channels=12)
-model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=64, positional_embedding=None)
+model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=59, positional_embedding=None)
 #model = UNO(in_channels=5, out_channels=12, hidden_channels=16, n_layers=5, uno_out_channels=[32,64,128,64,32], uno_n_modes=[[13,13,13],[13,13,13],[13,13,13],[13,13,13],[13,13,13]], uno_scalings=[[1,1,1],[0.5,0.5,0.5],[1,1,1],[1,1,1],[2,2,2]], channel_mlp_skip='linear')
 #model = AFNONet()
 

@@ -21,12 +21,14 @@ os.environ['HTTPS_PROXY'] = 'http://proxy:80'
 TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
 
-BOOST_CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/afno/u0byloyd/checkpoints/epoch=14-step=260625.ckpt"
+BOOST_CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/u0byloyd/checkpoints/epoch=14-step=260625.ckpt"
 
 #model = UNet3D(in_channels=5, out_channels=12)
-#model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=42, positional_embedding=None)
+model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=59, positional_embedding=None)
 #model = UNO(in_channels=5, out_channels=12, hidden_channels=16, n_layers=5, uno_out_channels=[32,64,128,64,32], uno_n_modes=[[13,13,13],[13,13,13],[13,13,13],[13,13,13],[13,13,13]], uno_scalings=[[1,1,1],[0.5,0.5,0.5],[1,1,1],[1,1,1],[2,2,2]], channel_mlp_skip='linear')
-model = AFNONet(depth=5)
+#model = AFNONet(depth=5)
+
+#model_to_boost = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=59, positional_embedding=None)
 
 input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/std/input_normalization.json")
 target_normalizer = StandardNormalizerSqrt.load_from_json(f"{TRAIN_DIR}/normalization/std/target_normalization.json")
@@ -39,7 +41,7 @@ augmentation = Compose(
     ]
 )
 
-#model_to_boost = LitMRIField.load_from_checkpoint(BOOST_CKPT, model=AFNONet(depth=5), input_normalizer=input_normalizer, target_normalizer=target_normalizer)
+#lit_model_to_boost = LitMRIField.load_from_checkpoint(BOOST_CKPT, model=model_to_boost, input_normalizer=input_normalizer, target_normalizer=target_normalizer)
 lit_model = LitMRIField(model, input_normalizer, target_normalizer)
 
 train_set = MagnetGridIterator(TRAIN_DIR, transforms=augmentation, num_samples=100)

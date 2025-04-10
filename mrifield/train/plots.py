@@ -21,11 +21,11 @@ TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_
 VAL_DIR = "/anvme/workspace/b190cb19-magnet/processed/val/grid_voxel_size_4_data_type_float32"
 TEST_DIR = "/anvme/workspace/b190cb19-magnet/processed/test/grid_voxel_size_4_data_type_float32"
 
-BOOST_CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/7hqhtfvz/checkpoints/epoch=9-step=173750.ckpt"
-CKPT = "/home/hpc/b190cb/b190cb19/ma_bohn/fno/7hqhtfvz/checkpoints/epoch=9-step=173750.ckpt"
+BOOST_CKPT = "/home/vault/b190cb/b190cb19/fno/u0byloyd/checkpoints/epoch=14-step=260625.ckpt"
+CKPT = "/home/vault/b190cb/b190cb19/fno/u0byloyd/checkpoints/epoch=14-step=260625.ckpt"
 
 #model = UNet3D(in_channels=5, out_channels=12)
-model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=64, positional_embedding=None)
+model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=59, positional_embedding=None)
 #model = UNO(in_channels=5, out_channels=12, hidden_channels=16, n_layers=5, uno_out_channels=[32,64,128,64,32], uno_n_modes=[[13,13,13],[13,13,13],[13,13,13],[13,13,13],[13,13,13]], uno_scalings=[[1,1,1],[0.5,0.5,0.5],[1,1,1],[1,1,1],[2,2,2]], channel_mlp_skip='linear')
 #model = AFNONet()
 
@@ -62,6 +62,8 @@ batches = 0
 rel_errs_e = np.zeros(101)
 rel_errs_h = np.zeros(101)
 
+sar10g_subject_errs = []
+
 res_e = []
 res_h = []
 
@@ -74,7 +76,7 @@ for batch in tqdm(test_loader):
     batches += 1
     with torch.no_grad():
         inputs, coils, field, subject = batch['input'].cuda(), batch['coils'].cuda(), batch['field'].cuda(), batch['subject'].cuda()
-        subject = subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)
+        subject_exp = subject.unsqueeze(1).expand(-1, 6, -1, -1, -1)
 
         x = train_input_normalizer(torch.cat([inputs, coils], dim=1))
         y = einops.rearrange(field, 'b he reim xyz ... -> b (he reim xyz) ...')
@@ -95,21 +97,52 @@ for batch in tqdm(test_loader):
         y_hat_e = einops.rearrange(y_hat[:, 0], 'b reim xyz ... -> b (reim xyz) ...')
         y_hat_h = einops.rearrange(y_hat[:, 1], 'b reim xyz ... -> b (reim xyz) ...')
 
-        rel_err_e = (torch.abs(y_hat_e - y_e) / torch.clamp(torch.abs(y_e), min=1e-9) * 100)[subject].cpu().numpy()
-        rel_err_h = (torch.abs(y_hat_h - y_h) / torch.clamp(torch.abs(y_h), min=1e-9) * 100)[subject].cpu().numpy()
+        # Cumulative Error Distribution
+        rel_err_e = (torch.abs(y_hat_e - y_e) / torch.clamp(torch.abs(y_e), min=1e-9) * 100)[subject_exp].cpu().numpy()
+        rel_err_h = (torch.abs(y_hat_h - y_h) / torch.clamp(torch.abs(y_h), min=1e-9) * 100)[subject_exp].cpu().numpy()
 
         for i in range(101):
             rel_errs_e[i] += np.sum(rel_err_e <= i) / len(rel_err_e)
             rel_errs_h[i] += np.sum(rel_err_h <= i) / len(rel_err_h)
 
         if batches <= 5:
-            res_e.extend((y_hat_e - y_e)[subject].cpu().numpy())
-            res_h.extend((y_hat_h - y_h)[subject].cpu().numpy())
-            
-            gt_e.extend(y_e[subject].cpu().numpy())
-            gt_h.extend(y_h[subject].cpu().numpy())
-            pr_e.extend(y_hat_e[subject].cpu().numpy())
-            pr_h.extend(y_hat_h[subject].cpu().numpy())
+            # Residual Histogram
+            res_e.extend((y_hat_e - y_e)[subject_exp].cpu().numpy())
+            res_h.extend((y_hat_h - y_h)[subject_exp].cpu().numpy())
+
+            # Ground Truth vs. Predictions
+            gt_e.extend(y_e[subject_exp].cpu().numpy())
+            gt_h.extend(y_h[subject_exp].cpu().numpy())
+            pr_e.extend(y_hat_e[subject_exp].cpu().numpy())
+            pr_h.extend(y_hat_h[subject_exp].cpu().numpy())
+
+        if batches <= 10:
+            # SAR10g Prediction Error Histogram
+
+            sigma = inputs[:, 0]
+            rho = inputs[:, 2]
+
+            y_e_norm = torch.norm(field[:, 0], dim=1)
+            y_hat_e_norm = torch.norm(y_hat[:, 0], dim=1)
+
+            sar_gt = sigma * torch.sum(y_e_norm**2, dim=1) / rho
+            sar_pr = sigma * torch.sum(y_hat_e_norm**2, dim=1) / rho
+
+            for voxel in torch.nonzero(subject[0]):
+                for l_cube in range(1, 12, 2):
+                    cube = torch.zeros_like(subject, dtype=bool)
+
+                    cube_x = slice(max(0, voxel[0].item() - l_cube // 2), min(cube.size(dim=1), voxel[0].item() + l_cube // 2 + 1))
+                    cube_y = slice(max(0, voxel[1].item() - l_cube // 2), min(cube.size(dim=2), voxel[1].item() + l_cube // 2 + 1))
+                    cube_z = slice(max(0, voxel[2].item() - l_cube // 2), min(cube.size(dim=3), voxel[2].item() + l_cube // 2 + 1))
+
+                    cube[:, cube_x, cube_y, cube_z] = True
+
+                    if torch.sum(rho[cube & subject] * 0.004**3) >= 0.01:
+                        sar10g_subject_gt = torch.mean(sar_gt[cube & subject])
+                        sar10g_subject_pr = torch.mean(sar_pr[cube & subject])
+                        sar10g_subject_errs.append(((sar10g_subject_pr - sar10g_subject_gt) / sar10g_subject_gt * 100).cpu().numpy())
+                        break
 
 rel_errs_e /= batches
 rel_errs_h /= batches
@@ -178,3 +211,19 @@ vs_h.set_xlabel("Ground Truth [A/m]", fontsize=14)
 vs_h.set_ylabel("Predictions [A/m]", fontsize=14)
 
 plt.savefig("./plots_vs")
+
+# SAR10g Prediction Error Histogram
+sar = plt.figure(figsize=(10, 6), dpi=300)
+
+plt.hist(sar10g_subject_errs, bins=200, density=True, color="r", alpha=0.7)
+plt.yscale("log")
+
+plt.text(0.97, 0.97, f"μ = {np.mean(sar10g_subject_errs):.1f}\nσ = {np.std(sar10g_subject_errs):.1f}", ha="right", va="top", transform=sar.transFigure)
+plt.axvline(x=0, c="black", linestyle="dashed")
+
+plt.title("SAR10g Prediction Error Histogram", fontsize=18)
+plt.xlabel("Relative Error [%]", fontsize=14)
+plt.ylabel("Frequency [-]", fontsize=14)
+
+plt.savefig("./plots_hist_sar")
+plt.cla()
