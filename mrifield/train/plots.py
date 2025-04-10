@@ -211,14 +211,15 @@ vs_h.set_xlabel("Ground Truth [A/m]", fontsize=14)
 vs_h.set_ylabel("Predictions [A/m]", fontsize=14)
 
 plt.savefig("./plots_vs")
+plt.cla()
 
 # SAR10g Prediction Error Histogram
-sar = plt.figure(figsize=(10, 6), dpi=300)
+plt.figure(figsize=(10, 6), dpi=300)
 
 plt.hist(sar10g_subject_errs, bins=200, density=True, color="r", alpha=0.7)
 plt.yscale("log")
 
-plt.text(0.97, 0.97, f"μ = {np.mean(sar10g_subject_errs):.1f}\nσ = {np.std(sar10g_subject_errs):.1f}", ha="right", va="top", transform=sar.transFigure)
+plt.text(0.97, 0.97, f"μ = {np.mean(sar10g_subject_errs):.2f}\nσ = {np.std(sar10g_subject_errs):.2f}", ha="right", va="top", transform=plt.gca().transAxes)
 plt.axvline(x=0, c="black", linestyle="dashed")
 
 plt.title("SAR10g Prediction Error Histogram", fontsize=18)
@@ -226,4 +227,3 @@ plt.xlabel("Relative Error [%]", fontsize=14)
 plt.ylabel("Frequency [-]", fontsize=14)
 
 plt.savefig("./plots_hist_sar")
-plt.cla()
