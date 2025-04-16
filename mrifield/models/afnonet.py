@@ -1,4 +1,4 @@
-#References: https://github.com/NVlabs/AFNO-transformer, https://github.com/NVlabs/FourCastNet
+# References: https://github.com/NVlabs/AFNO-transformer, https://github.com/NVlabs/FourCastNet
 
 from functools import partial
 import torch

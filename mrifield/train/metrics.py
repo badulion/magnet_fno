@@ -17,7 +17,7 @@ from magnet_pinn.data.utils import worker_init_fn
 from magnet_pinn.losses import MSELoss, MAELoss
 from magnet_pinn.losses.physics import DivergenceLoss
 
-from mrifield.models import UNet3D, AFNONet
+from mrifield.models import UNet3D, AFNONet, FNOFactorizedMesh3D
 from neuralop.models import FNO, UNO
 from mrifield.train.lit_mrifield import LitMRIField
 
@@ -32,6 +32,7 @@ CKPT = "/home/vault/b190cb/b190cb19/fno/u0byloyd/checkpoints/epoch=14-step=26062
 model = FNO(n_modes=(16, 16, 16), in_channels=5, out_channels=12, hidden_channels=59, positional_embedding=None)
 #model = UNO(in_channels=5, out_channels=12, hidden_channels=16, n_layers=5, uno_out_channels=[32,64,128,64,32], uno_n_modes=[[13,13,13],[13,13,13],[13,13,13],[13,13,13],[13,13,13]], uno_scalings=[[1,1,1],[0.5,0.5,0.5],[1,1,1],[1,1,1],[2,2,2]], channel_mlp_skip='linear')
 #model = AFNONet()
+#model = FNOFactorizedMesh3D(modes_x=16, modes_y=16, modes_z=16, width=64, input_dim=5, output_dim=12, n_layers=8, share_weight=False, factor=4, ff_weight_norm=False, n_ff_layers=2, layer_norm=True)
 
 train_input_normalizer = StandardNormalizer.load_from_json(f"{TRAIN_DIR}/normalization/std/input_normalization.json")
 train_target_normalizer = StandardNormalizerSqrt.load_from_json(f"{TRAIN_DIR}/normalization/std/target_normalization.json")
