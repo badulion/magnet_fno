@@ -5,7 +5,7 @@ from pytorch_lightning import LightningModule
 
 from magnet_pinn.utils import Normalizer
 from magnet_pinn.losses import MSELoss
-from magnet_pinn.losses.physics import BasePhysicsLoss, DivergenceLoss
+from magnet_pinn.losses.physics import BasePhysicsLoss, DivergenceLoss, FaradaysLoss
 
 class LitMRIField(LightningModule):
     def __init__(self,
@@ -74,6 +74,12 @@ class LitMRIField(LightningModule):
 
             subject_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, subject) + self.pi_loss(y_hat_b_im, y_b_im, subject))
             space_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, ~subject) + self.pi_loss(y_hat_b_im, y_b_im, ~subject))
+        elif isinstance(self.pi_loss, FaradaysLoss):
+            y_hat_denorm = self.target_normalizer.inverse(y_hat)
+            y_denorm = self.target_normalizer.inverse(y)
+
+            subject_loss += 1e-12 * self.pi_loss(y_hat_denorm, y_denorm, subject)
+            space_loss += 1e-12 * self.pi_loss(y_hat_denorm, y_denorm, ~subject)
 
         loss = subject_loss*self.subject_lambda + space_loss*self.space_lambda
 
