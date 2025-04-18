@@ -15,7 +15,7 @@ from magnet_pinn.data.transforms import Compose, Crop, CoilEnumeratorPhaseShift
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
 from magnet_pinn.losses import MSELoss, MAELoss
-from magnet_pinn.losses.physics import DivergenceLoss
+from magnet_pinn.losses.physics import DivergenceLoss, FaradaysLoss
 
 from mrifield.models import UNet3D, AFNONet, FNOFactorizedMesh3D
 from neuralop.models import FNO, UNO
@@ -67,6 +67,7 @@ ssim = SSIM(data_range=1, size_average=True, channel=12)
 mse = MSELoss()
 mae = MAELoss()
 div = DivergenceLoss()
+far = FaradaysLoss()
 
 mse_e = []
 mse_h = []
@@ -88,8 +89,11 @@ sar_subject_gt = []
 sar_subject_pr = []
 mse_sar_subject = []
 
-div_subject_gt = []
-div_subject_pr = []
+mse_div_subject_gt = []
+mse_div_subject_pr = []
+
+mse_far_subject_gt = []
+mse_far_subject_pr = []
 
 ssim_values = []
 
@@ -179,15 +183,22 @@ for batch in tqdm(test_loader, desc="Metrics"):
         sar_subject_pr.append(torch.mean(sar_pr[subject]).cpu().numpy())
         mse_sar_subject.append(mse(sar_pr, sar_gt, subject).cpu())
 
-        # Compute divergence
+        # Compute divergence and Faraday's law MSE
         y_hat_b_re = y_hat[:,1,0]
         y_hat_b_im = y_hat[:,1,1]
 
         y_b_re = field[:,1,0]
         y_b_im = field[:,1,1]
 
-        div_subject_gt.append((div(y_b_re, y_b_re, subject) + div(y_b_im, y_b_im, subject)).cpu().numpy())
-        div_subject_pr.append((div(y_hat_b_re, y_b_re, subject) + div(y_hat_b_im, y_b_im, subject)).cpu().numpy())
+        zero = torch.zeros_like(y)
+
+        mse_div_subject_gt.append((div(y_b_re, zero, subject) + div(y_b_im, zero, subject)).cpu().numpy())
+        mse_div_subject_pr.append((div(y_hat_b_re, zero, subject) + div(y_hat_b_im, zero, subject)).cpu().numpy())
+
+        y_hat = einops.rearrange(y_hat, 'b he reim xyz ... -> b (he reim xyz) ...')
+
+        mse_far_subject_gt.append(far(y, zero, subject).cpu().numpy())
+        mse_far_subject_pr.append(far(y_hat, zero, subject).cpu().numpy())
 
 print(f"mse_efield: {np.mean(mse_e)}")
 print(f"mse_hfield: {np.mean(mse_h)}")
@@ -212,8 +223,11 @@ print(f"sar_subject_gt: {np.mean(sar_subject_gt)}")
 print(f"sar_subject_pr: {np.mean(sar_subject_pr)}")
 print(f"mse_sar_subject: {np.mean(mse_sar_subject)}")
 
-print(f"div_subject_gt: {np.mean(div_subject_gt)}")
-print(f"div_subject_pr: {np.mean(div_subject_pr)}")
+print(f"rmse_div_subject_gt: {np.sqrt(np.mean(mse_div_subject_gt))}")
+print(f"rmse_div_subject_pr: {np.sqrt(np.mean(mse_div_subject_pr))}")
+
+print(f"rmse_far_subject_gt: {np.sqrt(np.mean(mse_far_subject_gt))}")
+print(f"rmse_far_subject_pr: {np.sqrt(np.mean(mse_far_subject_pr))}")
 
 print(f"ssim_mean: {np.mean(ssim_values)}")
 

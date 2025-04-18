@@ -10,7 +10,7 @@ from magnet_pinn.utils import StandardNormalizer, StandardNormalizerSqrt
 from magnet_pinn.data.transforms import Compose, Rotate, Crop, GridPhaseShift
 from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
-from magnet_pinn.losses.physics import DivergenceLoss
+from magnet_pinn.losses.physics import DivergenceLoss, FaradaysLoss
 
 from mrifield.models import UNet3D, AFNONet, FNOFactorizedMesh3D
 from neuralop.models import FNO, UNO
