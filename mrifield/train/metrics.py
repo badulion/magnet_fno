@@ -87,7 +87,6 @@ r2_h_subject = []
 
 sar_subject_gt = []
 sar_subject_pr = []
-mse_sar_subject = []
 
 mse_div_subject_gt = []
 mse_div_subject_pr = []
@@ -181,7 +180,6 @@ for batch in tqdm(test_loader, desc="Metrics"):
 
         sar_subject_gt.append(torch.mean(sar_gt[subject]).cpu().numpy())
         sar_subject_pr.append(torch.mean(sar_pr[subject]).cpu().numpy())
-        mse_sar_subject.append(mse(sar_pr, sar_gt, subject).cpu())
 
         # Compute divergence and Faraday's law MSE
         y_hat_b_re = y_hat[:,1,0]
@@ -221,7 +219,6 @@ print(f"r2_hfield_subject: {np.mean(r2_h_subject)}")
 
 print(f"sar_subject_gt: {np.mean(sar_subject_gt)}")
 print(f"sar_subject_pr: {np.mean(sar_subject_pr)}")
-print(f"mse_sar_subject: {np.mean(mse_sar_subject)}")
 
 print(f"rmse_div_subject_gt: {np.sqrt(np.mean(mse_div_subject_gt))}")
 print(f"rmse_div_subject_pr: {np.sqrt(np.mean(mse_div_subject_pr))}")
