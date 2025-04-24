@@ -63,23 +63,21 @@ class LitMRIField(LightningModule):
 
         # Physics-Informed Loss
         if isinstance(self.pi_loss, DivergenceLoss):
-            y_hat_denorm = einops.rearrange(self.target_normalizer.inverse(y_hat), 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
-            y_denorm = einops.rearrange(self.target_normalizer.inverse(y), 'b (he reim xyz) ... -> b he reim xyz ...', he=2, reim=2, xyz=3)
+            y_hat_denorm = self.target_normalizer.inverse(y_hat)
+            y_denorm = self.target_normalizer.inverse(y)
 
-            y_hat_b_re = y_hat_denorm[:,1,0]
-            y_hat_b_im = y_hat_denorm[:,1,1]
+            div_loss = self.pi_loss(y_hat_denorm, y_denorm, subject)
+            subject_loss += 100 * div_loss
 
-            y_b_re = y_denorm[:,1,0]
-            y_b_im = y_denorm[:,1,1]
-
-            subject_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, subject) + self.pi_loss(y_hat_b_im, y_b_im, subject))
-            space_loss += 10 * (self.pi_loss(y_hat_b_re, y_b_re, ~subject) + self.pi_loss(y_hat_b_im, y_b_im, ~subject))
+            self.log('tr_div_loss', div_loss, prog_bar=True)
         elif isinstance(self.pi_loss, FaradaysLoss):
             y_hat_denorm = self.target_normalizer.inverse(y_hat)
             y_denorm = self.target_normalizer.inverse(y)
 
-            subject_loss += 1e-12 * self.pi_loss(y_hat_denorm, y_denorm, subject)
-            space_loss += 1e-12 * self.pi_loss(y_hat_denorm, y_denorm, ~subject)
+            far_loss = self.pi_loss(y_hat_denorm, y_denorm, subject)
+            subject_loss += 1e-3 * far_loss
+
+            self.log('tr_far_loss', far_loss, prog_bar=True)
 
         loss = subject_loss*self.subject_lambda + space_loss*self.space_lambda
 
