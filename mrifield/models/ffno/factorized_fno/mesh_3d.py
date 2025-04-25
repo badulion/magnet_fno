@@ -137,7 +137,7 @@ class FNOFactorizedMesh3D(nn.Module):
         x = self.in_lift(x) # [B, X, Y, Z, H]
 
         for i in range(self.n_layers):
-            x = self.spectral_layers[i](x)
+            x = x + self.spectral_layers[i](x)
 
         x = self.out_proj(x)
         x = rearrange(x, 'b s1 s2 s3 i -> b i s1 s2 s3')
