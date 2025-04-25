@@ -182,18 +182,11 @@ for batch in tqdm(test_loader, desc="Metrics"):
         sar_subject_pr.append(torch.mean(sar_pr[subject]).cpu().numpy())
 
         # Compute divergence and Faraday's law MSE
-        y_hat_b_re = y_hat[:,1,0]
-        y_hat_b_im = y_hat[:,1,1]
-
-        y_b_re = field[:,1,0]
-        y_b_im = field[:,1,1]
-
         zero = torch.zeros_like(y)
-
-        mse_div_subject_gt.append((div(y_b_re, zero, subject) + div(y_b_im, zero, subject)).cpu().numpy())
-        mse_div_subject_pr.append((div(y_hat_b_re, zero, subject) + div(y_hat_b_im, zero, subject)).cpu().numpy())
-
         y_hat = einops.rearrange(y_hat, 'b he reim xyz ... -> b (he reim xyz) ...')
+
+        mse_div_subject_gt.append(div(y, zero, subject).cpu().numpy())
+        mse_div_subject_pr.append(div(y_hat, zero, subject).cpu().numpy())
 
         mse_far_subject_gt.append(far(y, zero, subject).cpu().numpy())
         mse_far_subject_pr.append(far(y_hat, zero, subject).cpu().numpy())
