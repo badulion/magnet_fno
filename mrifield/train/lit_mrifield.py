@@ -6,6 +6,7 @@ from pytorch_lightning import LightningModule
 from magnet_pinn.utils import Normalizer
 from magnet_pinn.losses import MSELoss
 from magnet_pinn.losses.physics import BasePhysicsLoss, DivergenceLoss, FaradaysLoss
+from magnet_pinn.losses.utils import ObjectMaskPadding
 
 class LitMRIField(LightningModule):
     def __init__(self,
@@ -73,8 +74,9 @@ class LitMRIField(LightningModule):
         elif isinstance(self.pi_loss, FaradaysLoss):
             y_hat_denorm = self.target_normalizer.inverse(y_hat)
             y_denorm = self.target_normalizer.inverse(y)
+            pad = ObjectMaskPadding(padding=1)
 
-            far_loss = self.pi_loss(y_hat_denorm, y_denorm, subject)
+            far_loss = self.pi_loss(y_hat_denorm, y_denorm, pad(subject.unsqueeze(1)).squeeze(1))
             subject_loss += 1e-3 * far_loss
 
             self.log('tr_far_loss', far_loss, prog_bar=True)
