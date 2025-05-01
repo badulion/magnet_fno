@@ -16,6 +16,7 @@ from magnet_pinn.data.grid import MagnetGridIterator
 from magnet_pinn.data.utils import worker_init_fn
 from magnet_pinn.losses import MSELoss, MAELoss
 from magnet_pinn.losses.physics import DivergenceLoss, FaradaysLoss
+from magnet_pinn.losses.utils import ObjectMaskPadding
 
 from mrifield.models import UNet3D, AFNONet, FNOFactorizedMesh3D
 from neuralop.models import FNO, UNO
@@ -188,8 +189,10 @@ for batch in tqdm(test_loader, desc="Metrics"):
         mse_div_subject_gt.append(div(y, zero, subject).cpu().numpy())
         mse_div_subject_pr.append(div(y_hat, zero, subject).cpu().numpy())
 
-        mse_far_subject_gt.append(far(y, zero, subject).cpu().numpy())
-        mse_far_subject_pr.append(far(y_hat, zero, subject).cpu().numpy())
+        pad = ObjectMaskPadding(padding=1)
+
+        mse_far_subject_gt.append(far(y, zero, pad(subject.cpu().unsqueeze(1)).squeeze(1)).cpu().numpy())
+        mse_far_subject_pr.append(far(y_hat, zero, pad(subject.cpu().unsqueeze(1)).squeeze(1)).cpu().numpy())
 
 print(f"mse_efield: {np.mean(mse_e)}")
 print(f"mse_hfield: {np.mean(mse_h)}")
