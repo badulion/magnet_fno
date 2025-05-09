@@ -67,10 +67,13 @@ class LitMRIField(LightningModule):
             y_hat_denorm = self.target_normalizer.inverse(y_hat)
             y_denorm = self.target_normalizer.inverse(y)
 
-            div_loss = self.pi_loss(y_hat_denorm, y_denorm, subject)
-            subject_loss += 100 * div_loss
+            div_loss_sub = self.pi_loss(y_hat_denorm, y_denorm, subject)
+            div_loss_space = self.pi_loss(y_hat_denorm, y_denorm, ~subject)
 
-            self.log('tr_div_loss', div_loss, prog_bar=True)
+            subject_loss += 5e-5 * div_loss_sub
+            space_loss += 5e-5 * div_loss_space
+
+            self.log('tr_div_loss', div_loss_sub + div_loss_space, prog_bar=True)
         elif isinstance(self.pi_loss, FaradaysLoss):
             y_hat_denorm = self.target_normalizer.inverse(y_hat)
             y_denorm = self.target_normalizer.inverse(y)
