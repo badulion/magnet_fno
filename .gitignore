@@ -164,6 +164,7 @@ cython_debug/
 .DS_Store
 /data/
 /results/afno/
+/results/base/
 /results/div/
 /results/far/
 /results/ffno/

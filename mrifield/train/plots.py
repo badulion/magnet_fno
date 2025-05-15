@@ -63,6 +63,8 @@ rel_errs_e = np.zeros(101)
 rel_errs_h = np.zeros(101)
 
 sar10g_subject_errs = []
+gt_sar = []
+pr_sar = []
 
 res_e = []
 res_h = []
@@ -142,6 +144,10 @@ for batch in tqdm(test_loader):
                         sar10g_subject_gt = torch.mean(sar_gt[cube & subject])
                         sar10g_subject_pr = torch.mean(sar_pr[cube & subject])
                         sar10g_subject_errs.append(((sar10g_subject_pr - sar10g_subject_gt) / sar10g_subject_gt * 100).cpu().numpy())
+                        if batches <= 5:
+                            gt_sar.append(sar10g_subject_gt.cpu().numpy())
+                            pr_sar.append(sar10g_subject_pr.cpu().numpy())
+
                         break
 
 rel_errs_e /= batches
@@ -227,3 +233,17 @@ plt.xlabel("Relative Error [%]", fontsize=14)
 plt.ylabel("Frequency [-]", fontsize=14)
 
 plt.savefig("./plots_hist_sar")
+plt.cla()
+
+# SAR10g Ground Truth vs. Predictions
+plt.figure(figsize=(10, 6), dpi=300)
+
+plt.scatter(gt_sar, pr_sar, s=0.5, alpha=0.05, marker=".")
+plt.axline((0, 0), slope=1.0, c="black", linestyle="dashed")
+plt.grid(True)
+
+plt.title("Ground Truth vs. Predictions (SAR10g)", fontsize=18)
+plt.xlabel("Ground Truth [W/kg]", fontsize=14)
+plt.ylabel("Predictions [W/kg]", fontsize=14)
+
+plt.savefig("./plots_vs_sar")
