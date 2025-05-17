@@ -14,6 +14,7 @@ from magnet_pinn.data.utils import worker_init_fn
 
 from mrifield.models import UNet3D, AFNONet, FNOFactorizedMesh3D
 from neuralop.models import FNO, UNO
+
 from mrifield.train.lit_mrifield import LitMRIField
 
 TRAIN_DIR = "/anvme/workspace/b190cb19-magnet/processed/train/grid_voxel_size_4_data_type_float32"
