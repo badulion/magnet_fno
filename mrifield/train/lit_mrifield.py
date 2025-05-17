@@ -80,7 +80,7 @@ class LitMRIField(LightningModule):
             pad = ObjectMaskPadding(padding=1)
 
             far_loss = self.pi_loss(y_hat_denorm, y_denorm, pad(subject.unsqueeze(1)).squeeze(1))
-            subject_loss += 1e-3 * far_loss
+            subject_loss += 1e-9 * far_loss
 
             self.log('tr_far_loss', far_loss, prog_bar=True)
 
