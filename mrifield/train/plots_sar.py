@@ -23,7 +23,7 @@ TEST_DIR = "/anvme/workspace/b190cb19-magnet/processed/test/grid_voxel_size_4_da
 CKPT = "/home/vault/b190cb/b190cb19/b1+/l87sylvh/checkpoints/epoch=14-step=260625.ckpt"
 
 #model = UNet3D(in_channels=3, out_channels=1, f_maps=90, num_groups=9)
-model = FNO(n_modes=(16, 16, 16), in_channels=3, out_channels=1, hidden_channels=59, positional_embedding=None, tensorization='tucker', rank=0.5)
+model = FNO(n_modes=(16, 16, 16), in_channels=3, out_channels=1, hidden_channels=59, positional_embedding=None)
 
 trained_model = LitSAR.load_from_checkpoint(CKPT, model=model)
 
@@ -48,9 +48,6 @@ rel_errs = np.zeros(101)
 sar10g_subject_errs = []
 gt_sar = []
 pr_sar = []
-
-res_e = []
-res_h = []
 
 gt_sar = []
 pr_sar = []
