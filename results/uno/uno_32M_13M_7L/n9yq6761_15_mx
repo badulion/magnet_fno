@@ -1,0 +1,222 @@
+### Starting TaskPrologue of job 2635727 on a0905 at Mo 12. Mai 09:35:37 CEST 2025
+Running on cores 16-31 with governor ondemand
+Mon May 12 09:35:37 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.133.20             Driver Version: 570.133.20     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          On  |   00000000:13:00.0 Off |                    0 |
+| N/A   35C    P0             56W /  400W |       0MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+/home/hpc/b190cb/b190cb19/ma_bohn/.venv/lib64/python3.11/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+fno_skip='linear'
+channel_mlp_skip='linear'
+fno_skip='linear'
+channel_mlp_skip='linear'
+fno_skip='linear'
+channel_mlp_skip='linear'
+fno_skip='linear'
+channel_mlp_skip='linear'
+fno_skip='linear'
+channel_mlp_skip='linear'
+fno_skip='linear'
+channel_mlp_skip='linear'
+fno_skip='linear'
+channel_mlp_skip='linear'
+    | Name                                        | Type                   | Params | Mode
+------------------------------------------------------------------------------------------------
+0   | model                                       | UNO                    | 32.2 M | eval
+1   | model.positional_embedding                  | GridEmbeddingND        | 0      | eval
+2   | model.lifting                               | ChannelMLP             | 6.4 K  | eval
+3   | model.lifting.fcs                           | ModuleList             | 6.4 K  | eval
+4   | model.lifting.fcs.0                         | Conv1d                 | 2.3 K  | eval
+5   | model.lifting.fcs.1                         | Conv1d                 | 4.1 K  | eval
+6   | model.fno_blocks                            | ModuleList             | 32.2 M | eval
+7   | model.fno_blocks.0                          | FNOBlocks              | 303 K  | eval
+8   | model.fno_blocks.0.convs                    | ModuleList             | 302 K  | eval
+9   | model.fno_blocks.0.convs.0                  | SpectralConv           | 302 K  | eval
+10  | model.fno_blocks.0.convs.0.weight           | DenseTensor            | 302 K  | eval
+11  | model.fno_blocks.0.fno_skips                | ModuleList             | 256    | eval
+12  | model.fno_blocks.0.fno_skips.0              | Flattened1dConv        | 256    | eval
+13  | model.fno_blocks.0.fno_skips.0.conv         | Conv1d                 | 256    | eval
+14  | model.fno_blocks.0.channel_mlp              | ModuleList             | 280    | eval
+15  | model.fno_blocks.0.channel_mlp.0            | ChannelMLP             | 280    | eval
+16  | model.fno_blocks.0.channel_mlp.0.fcs        | ModuleList             | 280    | eval
+17  | model.fno_blocks.0.channel_mlp.0.fcs.0      | Conv1d                 | 136    | eval
+18  | model.fno_blocks.0.channel_mlp.0.fcs.1      | Conv1d                 | 144    | eval
+19  | model.fno_blocks.0.channel_mlp_skips        | ModuleList             | 256    | eval
+20  | model.fno_blocks.0.channel_mlp_skips.0      | Flattened1dConv        | 256    | eval
+21  | model.fno_blocks.0.channel_mlp_skips.0.conv | Conv1d                 | 256    | eval
+22  | model.fno_blocks.1                          | FNOBlocks              | 607 K  | eval
+23  | model.fno_blocks.1.convs                    | ModuleList             | 605 K  | eval
+24  | model.fno_blocks.1.convs.0                  | SpectralConv           | 605 K  | eval
+25  | model.fno_blocks.1.convs.0.weight           | DenseTensor            | 605 K  | eval
+26  | model.fno_blocks.1.fno_skips                | ModuleList             | 512    | eval
+27  | model.fno_blocks.1.fno_skips.0              | Flattened1dConv        | 512    | eval
+28  | model.fno_blocks.1.fno_skips.0.conv         | Conv1d                 | 512    | eval
+29  | model.fno_blocks.1.channel_mlp              | ModuleList             | 1.1 K  | eval
+30  | model.fno_blocks.1.channel_mlp.0            | ChannelMLP             | 1.1 K  | eval
+31  | model.fno_blocks.1.channel_mlp.0.fcs        | ModuleList             | 1.1 K  | eval
+32  | model.fno_blocks.1.channel_mlp.0.fcs.0      | Conv1d                 | 528    | eval
+33  | model.fno_blocks.1.channel_mlp.0.fcs.1      | Conv1d                 | 544    | eval
+34  | model.fno_blocks.1.channel_mlp_skips        | ModuleList             | 512    | eval
+35  | model.fno_blocks.1.channel_mlp_skips.0      | Flattened1dConv        | 512    | eval
+36  | model.fno_blocks.1.channel_mlp_skips.0.conv | Conv1d                 | 512    | eval
+37  | model.fno_blocks.2                          | FNOBlocks              | 2.4 M  | eval
+38  | model.fno_blocks.2.convs                    | ModuleList             | 2.4 M  | eval
+39  | model.fno_blocks.2.convs.0                  | SpectralConv           | 2.4 M  | eval
+40  | model.fno_blocks.2.convs.0.weight           | DenseTensor            | 2.4 M  | eval
+41  | model.fno_blocks.2.fno_skips                | ModuleList             | 2.0 K  | eval
+42  | model.fno_blocks.2.fno_skips.0              | Flattened1dConv        | 2.0 K  | eval
+43  | model.fno_blocks.2.fno_skips.0.conv         | Conv1d                 | 2.0 K  | eval
+44  | model.fno_blocks.2.channel_mlp              | ModuleList             | 4.2 K  | eval
+45  | model.fno_blocks.2.channel_mlp.0            | ChannelMLP             | 4.2 K  | eval
+46  | model.fno_blocks.2.channel_mlp.0.fcs        | ModuleList             | 4.2 K  | eval
+47  | model.fno_blocks.2.channel_mlp.0.fcs.0      | Conv1d                 | 2.1 K  | eval
+48  | model.fno_blocks.2.channel_mlp.0.fcs.1      | Conv1d                 | 2.1 K  | eval
+49  | model.fno_blocks.2.channel_mlp_skips        | ModuleList             | 2.0 K  | eval
+50  | model.fno_blocks.2.channel_mlp_skips.0      | Flattened1dConv        | 2.0 K  | eval
+51  | model.fno_blocks.2.channel_mlp_skips.0.conv | Conv1d                 | 2.0 K  | eval
+52  | model.fno_blocks.3                          | FNOBlocks              | 9.7 M  | eval
+53  | model.fno_blocks.3.convs                    | ModuleList             | 9.7 M  | eval
+54  | model.fno_blocks.3.convs.0                  | SpectralConv           | 9.7 M  | eval
+55  | model.fno_blocks.3.convs.0.weight           | DenseTensor            | 9.7 M  | eval
+56  | model.fno_blocks.3.fno_skips                | ModuleList             | 8.2 K  | eval
+57  | model.fno_blocks.3.fno_skips.0              | Flattened1dConv        | 8.2 K  | eval
+58  | model.fno_blocks.3.fno_skips.0.conv         | Conv1d                 | 8.2 K  | eval
+59  | model.fno_blocks.3.channel_mlp              | ModuleList             | 16.6 K | eval
+60  | model.fno_blocks.3.channel_mlp.0            | ChannelMLP             | 16.6 K | eval
+61  | model.fno_blocks.3.channel_mlp.0.fcs        | ModuleList             | 16.6 K | eval
+62  | model.fno_blocks.3.channel_mlp.0.fcs.0      | Conv1d                 | 8.3 K  | eval
+63  | model.fno_blocks.3.channel_mlp.0.fcs.1      | Conv1d                 | 8.3 K  | eval
+64  | model.fno_blocks.3.channel_mlp_skips        | ModuleList             | 8.2 K  | eval
+65  | model.fno_blocks.3.channel_mlp_skips.0      | Flattened1dConv        | 8.2 K  | eval
+66  | model.fno_blocks.3.channel_mlp_skips.0.conv | Conv1d                 | 8.2 K  | eval
+67  | model.fno_blocks.4                          | FNOBlocks              | 14.6 M | eval
+68  | model.fno_blocks.4.convs                    | ModuleList             | 14.5 M | eval
+69  | model.fno_blocks.4.convs.0                  | SpectralConv           | 14.5 M | eval
+70  | model.fno_blocks.4.convs.0.weight           | DenseTensor            | 14.5 M | eval
+71  | model.fno_blocks.4.fno_skips                | ModuleList             | 12.3 K | eval
+72  | model.fno_blocks.4.fno_skips.0              | Flattened1dConv        | 12.3 K | eval
+73  | model.fno_blocks.4.fno_skips.0.conv         | Conv1d                 | 12.3 K | eval
+74  | model.fno_blocks.4.channel_mlp              | ModuleList             | 4.2 K  | eval
+75  | model.fno_blocks.4.channel_mlp.0            | ChannelMLP             | 4.2 K  | eval
+76  | model.fno_blocks.4.channel_mlp.0.fcs        | ModuleList             | 4.2 K  | eval
+77  | model.fno_blocks.4.channel_mlp.0.fcs.0      | Conv1d                 | 2.1 K  | eval
+78  | model.fno_blocks.4.channel_mlp.0.fcs.1      | Conv1d                 | 2.1 K  | eval
+79  | model.fno_blocks.4.channel_mlp_skips        | ModuleList             | 12.3 K | eval
+80  | model.fno_blocks.4.channel_mlp_skips.0      | Flattened1dConv        | 12.3 K | eval
+81  | model.fno_blocks.4.channel_mlp_skips.0.conv | Conv1d                 | 12.3 K | eval
+82  | model.fno_blocks.5                          | FNOBlocks              | 3.6 M  | eval
+83  | model.fno_blocks.5.convs                    | ModuleList             | 3.6 M  | eval
+84  | model.fno_blocks.5.convs.0                  | SpectralConv           | 3.6 M  | eval
+85  | model.fno_blocks.5.convs.0.weight           | DenseTensor            | 3.6 M  | eval
+86  | model.fno_blocks.5.fno_skips                | ModuleList             | 3.1 K  | eval
+87  | model.fno_blocks.5.fno_skips.0              | Flattened1dConv        | 3.1 K  | eval
+88  | model.fno_blocks.5.fno_skips.0.conv         | Conv1d                 | 3.1 K  | eval
+89  | model.fno_blocks.5.channel_mlp              | ModuleList             | 1.1 K  | eval
+90  | model.fno_blocks.5.channel_mlp.0            | ChannelMLP             | 1.1 K  | eval
+91  | model.fno_blocks.5.channel_mlp.0.fcs        | ModuleList             | 1.1 K  | eval
+92  | model.fno_blocks.5.channel_mlp.0.fcs.0      | Conv1d                 | 528    | eval
+93  | model.fno_blocks.5.channel_mlp.0.fcs.1      | Conv1d                 | 544    | eval
+94  | model.fno_blocks.5.channel_mlp_skips        | ModuleList             | 3.1 K  | eval
+95  | model.fno_blocks.5.channel_mlp_skips.0      | Flattened1dConv        | 3.1 K  | eval
+96  | model.fno_blocks.5.channel_mlp_skips.0.conv | Conv1d                 | 3.1 K  | eval
+97  | model.fno_blocks.6                          | FNOBlocks              | 910 K  | eval
+98  | model.fno_blocks.6.convs                    | ModuleList             | 908 K  | eval
+99  | model.fno_blocks.6.convs.0                  | SpectralConv           | 908 K  | eval
+100 | model.fno_blocks.6.convs.0.weight           | DenseTensor            | 908 K  | eval
+101 | model.fno_blocks.6.fno_skips                | ModuleList             | 768    | eval
+102 | model.fno_blocks.6.fno_skips.0              | Flattened1dConv        | 768    | eval
+103 | model.fno_blocks.6.fno_skips.0.conv         | Conv1d                 | 768    | eval
+104 | model.fno_blocks.6.channel_mlp              | ModuleList             | 280    | eval
+105 | model.fno_blocks.6.channel_mlp.0            | ChannelMLP             | 280    | eval
+106 | model.fno_blocks.6.channel_mlp.0.fcs        | ModuleList             | 280    | eval
+107 | model.fno_blocks.6.channel_mlp.0.fcs.0      | Conv1d                 | 136    | eval
+108 | model.fno_blocks.6.channel_mlp.0.fcs.1      | Conv1d                 | 144    | eval
+109 | model.fno_blocks.6.channel_mlp_skips        | ModuleList             | 768    | eval
+110 | model.fno_blocks.6.channel_mlp_skips.0      | Flattened1dConv        | 768    | eval
+111 | model.fno_blocks.6.channel_mlp_skips.0.conv | Conv1d                 | 768    | eval
+112 | model.horizontal_skips                      | ModuleDict             | 5.4 K  | eval
+113 | model.horizontal_skips.0                    | Flattened1dConv        | 256    | eval
+114 | model.horizontal_skips.0.conv               | Conv1d                 | 256    | eval
+115 | model.horizontal_skips.1                    | Flattened1dConv        | 1.0 K  | eval
+116 | model.horizontal_skips.1.conv               | Conv1d                 | 1.0 K  | eval
+117 | model.horizontal_skips.2                    | Flattened1dConv        | 4.1 K  | eval
+118 | model.horizontal_skips.2.conv               | Conv1d                 | 4.1 K  | eval
+119 | model.projection                            | ChannelMLP             | 7.4 K  | eval
+120 | model.projection.fcs                        | ModuleList             | 7.4 K  | eval
+121 | model.projection.fcs.0                      | Conv1d                 | 4.4 K  | eval
+122 | model.projection.fcs.1                      | Conv1d                 | 3.1 K  | eval
+123 | input_normalizer                            | StandardNormalizer     | 0      | eval
+124 | target_normalizer                           | StandardNormalizerSqrt | 0      | eval
+125 | loss_fn                                     | MSELoss                | 0      | eval
+126 | loss_fn.masked_reduction                    | MaskedLossReducer      | 0      | eval
+------------------------------------------------------------------------------------------------
+32.2 M    Trainable params
+0         Non-trainable params
+32.2 M    Total params
+128.814   Total estimated model params size (MB)
+0         Modules in train mode
+127       Modules in eval mode
+Metrics:   0%|          | 0/172 [00:00<?, ?it/s]Metrics:   1%|          | 1/172 [00:09<26:16,  9.22s/it]Metrics:   1%|          | 2/172 [00:09<11:19,  4.00s/it]Metrics:   2%|▏         | 3/172 [00:09<06:33,  2.33s/it]Metrics:   2%|▏         | 4/172 [00:10<04:20,  1.55s/it]Metrics:   3%|▎         | 5/172 [00:10<03:07,  1.12s/it]Metrics:   3%|▎         | 6/172 [00:11<02:26,  1.13it/s]Metrics:   4%|▍         | 7/172 [00:11<02:01,  1.36it/s]Metrics:   5%|▍         | 8/172 [00:11<01:42,  1.59it/s]Metrics:   5%|▌         | 9/172 [00:12<01:31,  1.79it/s]Metrics:   6%|▌         | 10/172 [00:12<01:22,  1.96it/s]Metrics:   6%|▋         | 11/172 [00:13<01:16,  2.10it/s]Metrics:   7%|▋         | 12/172 [00:13<01:13,  2.18it/s]Metrics:   8%|▊         | 13/172 [00:13<01:11,  2.24it/s]Metrics:   8%|▊         | 14/172 [00:14<01:08,  2.32it/s]Metrics:   9%|▊         | 15/172 [00:14<01:06,  2.37it/s]Metrics:   9%|▉         | 16/172 [00:15<01:04,  2.42it/s]Metrics:  10%|▉         | 17/172 [00:15<01:03,  2.46it/s]Metrics:  10%|█         | 18/172 [00:15<01:01,  2.52it/s]Metrics:  11%|█         | 19/172 [00:16<00:59,  2.59it/s]Metrics:  12%|█▏        | 20/172 [00:16<00:58,  2.59it/s]Metrics:  12%|█▏        | 21/172 [00:16<00:56,  2.66it/s]Metrics:  13%|█▎        | 22/172 [00:17<00:54,  2.75it/s]Metrics:  13%|█▎        | 23/172 [00:17<00:52,  2.84it/s]Metrics:  14%|█▍        | 24/172 [00:17<00:51,  2.90it/s]Metrics:  15%|█▍        | 25/172 [00:18<00:50,  2.94it/s]Metrics:  15%|█▌        | 26/172 [00:18<00:49,  2.95it/s]Metrics:  16%|█▌        | 27/172 [00:18<00:48,  2.98it/s]Metrics:  16%|█▋        | 28/172 [00:19<00:47,  3.01it/s]Metrics:  17%|█▋        | 29/172 [00:19<00:47,  3.02it/s]Metrics:  17%|█▋        | 30/172 [00:19<00:46,  3.02it/s]Metrics:  18%|█▊        | 31/172 [00:20<00:46,  3.03it/s]Metrics:  19%|█▊        | 32/172 [00:20<00:45,  3.05it/s]Metrics:  19%|█▉        | 33/172 [00:20<00:45,  3.03it/s]Metrics:  20%|█▉        | 34/172 [00:21<00:46,  2.98it/s]Metrics:  20%|██        | 35/172 [00:21<00:46,  2.92it/s]Metrics:  21%|██        | 36/172 [00:21<00:47,  2.86it/s]Metrics:  22%|██▏       | 37/172 [00:22<00:48,  2.80it/s]Metrics:  22%|██▏       | 38/172 [00:22<00:49,  2.73it/s]Metrics:  23%|██▎       | 39/172 [00:23<00:49,  2.67it/s]Metrics:  23%|██▎       | 40/172 [00:23<00:50,  2.61it/s]Metrics:  24%|██▍       | 41/172 [00:23<00:50,  2.60it/s]Metrics:  24%|██▍       | 42/172 [00:24<00:51,  2.53it/s]Metrics:  25%|██▌       | 43/172 [00:24<00:51,  2.48it/s]Metrics:  26%|██▌       | 44/172 [00:25<00:52,  2.46it/s]Metrics:  26%|██▌       | 45/172 [00:25<00:52,  2.43it/s]Metrics:  27%|██▋       | 46/172 [00:26<00:52,  2.39it/s]Metrics:  27%|██▋       | 47/172 [00:26<00:51,  2.43it/s]Metrics:  28%|██▊       | 48/172 [00:26<00:50,  2.47it/s]Metrics:  28%|██▊       | 49/172 [00:27<00:49,  2.47it/s]Metrics:  29%|██▉       | 50/172 [00:27<00:48,  2.51it/s]Metrics:  30%|██▉       | 51/172 [00:28<00:47,  2.55it/s]Metrics:  30%|███       | 52/172 [00:28<00:46,  2.60it/s]Metrics:  31%|███       | 53/172 [00:28<00:44,  2.65it/s]Metrics:  31%|███▏      | 54/172 [00:29<00:42,  2.75it/s]Metrics:  32%|███▏      | 55/172 [00:29<00:41,  2.84it/s]Metrics:  33%|███▎      | 56/172 [00:29<00:39,  2.90it/s]Metrics:  33%|███▎      | 57/172 [00:30<00:39,  2.94it/s]Metrics:  34%|███▎      | 58/172 [00:30<00:38,  2.98it/s]Metrics:  34%|███▍      | 59/172 [00:30<00:37,  2.98it/s]Metrics:  35%|███▍      | 60/172 [00:31<00:37,  2.99it/s]Metrics:  35%|███▌      | 61/172 [00:31<00:37,  2.98it/s]Metrics:  36%|███▌      | 62/172 [00:31<00:36,  2.99it/s]Metrics:  37%|███▋      | 63/172 [00:32<00:36,  3.01it/s]Metrics:  37%|███▋      | 64/172 [00:32<00:35,  3.05it/s]Metrics:  38%|███▊      | 65/172 [00:32<00:35,  3.01it/s]Metrics:  38%|███▊      | 66/172 [00:33<00:35,  2.97it/s]Metrics:  39%|███▉      | 67/172 [00:33<00:35,  2.94it/s]Metrics:  40%|███▉      | 68/172 [00:33<00:36,  2.89it/s]Metrics:  40%|████      | 69/172 [00:34<00:36,  2.83it/s]Metrics:  41%|████      | 70/172 [00:34<00:37,  2.75it/s]Metrics:  41%|████▏     | 71/172 [00:34<00:37,  2.70it/s]Metrics:  42%|████▏     | 72/172 [00:35<00:37,  2.64it/s]Metrics:  42%|████▏     | 73/172 [00:35<00:38,  2.60it/s]Metrics:  43%|████▎     | 74/172 [00:36<00:38,  2.57it/s]Metrics:  44%|████▎     | 75/172 [00:36<00:37,  2.57it/s]Metrics:  44%|████▍     | 76/172 [00:36<00:37,  2.55it/s]Metrics:  45%|████▍     | 77/172 [00:37<00:38,  2.47it/s]Metrics:  45%|████▌     | 78/172 [00:37<00:38,  2.46it/s]Metrics:  46%|████▌     | 79/172 [00:38<00:37,  2.47it/s]Metrics:  47%|████▋     | 80/172 [00:38<00:37,  2.46it/s]Metrics:  47%|████▋     | 81/172 [00:38<00:37,  2.43it/s]Metrics:  48%|████▊     | 82/172 [00:39<00:36,  2.44it/s]Metrics:  48%|████▊     | 83/172 [00:39<00:34,  2.55it/s]Metrics:  49%|████▉     | 84/172 [00:40<00:33,  2.61it/s]Metrics:  49%|████▉     | 85/172 [00:40<00:32,  2.65it/s]Metrics:  50%|█████     | 86/172 [00:40<00:31,  2.72it/s]Metrics:  51%|█████     | 87/172 [00:41<00:30,  2.81it/s]Metrics:  51%|█████     | 88/172 [00:41<00:29,  2.88it/s]Metrics:  52%|█████▏    | 89/172 [00:41<00:28,  2.94it/s]Metrics:  52%|█████▏    | 90/172 [00:42<00:27,  2.98it/s]Metrics:  53%|█████▎    | 91/172 [00:42<00:26,  3.01it/s]Metrics:  53%|█████▎    | 92/172 [00:42<00:26,  3.05it/s]Metrics:  54%|█████▍    | 93/172 [00:43<00:25,  3.05it/s]Metrics:  55%|█████▍    | 94/172 [00:43<00:25,  3.07it/s]Metrics:  55%|█████▌    | 95/172 [00:43<00:25,  3.04it/s]Metrics:  56%|█████▌    | 96/172 [00:44<00:24,  3.06it/s]Metrics:  56%|█████▋    | 97/172 [00:44<00:24,  3.02it/s]Metrics:  57%|█████▋    | 98/172 [00:44<00:24,  2.98it/s]Metrics:  58%|█████▊    | 99/172 [00:45<00:24,  2.97it/s]Metrics:  58%|█████▊    | 100/172 [00:45<00:24,  2.91it/s]Metrics:  59%|█████▊    | 101/172 [00:45<00:24,  2.84it/s]Metrics:  59%|█████▉    | 102/172 [00:46<00:25,  2.74it/s]Metrics:  60%|█████▉    | 103/172 [00:46<00:25,  2.66it/s]Metrics:  60%|██████    | 104/172 [00:47<00:26,  2.59it/s]Metrics:  61%|██████    | 105/172 [00:47<00:26,  2.56it/s]Metrics:  62%|██████▏   | 106/172 [00:47<00:26,  2.54it/s]Metrics:  62%|██████▏   | 107/172 [00:48<00:25,  2.52it/s]Metrics:  63%|██████▎   | 108/172 [00:48<00:25,  2.55it/s]Metrics:  63%|██████▎   | 109/172 [00:48<00:24,  2.53it/s]Metrics:  64%|██████▍   | 110/172 [00:49<00:24,  2.54it/s]Metrics:  65%|██████▍   | 111/172 [00:49<00:24,  2.52it/s]Metrics:  65%|██████▌   | 112/172 [00:50<00:24,  2.45it/s]Metrics:  66%|██████▌   | 113/172 [00:50<00:24,  2.41it/s]Metrics:  66%|██████▋   | 114/172 [00:51<00:24,  2.40it/s]Metrics:  67%|██████▋   | 115/172 [00:51<00:22,  2.48it/s]Metrics:  67%|██████▋   | 116/172 [00:51<00:22,  2.54it/s]Metrics:  68%|██████▊   | 117/172 [00:52<00:21,  2.61it/s]Metrics:  69%|██████▊   | 118/172 [00:52<00:19,  2.73it/s]Metrics:  69%|██████▉   | 119/172 [00:52<00:18,  2.83it/s]Metrics:  70%|██████▉   | 120/172 [00:53<00:18,  2.88it/s]Metrics:  70%|███████   | 121/172 [00:53<00:17,  2.93it/s]Metrics:  71%|███████   | 122/172 [00:53<00:16,  2.97it/s]Metrics:  72%|███████▏  | 123/172 [00:54<00:16,  3.02it/s]Metrics:  72%|███████▏  | 124/172 [00:54<00:15,  3.05it/s]Metrics:  73%|███████▎  | 125/172 [00:54<00:15,  3.06it/s]Metrics:  73%|███████▎  | 126/172 [00:55<00:14,  3.07it/s]Metrics:  74%|███████▍  | 127/172 [00:55<00:14,  3.06it/s]Metrics:  74%|███████▍  | 128/172 [00:55<00:14,  3.07it/s]Metrics:  75%|███████▌  | 129/172 [00:56<00:14,  3.04it/s]Metrics:  76%|███████▌  | 130/172 [00:56<00:13,  3.00it/s]Metrics:  76%|███████▌  | 131/172 [00:56<00:13,  2.96it/s]Metrics:  77%|███████▋  | 132/172 [00:57<00:13,  2.91it/s]Metrics:  77%|███████▋  | 133/172 [00:57<00:13,  2.82it/s]Metrics:  78%|███████▊  | 134/172 [00:57<00:13,  2.74it/s]Metrics:  78%|███████▊  | 135/172 [00:58<00:13,  2.73it/s]Metrics:  79%|███████▉  | 136/172 [00:58<00:12,  2.77it/s]Metrics:  80%|███████▉  | 137/172 [00:58<00:12,  2.85it/s]Metrics:  80%|████████  | 138/172 [00:59<00:11,  2.99it/s]Metrics:  81%|████████  | 139/172 [00:59<00:10,  3.09it/s]Metrics:  81%|████████▏ | 140/172 [00:59<00:10,  3.19it/s]Metrics:  82%|████████▏ | 141/172 [01:00<00:09,  3.27it/s]Metrics:  83%|████████▎ | 142/172 [01:00<00:09,  3.31it/s]Metrics:  83%|████████▎ | 143/172 [01:00<00:08,  3.34it/s]Metrics:  84%|████████▎ | 144/172 [01:01<00:08,  3.38it/s]Metrics:  84%|████████▍ | 145/172 [01:01<00:07,  3.39it/s]Metrics:  85%|████████▍ | 146/172 [01:01<00:07,  3.38it/s]Metrics:  85%|████████▌ | 147/172 [01:01<00:07,  3.31it/s]Metrics:  86%|████████▌ | 148/172 [01:02<00:07,  3.24it/s]Metrics:  87%|████████▋ | 149/172 [01:02<00:07,  3.17it/s]Metrics:  87%|████████▋ | 150/172 [01:02<00:07,  3.13it/s]Metrics:  88%|████████▊ | 151/172 [01:03<00:06,  3.16it/s]Metrics:  88%|████████▊ | 152/172 [01:03<00:06,  3.20it/s]Metrics:  89%|████████▉ | 153/172 [01:03<00:05,  3.28it/s]Metrics:  90%|████████▉ | 154/172 [01:04<00:05,  3.35it/s]Metrics:  90%|█████████ | 155/172 [01:04<00:05,  3.37it/s]Metrics:  91%|█████████ | 156/172 [01:04<00:04,  3.38it/s]Metrics:  91%|█████████▏| 157/172 [01:04<00:04,  3.43it/s]Metrics:  92%|█████████▏| 158/172 [01:05<00:04,  3.46it/s]Metrics:  92%|█████████▏| 159/172 [01:05<00:03,  3.49it/s]Metrics:  93%|█████████▎| 160/172 [01:05<00:03,  3.49it/s]Metrics:  94%|█████████▎| 161/172 [01:06<00:03,  3.51it/s]Metrics:  94%|█████████▍| 162/172 [01:06<00:02,  3.51it/s]Metrics:  95%|█████████▍| 163/172 [01:06<00:02,  3.51it/s]Metrics:  95%|█████████▌| 164/172 [01:06<00:02,  3.49it/s]Metrics:  96%|█████████▌| 165/172 [01:07<00:02,  3.48it/s]Metrics:  97%|█████████▋| 166/172 [01:07<00:01,  3.50it/s]Metrics:  97%|█████████▋| 167/172 [01:07<00:01,  3.46it/s]Metrics:  98%|█████████▊| 168/172 [01:08<00:01,  3.48it/s]Metrics:  98%|█████████▊| 169/172 [01:08<00:00,  3.48it/s]Metrics:  99%|█████████▉| 170/172 [01:08<00:00,  3.48it/s]Metrics:  99%|█████████▉| 171/172 [01:08<00:00,  3.48it/s]Metrics: 100%|██████████| 172/172 [01:09<00:00,  3.49it/s]Metrics: 100%|██████████| 172/172 [01:09<00:00,  2.48it/s]
+mse_efield: 4342.48974609375
+mse_hfield: 0.017351815477013588
+mse_efield_space: 4646.61865234375
+mse_hfield_space: 0.01853959634900093
+mse_efield_subject: 4.257155895233154
+mse_hfield_subject: 0.00040878826985135674
+rmse_efield_subject: 2.0632877349853516
+rmse_hfield_subject: 0.020218513906002045
+mae_efield_subject: 1.1109294891357422
+mae_hfield_subject: 0.010960046201944351
+mad_efield_subject: 0.30536213517189026
+mad_hfield_subject: 0.01668756827712059
+r2_efield_subject: 0.8651391319757284
+r2_hfield_subject: 0.977323308933613
+sar_subject_gt: 0.09792684018611908
+sar_subject_pr: 0.0880858302116394
+rmse_div_subject_gt: 0.44454628229141235
+rmse_div_subject_pr: 2.1419765949249268
+rmse_far_subject_gt: 58.916595458984375
+rmse_far_subject_pr: 149.8559112548828
+ssim_mean: 0.9406689405441284
+inf_median: 0.024788395239738747
+=== JOB_STATISTICS ===
+=== current date     : Mon May 12 09:37:45 CEST 2025
+= Job-ID             : 2635727 on alex
+= Job-Name           : mx_mrifield
+= Job-Command        : /home/hpc/b190cb/b190cb19/ma_bohn/mx_mrifield
+= Initial workdir    : /home/hpc/b190cb/b190cb19/ma_bohn
+= Queue/Partition    : a100
+= Slurm account      : b190cb with QOS=normal
+= Features           : a100_40
+= Requested resources:  for 00:10:00
+= Elapsed runtime    : 00:02:10
+= Total RAM usage    : 93.4 GiB of assigned  GiB (%)
+= Node list          : a0905
+= Subm/Elig/Start/End: 2025-05-12T09:35:33 / 2025-05-12T09:35:33 / 2025-05-12T09:35:35 / 2025-05-12T09:37:45
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           48.7G   104.9G   209.7G        N/A  47,562      500K   1,000K        N/A    
+    /home/vault         85.2G  1048.6G  2097.2G        N/A   3,357      200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A100-SXM4-40GB, 00000000:13:00.0, 964659, 22 %, 17 %, 13726 MiB, 117669 ms

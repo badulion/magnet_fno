@@ -1,0 +1,165 @@
+### Starting TaskPrologue of job 2611468 on a0905 at Do 1. Mai 10:47:51 CEST 2025
+Running on cores 64-79 with governor ondemand
+Thu May  1 10:47:51 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.133.20             Driver Version: 570.133.20     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          On  |   00000000:90:00.0 Off |                    0 |
+| N/A   37C    P0             54W /  400W |       0MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+/home/hpc/b190cb/b190cb19/ma_bohn/.venv/lib64/python3.11/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+   | Name                                                | Type                  | Params | Mode
+------------------------------------------------------------------------------------------------------
+0  | model                                               | UNet3D                | 16.3 M | eval
+1  | model.encoders                                      | ModuleList            | 7.0 M  | eval
+2  | model.encoders.0                                    | Encoder               | 59.7 K | eval
+3  | model.encoders.0.basic_module                       | DoubleConv            | 59.7 K | eval
+4  | model.encoders.0.basic_module.SingleConv1           | SingleConv            | 4.3 K  | eval
+5  | model.encoders.0.basic_module.SingleConv1.groupnorm | GroupNorm             | 10     | eval
+6  | model.encoders.0.basic_module.SingleConv1.conv      | Conv3d                | 4.3 K  | eval
+7  | model.encoders.0.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+8  | model.encoders.0.basic_module.SingleConv2           | SingleConv            | 55.4 K | eval
+9  | model.encoders.0.basic_module.SingleConv2.groupnorm | GroupNorm             | 64     | eval
+10 | model.encoders.0.basic_module.SingleConv2.conv      | Conv3d                | 55.3 K | eval
+11 | model.encoders.0.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+12 | model.encoders.1                                    | Encoder               | 332 K  | eval
+13 | model.encoders.1.pooling                            | MaxPool3d             | 0      | eval
+14 | model.encoders.1.basic_module                       | DoubleConv            | 332 K  | eval
+15 | model.encoders.1.basic_module.SingleConv1           | SingleConv            | 110 K  | eval
+16 | model.encoders.1.basic_module.SingleConv1.groupnorm | GroupNorm             | 128    | eval
+17 | model.encoders.1.basic_module.SingleConv1.conv      | Conv3d                | 110 K  | eval
+18 | model.encoders.1.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+19 | model.encoders.1.basic_module.SingleConv2           | SingleConv            | 221 K  | eval
+20 | model.encoders.1.basic_module.SingleConv2.groupnorm | GroupNorm             | 128    | eval
+21 | model.encoders.1.basic_module.SingleConv2.conv      | Conv3d                | 221 K  | eval
+22 | model.encoders.1.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+23 | model.encoders.2                                    | Encoder               | 1.3 M  | eval
+24 | model.encoders.2.pooling                            | MaxPool3d             | 0      | eval
+25 | model.encoders.2.basic_module                       | DoubleConv            | 1.3 M  | eval
+26 | model.encoders.2.basic_module.SingleConv1           | SingleConv            | 442 K  | eval
+27 | model.encoders.2.basic_module.SingleConv1.groupnorm | GroupNorm             | 256    | eval
+28 | model.encoders.2.basic_module.SingleConv1.conv      | Conv3d                | 442 K  | eval
+29 | model.encoders.2.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+30 | model.encoders.2.basic_module.SingleConv2           | SingleConv            | 884 K  | eval
+31 | model.encoders.2.basic_module.SingleConv2.groupnorm | GroupNorm             | 256    | eval
+32 | model.encoders.2.basic_module.SingleConv2.conv      | Conv3d                | 884 K  | eval
+33 | model.encoders.2.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+34 | model.encoders.3                                    | Encoder               | 5.3 M  | eval
+35 | model.encoders.3.pooling                            | MaxPool3d             | 0      | eval
+36 | model.encoders.3.basic_module                       | DoubleConv            | 5.3 M  | eval
+37 | model.encoders.3.basic_module.SingleConv1           | SingleConv            | 1.8 M  | eval
+38 | model.encoders.3.basic_module.SingleConv1.groupnorm | GroupNorm             | 512    | eval
+39 | model.encoders.3.basic_module.SingleConv1.conv      | Conv3d                | 1.8 M  | eval
+40 | model.encoders.3.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+41 | model.encoders.3.basic_module.SingleConv2           | SingleConv            | 3.5 M  | eval
+42 | model.encoders.3.basic_module.SingleConv2.groupnorm | GroupNorm             | 512    | eval
+43 | model.encoders.3.basic_module.SingleConv2.conv      | Conv3d                | 3.5 M  | eval
+44 | model.encoders.3.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+45 | model.decoders                                      | ModuleList            | 9.3 M  | eval
+46 | model.decoders.0                                    | Decoder               | 7.1 M  | eval
+47 | model.decoders.0.upsampling                         | InterpolateUpsampling | 0      | eval
+48 | model.decoders.0.basic_module                       | DoubleConv            | 7.1 M  | eval
+49 | model.decoders.0.basic_module.SingleConv1           | SingleConv            | 5.3 M  | eval
+50 | model.decoders.0.basic_module.SingleConv1.groupnorm | GroupNorm             | 1.5 K  | eval
+51 | model.decoders.0.basic_module.SingleConv1.conv      | Conv3d                | 5.3 M  | eval
+52 | model.decoders.0.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+53 | model.decoders.0.basic_module.SingleConv2           | SingleConv            | 1.8 M  | eval
+54 | model.decoders.0.basic_module.SingleConv2.groupnorm | GroupNorm             | 512    | eval
+55 | model.decoders.0.basic_module.SingleConv2.conv      | Conv3d                | 1.8 M  | eval
+56 | model.decoders.0.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+57 | model.decoders.1                                    | Decoder               | 1.8 M  | eval
+58 | model.decoders.1.upsampling                         | InterpolateUpsampling | 0      | eval
+59 | model.decoders.1.basic_module                       | DoubleConv            | 1.8 M  | eval
+60 | model.decoders.1.basic_module.SingleConv1           | SingleConv            | 1.3 M  | eval
+61 | model.decoders.1.basic_module.SingleConv1.groupnorm | GroupNorm             | 768    | eval
+62 | model.decoders.1.basic_module.SingleConv1.conv      | Conv3d                | 1.3 M  | eval
+63 | model.decoders.1.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+64 | model.decoders.1.basic_module.SingleConv2           | SingleConv            | 442 K  | eval
+65 | model.decoders.1.basic_module.SingleConv2.groupnorm | GroupNorm             | 256    | eval
+66 | model.decoders.1.basic_module.SingleConv2.conv      | Conv3d                | 442 K  | eval
+67 | model.decoders.1.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+68 | model.decoders.2                                    | Decoder               | 442 K  | eval
+69 | model.decoders.2.upsampling                         | InterpolateUpsampling | 0      | eval
+70 | model.decoders.2.basic_module                       | DoubleConv            | 442 K  | eval
+71 | model.decoders.2.basic_module.SingleConv1           | SingleConv            | 332 K  | eval
+72 | model.decoders.2.basic_module.SingleConv1.groupnorm | GroupNorm             | 384    | eval
+73 | model.decoders.2.basic_module.SingleConv1.conv      | Conv3d                | 331 K  | eval
+74 | model.decoders.2.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+75 | model.decoders.2.basic_module.SingleConv2           | SingleConv            | 110 K  | eval
+76 | model.decoders.2.basic_module.SingleConv2.groupnorm | GroupNorm             | 128    | eval
+77 | model.decoders.2.basic_module.SingleConv2.conv      | Conv3d                | 110 K  | eval
+78 | model.decoders.2.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+79 | model.final_conv                                    | Conv3d                | 780    | eval
+80 | input_normalizer                                    | StandardNormalizer    | 0      | eval
+81 | target_normalizer                                   | StandardNormalizer    | 0      | eval
+82 | loss_fn                                             | MSELoss               | 0      | eval
+83 | loss_fn.masked_reduction                            | MaskedLossReducer     | 0      | eval
+------------------------------------------------------------------------------------------------------
+16.3 M    Trainable params
+0         Non-trainable params
+16.3 M    Total params
+65.291    Total estimated model params size (MB)
+0         Modules in train mode
+84        Modules in eval mode
+Metrics:   0%|          | 0/172 [00:00<?, ?it/s]Metrics:   1%|          | 1/172 [00:09<25:50,  9.07s/it]Metrics:   1%|          | 2/172 [00:09<11:34,  4.09s/it]Metrics:   2%|▏         | 3/172 [00:10<06:54,  2.45s/it]Metrics:   2%|▏         | 4/172 [00:10<04:44,  1.69s/it]Metrics:   3%|▎         | 5/172 [00:11<03:33,  1.28s/it]Metrics:   3%|▎         | 6/172 [00:11<02:49,  1.02s/it]Metrics:   4%|▍         | 7/172 [00:12<02:21,  1.17it/s]Metrics:   5%|▍         | 8/172 [00:12<02:01,  1.34it/s]Metrics:   5%|▌         | 9/172 [00:13<01:48,  1.50it/s]Metrics:   6%|▌         | 10/172 [00:13<01:40,  1.61it/s]Metrics:   6%|▋         | 11/172 [00:14<01:35,  1.69it/s]Metrics:   7%|▋         | 12/172 [00:14<01:31,  1.75it/s]Metrics:   8%|▊         | 13/172 [00:15<01:28,  1.80it/s]Metrics:   8%|▊         | 14/172 [00:15<01:25,  1.85it/s]Metrics:   9%|▊         | 15/172 [00:16<01:24,  1.85it/s]Metrics:   9%|▉         | 16/172 [00:16<01:23,  1.87it/s]Metrics:  10%|▉         | 17/172 [00:17<01:21,  1.89it/s]Metrics:  10%|█         | 18/172 [00:17<01:19,  1.94it/s]Metrics:  11%|█         | 19/172 [00:18<01:17,  1.97it/s]Metrics:  12%|█▏        | 20/172 [00:18<01:15,  2.02it/s]Metrics:  12%|█▏        | 21/172 [00:19<01:13,  2.07it/s]Metrics:  13%|█▎        | 22/172 [00:19<01:10,  2.11it/s]Metrics:  13%|█▎        | 23/172 [00:20<01:09,  2.13it/s]Metrics:  14%|█▍        | 24/172 [00:20<01:09,  2.14it/s]Metrics:  15%|█▍        | 25/172 [00:21<01:08,  2.15it/s]Metrics:  15%|█▌        | 26/172 [00:21<01:07,  2.17it/s]Metrics:  16%|█▌        | 27/172 [00:22<01:06,  2.18it/s]Metrics:  16%|█▋        | 28/172 [00:22<01:06,  2.18it/s]Metrics:  17%|█▋        | 29/172 [00:23<01:05,  2.17it/s]Metrics:  17%|█▋        | 30/172 [00:23<01:05,  2.18it/s]Metrics:  18%|█▊        | 31/172 [00:23<01:04,  2.19it/s]Metrics:  19%|█▊        | 32/172 [00:24<01:04,  2.18it/s]Metrics:  19%|█▉        | 33/172 [00:24<01:04,  2.17it/s]Metrics:  20%|█▉        | 34/172 [00:25<01:04,  2.14it/s]Metrics:  20%|██        | 35/172 [00:25<01:04,  2.12it/s]Metrics:  21%|██        | 36/172 [00:26<01:06,  2.04it/s]Metrics:  22%|██▏       | 37/172 [00:26<01:06,  2.03it/s]Metrics:  22%|██▏       | 38/172 [00:27<01:06,  2.01it/s]Metrics:  23%|██▎       | 39/172 [00:27<01:06,  1.99it/s]Metrics:  23%|██▎       | 40/172 [00:28<01:07,  1.95it/s]Metrics:  24%|██▍       | 41/172 [00:28<01:06,  1.98it/s]Metrics:  24%|██▍       | 42/172 [00:29<01:06,  1.96it/s]Metrics:  25%|██▌       | 43/172 [00:29<01:05,  1.97it/s]Metrics:  26%|██▌       | 44/172 [00:30<01:06,  1.93it/s]Metrics:  26%|██▌       | 45/172 [00:30<01:05,  1.94it/s]Metrics:  27%|██▋       | 46/172 [00:31<01:04,  1.94it/s]Metrics:  27%|██▋       | 47/172 [00:31<01:04,  1.95it/s]Metrics:  28%|██▊       | 48/172 [00:32<01:03,  1.95it/s]Metrics:  28%|██▊       | 49/172 [00:32<01:02,  1.97it/s]Metrics:  29%|██▉       | 50/172 [00:33<01:01,  2.00it/s]Metrics:  30%|██▉       | 51/172 [00:33<00:59,  2.02it/s]Metrics:  30%|███       | 52/172 [00:34<00:58,  2.07it/s]Metrics:  31%|███       | 53/172 [00:34<00:57,  2.08it/s]Metrics:  31%|███▏      | 54/172 [00:35<00:56,  2.10it/s]Metrics:  32%|███▏      | 55/172 [00:35<00:55,  2.12it/s]Metrics:  33%|███▎      | 56/172 [00:36<00:54,  2.13it/s]Metrics:  33%|███▎      | 57/172 [00:36<00:53,  2.16it/s]Metrics:  34%|███▎      | 58/172 [00:37<00:53,  2.15it/s]Metrics:  34%|███▍      | 59/172 [00:37<00:52,  2.14it/s]Metrics:  35%|███▍      | 60/172 [00:38<00:51,  2.15it/s]Metrics:  35%|███▌      | 61/172 [00:38<00:51,  2.18it/s]Metrics:  36%|███▌      | 62/172 [00:39<00:50,  2.18it/s]Metrics:  37%|███▋      | 63/172 [00:39<00:50,  2.17it/s]Metrics:  37%|███▋      | 64/172 [00:39<00:49,  2.17it/s]Metrics:  38%|███▊      | 65/172 [00:40<00:49,  2.16it/s]Metrics:  38%|███▊      | 66/172 [00:40<00:49,  2.16it/s]Metrics:  39%|███▉      | 67/172 [00:41<00:49,  2.14it/s]Metrics:  40%|███▉      | 68/172 [00:41<00:49,  2.10it/s]Metrics:  40%|████      | 69/172 [00:42<00:49,  2.06it/s]Metrics:  41%|████      | 70/172 [00:42<00:50,  2.02it/s]Metrics:  41%|████▏     | 71/172 [00:43<00:50,  2.00it/s]Metrics:  42%|████▏     | 72/172 [00:43<00:50,  1.98it/s]Metrics:  42%|████▏     | 73/172 [00:44<00:50,  1.96it/s]Metrics:  43%|████▎     | 74/172 [00:44<00:50,  1.95it/s]Metrics:  44%|████▎     | 75/172 [00:45<00:49,  1.95it/s]Metrics:  44%|████▍     | 76/172 [00:45<00:49,  1.95it/s]Metrics:  45%|████▍     | 77/172 [00:46<00:48,  1.95it/s]Metrics:  45%|████▌     | 78/172 [00:47<00:48,  1.93it/s]Metrics:  46%|████▌     | 79/172 [00:47<00:48,  1.93it/s]Metrics:  47%|████▋     | 80/172 [00:48<00:47,  1.93it/s]Metrics:  47%|████▋     | 81/172 [00:48<00:46,  1.97it/s]Metrics:  48%|████▊     | 82/172 [00:49<00:45,  1.97it/s]Metrics:  48%|████▊     | 83/172 [00:49<00:44,  2.00it/s]Metrics:  49%|████▉     | 84/172 [00:50<00:43,  2.02it/s]Metrics:  49%|████▉     | 85/172 [00:50<00:42,  2.07it/s]Metrics:  50%|█████     | 86/172 [00:50<00:40,  2.11it/s]Metrics:  51%|█████     | 87/172 [00:51<00:40,  2.12it/s]Metrics:  51%|█████     | 88/172 [00:51<00:39,  2.14it/s]Metrics:  52%|█████▏    | 89/172 [00:52<00:38,  2.14it/s]Metrics:  52%|█████▏    | 90/172 [00:52<00:38,  2.15it/s]Metrics:  53%|█████▎    | 91/172 [00:53<00:37,  2.17it/s]Metrics:  53%|█████▎    | 92/172 [00:53<00:36,  2.18it/s]Metrics:  54%|█████▍    | 93/172 [00:54<00:36,  2.18it/s]Metrics:  55%|█████▍    | 94/172 [00:54<00:35,  2.17it/s]Metrics:  55%|█████▌    | 95/172 [00:55<00:35,  2.18it/s]Metrics:  56%|█████▌    | 96/172 [00:55<00:34,  2.19it/s]Metrics:  56%|█████▋    | 97/172 [00:55<00:34,  2.20it/s]Metrics:  57%|█████▋    | 98/172 [00:56<00:34,  2.16it/s]Metrics:  58%|█████▊    | 99/172 [00:56<00:34,  2.14it/s]Metrics:  58%|█████▊    | 100/172 [00:57<00:34,  2.07it/s]Metrics:  59%|█████▊    | 101/172 [00:57<00:35,  2.01it/s]Metrics:  59%|█████▉    | 102/172 [00:58<00:35,  1.97it/s]Metrics:  60%|█████▉    | 103/172 [00:59<00:34,  1.98it/s]Metrics:  60%|██████    | 104/172 [00:59<00:34,  1.97it/s]Metrics:  61%|██████    | 105/172 [01:00<00:34,  1.96it/s]Metrics:  62%|██████▏   | 106/172 [01:00<00:34,  1.94it/s]Metrics:  62%|██████▏   | 107/172 [01:01<00:33,  1.94it/s]Metrics:  63%|██████▎   | 108/172 [01:01<00:33,  1.93it/s]Metrics:  63%|██████▎   | 109/172 [01:02<00:32,  1.96it/s]Metrics:  64%|██████▍   | 110/172 [01:02<00:31,  1.96it/s]Metrics:  65%|██████▍   | 111/172 [01:03<00:31,  1.96it/s]Metrics:  65%|██████▌   | 112/172 [01:03<00:30,  1.94it/s]Metrics:  66%|██████▌   | 113/172 [01:04<00:30,  1.96it/s]Metrics:  66%|██████▋   | 114/172 [01:04<00:29,  1.96it/s]Metrics:  67%|██████▋   | 115/172 [01:05<00:28,  1.98it/s]Metrics:  67%|██████▋   | 116/172 [01:05<00:27,  2.03it/s]Metrics:  68%|██████▊   | 117/172 [01:08<01:05,  1.19s/it]Metrics:  69%|██████▊   | 118/172 [01:08<00:52,  1.03it/s]Metrics:  69%|██████▉   | 119/172 [01:09<00:43,  1.21it/s]Metrics:  70%|██████▉   | 120/172 [01:09<00:37,  1.40it/s]Metrics:  70%|███████   | 121/172 [01:10<00:32,  1.55it/s]Metrics:  71%|███████   | 122/172 [01:10<00:29,  1.70it/s]Metrics:  72%|███████▏  | 123/172 [01:11<00:27,  1.81it/s]Metrics:  72%|███████▏  | 124/172 [01:11<00:25,  1.91it/s]Metrics:  73%|███████▎  | 125/172 [01:12<00:23,  1.99it/s]Metrics:  73%|███████▎  | 126/172 [01:12<00:22,  2.04it/s]Metrics:  74%|███████▍  | 127/172 [01:13<00:21,  2.08it/s]Metrics:  74%|███████▍  | 128/172 [01:13<00:20,  2.11it/s]Metrics:  75%|███████▌  | 129/172 [01:14<00:20,  2.12it/s]Metrics:  76%|███████▌  | 130/172 [01:14<00:19,  2.12it/s]Metrics:  76%|███████▌  | 131/172 [01:14<00:19,  2.11it/s]Metrics:  77%|███████▋  | 132/172 [01:15<00:19,  2.06it/s]Metrics:  77%|███████▋  | 133/172 [01:15<00:19,  2.01it/s]Metrics:  78%|███████▊  | 134/172 [01:16<00:18,  2.01it/s]Metrics:  78%|███████▊  | 135/172 [01:16<00:18,  2.04it/s]Metrics:  79%|███████▉  | 136/172 [01:17<00:17,  2.09it/s]Metrics:  80%|███████▉  | 137/172 [01:17<00:16,  2.15it/s]Metrics:  80%|████████  | 138/172 [01:18<00:14,  2.27it/s]Metrics:  81%|████████  | 139/172 [01:18<00:13,  2.38it/s]Metrics:  81%|████████▏ | 140/172 [01:18<00:13,  2.46it/s]Metrics:  82%|████████▏ | 141/172 [01:19<00:12,  2.49it/s]Metrics:  83%|████████▎ | 142/172 [01:19<00:11,  2.54it/s]Metrics:  83%|████████▎ | 143/172 [01:20<00:11,  2.58it/s]Metrics:  84%|████████▎ | 144/172 [01:20<00:10,  2.60it/s]Metrics:  84%|████████▍ | 145/172 [01:20<00:10,  2.50it/s]Metrics:  85%|████████▍ | 146/172 [01:21<00:10,  2.38it/s]Metrics:  85%|████████▌ | 147/172 [01:21<00:10,  2.31it/s]Metrics:  86%|████████▌ | 148/172 [01:22<00:10,  2.28it/s]Metrics:  87%|████████▋ | 149/172 [01:22<00:10,  2.26it/s]Metrics:  87%|████████▋ | 150/172 [01:23<00:09,  2.25it/s]Metrics:  88%|████████▊ | 151/172 [01:23<00:09,  2.26it/s]Metrics:  88%|████████▊ | 152/172 [01:24<00:08,  2.35it/s]Metrics:  89%|████████▉ | 153/172 [01:24<00:07,  2.41it/s]Metrics:  90%|████████▉ | 154/172 [01:24<00:07,  2.47it/s]Metrics:  90%|█████████ | 155/172 [01:25<00:06,  2.51it/s]Metrics:  91%|█████████ | 156/172 [01:25<00:06,  2.54it/s]Metrics:  91%|█████████▏| 157/172 [01:25<00:05,  2.57it/s]Metrics:  92%|█████████▏| 158/172 [01:26<00:05,  2.59it/s]Metrics:  92%|█████████▏| 159/172 [01:26<00:04,  2.61it/s]Metrics:  93%|█████████▎| 160/172 [01:27<00:04,  2.63it/s]Metrics:  94%|█████████▎| 161/172 [01:27<00:04,  2.63it/s]Metrics:  94%|█████████▍| 162/172 [01:27<00:03,  2.64it/s]Metrics:  95%|█████████▍| 163/172 [01:28<00:03,  2.64it/s]Metrics:  95%|█████████▌| 164/172 [01:28<00:03,  2.64it/s]Metrics:  96%|█████████▌| 165/172 [01:28<00:02,  2.62it/s]Metrics:  97%|█████████▋| 166/172 [01:29<00:02,  2.62it/s]Metrics:  97%|█████████▋| 167/172 [01:29<00:01,  2.61it/s]Metrics:  98%|█████████▊| 168/172 [01:30<00:01,  2.61it/s]Metrics:  98%|█████████▊| 169/172 [01:30<00:01,  2.63it/s]Metrics:  99%|█████████▉| 170/172 [01:30<00:00,  2.63it/s]Metrics:  99%|█████████▉| 171/172 [01:31<00:00,  2.62it/s]Metrics: 100%|██████████| 172/172 [01:31<00:00,  2.62it/s]Metrics: 100%|██████████| 172/172 [01:31<00:00,  1.88it/s]
+mse_efield: 1319.974365234375
+mse_hfield: 0.010658997111022472
+mse_efield_space: 1419.12060546875
+mse_hfield_space: 0.011456066742539406
+mse_efield_subject: 25.573366165161133
+mse_hfield_subject: 0.000252856028964743
+rmse_efield_subject: 5.057011604309082
+rmse_hfield_subject: 0.01590144820511341
+mae_efield_subject: 1.8241263628005981
+mae_hfield_subject: 0.008611327968537807
+mad_efield_subject: 1.211735725402832
+mad_hfield_subject: 0.023303069174289703
+r2_efield_subject: 0.9306048068196274
+r2_hfield_subject: 0.987985261304434
+sar_subject_gt: 3.0138344764709473
+sar_subject_pr: 2.995241403579712
+rmse_div_subject_gt: 0.5248585343360901
+rmse_div_subject_pr: 1.4199846982955933
+rmse_far_subject_gt: 352.2498474121094
+rmse_far_subject_pr: 367.2342529296875
+ssim_mean: 0.9956530928611755
+inf_median: 0.03962587349815294
+=== JOB_STATISTICS ===
+=== current date     : Thu May  1 10:50:23 CEST 2025
+= Job-ID             : 2611468 on alex
+= Job-Name           : mx_mrifield
+= Job-Command        : /home/hpc/b190cb/b190cb19/ma_bohn/mx_mrifield
+= Initial workdir    : /home/hpc/b190cb/b190cb19/ma_bohn
+= Queue/Partition    : a100
+= Slurm account      : b190cb with QOS=normal
+= Features           : a100_40
+= Requested resources:  for 01:00:00
+= Elapsed runtime    : 00:02:33
+= Total RAM usage    : 95.8 GiB of assigned  GiB (%)
+= Node list          : a0905
+= Subm/Elig/Start/End: 2025-05-01T10:47:23 / 2025-05-01T10:47:23 / 2025-05-01T10:47:49 / 2025-05-01T10:50:22
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           51.8G   104.9G   209.7G        N/A  49,904      500K   1,000K        N/A    
+    /home/vault         67.1G  1048.6G  2097.2G        N/A     565      200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A100-SXM4-40GB, 00000000:90:00.0, 1813198, 24 %, 9 %, 16848 MiB, 140229 ms

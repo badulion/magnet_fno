@@ -1,0 +1,202 @@
+### Starting TaskPrologue of job 2677599 on a0905 at Mi 21. Mai 10:19:14 CEST 2025
+Running on cores 64-79 with governor ondemand
+Wed May 21 10:19:14 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.133.20             Driver Version: 570.133.20     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          On  |   00000000:90:00.0 Off |                    0 |
+| N/A   37C    P0             53W /  400W |       0MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+/home/hpc/b190cb/b190cb19/ma_bohn/.venv/lib64/python3.11/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+    | Name                                    | Type                   | Params | Mode
+--------------------------------------------------------------------------------------------
+0   | model                                   | AFNONet                | 48.2 M | eval
+1   | model.patch_embed                       | PatchEmbed             | 13.1 M | eval
+2   | model.patch_embed.proj                  | Conv3d                 | 13.1 M | eval
+3   | model.pos_drop                          | Dropout                | 0      | eval
+4   | model.blocks                            | ModuleList             | 25.1 M | eval
+5   | model.blocks.0                          | Block                  | 5.0 M  | eval
+6   | model.blocks.0.norm1                    | LayerNorm              | 1.5 K  | eval
+7   | model.blocks.0.filter                   | AFNO3D                 | 297 K  | eval
+8   | model.blocks.0.drop_path                | Identity               | 0      | eval
+9   | model.blocks.0.norm2                    | LayerNorm              | 1.5 K  | eval
+10  | model.blocks.0.mlp                      | MLP                    | 4.7 M  | eval
+11  | model.blocks.0.mlp.fc1                  | Linear                 | 2.4 M  | eval
+12  | model.blocks.0.mlp.act                  | GELU                   | 0      | eval
+13  | model.blocks.0.mlp.fc2                  | Linear                 | 2.4 M  | eval
+14  | model.blocks.0.mlp.drop                 | Dropout                | 0      | eval
+15  | model.blocks.1                          | Block                  | 5.0 M  | eval
+16  | model.blocks.1.norm1                    | LayerNorm              | 1.5 K  | eval
+17  | model.blocks.1.filter                   | AFNO3D                 | 297 K  | eval
+18  | model.blocks.1.drop_path                | Identity               | 0      | eval
+19  | model.blocks.1.norm2                    | LayerNorm              | 1.5 K  | eval
+20  | model.blocks.1.mlp                      | MLP                    | 4.7 M  | eval
+21  | model.blocks.1.mlp.fc1                  | Linear                 | 2.4 M  | eval
+22  | model.blocks.1.mlp.act                  | GELU                   | 0      | eval
+23  | model.blocks.1.mlp.fc2                  | Linear                 | 2.4 M  | eval
+24  | model.blocks.1.mlp.drop                 | Dropout                | 0      | eval
+25  | model.blocks.2                          | Block                  | 5.0 M  | eval
+26  | model.blocks.2.norm1                    | LayerNorm              | 1.5 K  | eval
+27  | model.blocks.2.filter                   | AFNO3D                 | 297 K  | eval
+28  | model.blocks.2.drop_path                | Identity               | 0      | eval
+29  | model.blocks.2.norm2                    | LayerNorm              | 1.5 K  | eval
+30  | model.blocks.2.mlp                      | MLP                    | 4.7 M  | eval
+31  | model.blocks.2.mlp.fc1                  | Linear                 | 2.4 M  | eval
+32  | model.blocks.2.mlp.act                  | GELU                   | 0      | eval
+33  | model.blocks.2.mlp.fc2                  | Linear                 | 2.4 M  | eval
+34  | model.blocks.2.mlp.drop                 | Dropout                | 0      | eval
+35  | model.blocks.3                          | Block                  | 5.0 M  | eval
+36  | model.blocks.3.norm1                    | LayerNorm              | 1.5 K  | eval
+37  | model.blocks.3.filter                   | AFNO3D                 | 297 K  | eval
+38  | model.blocks.3.drop_path                | Identity               | 0      | eval
+39  | model.blocks.3.norm2                    | LayerNorm              | 1.5 K  | eval
+40  | model.blocks.3.mlp                      | MLP                    | 4.7 M  | eval
+41  | model.blocks.3.mlp.fc1                  | Linear                 | 2.4 M  | eval
+42  | model.blocks.3.mlp.act                  | GELU                   | 0      | eval
+43  | model.blocks.3.mlp.fc2                  | Linear                 | 2.4 M  | eval
+44  | model.blocks.3.mlp.drop                 | Dropout                | 0      | eval
+45  | model.blocks.4                          | Block                  | 5.0 M  | eval
+46  | model.blocks.4.norm1                    | LayerNorm              | 1.5 K  | eval
+47  | model.blocks.4.filter                   | AFNO3D                 | 297 K  | eval
+48  | model.blocks.4.drop_path                | Identity               | 0      | eval
+49  | model.blocks.4.norm2                    | LayerNorm              | 1.5 K  | eval
+50  | model.blocks.4.mlp                      | MLP                    | 4.7 M  | eval
+51  | model.blocks.4.mlp.fc1                  | Linear                 | 2.4 M  | eval
+52  | model.blocks.4.mlp.act                  | GELU                   | 0      | eval
+53  | model.blocks.4.mlp.fc2                  | Linear                 | 2.4 M  | eval
+54  | model.blocks.4.mlp.drop                 | Dropout                | 0      | eval
+55  | model.norm                              | LayerNorm              | 1.5 K  | eval
+56  | model.head                              | Linear                 | 9.2 M  | eval
+57  | input_normalizer                        | StandardNormalizer     | 0      | eval
+58  | target_normalizer                       | StandardNormalizerSqrt | 0      | eval
+59  | model_to_boost                          | LitMRIField            | 38.9 M | eval
+60  | model_to_boost.model                    | AFNONet                | 38.9 M | eval
+61  | model_to_boost.model.patch_embed        | PatchEmbed             | 3.8 M  | eval
+62  | model_to_boost.model.patch_embed.proj   | Conv3d                 | 3.8 M  | eval
+63  | model_to_boost.model.pos_drop           | Dropout                | 0      | eval
+64  | model_to_boost.model.blocks             | ModuleList             | 25.1 M | eval
+65  | model_to_boost.model.blocks.0           | Block                  | 5.0 M  | eval
+66  | model_to_boost.model.blocks.0.norm1     | LayerNorm              | 1.5 K  | eval
+67  | model_to_boost.model.blocks.0.filter    | AFNO3D                 | 297 K  | eval
+68  | model_to_boost.model.blocks.0.drop_path | Identity               | 0      | eval
+69  | model_to_boost.model.blocks.0.norm2     | LayerNorm              | 1.5 K  | eval
+70  | model_to_boost.model.blocks.0.mlp       | MLP                    | 4.7 M  | eval
+71  | model_to_boost.model.blocks.0.mlp.fc1   | Linear                 | 2.4 M  | eval
+72  | model_to_boost.model.blocks.0.mlp.act   | GELU                   | 0      | eval
+73  | model_to_boost.model.blocks.0.mlp.fc2   | Linear                 | 2.4 M  | eval
+74  | model_to_boost.model.blocks.0.mlp.drop  | Dropout                | 0      | eval
+75  | model_to_boost.model.blocks.1           | Block                  | 5.0 M  | eval
+76  | model_to_boost.model.blocks.1.norm1     | LayerNorm              | 1.5 K  | eval
+77  | model_to_boost.model.blocks.1.filter    | AFNO3D                 | 297 K  | eval
+78  | model_to_boost.model.blocks.1.drop_path | Identity               | 0      | eval
+79  | model_to_boost.model.blocks.1.norm2     | LayerNorm              | 1.5 K  | eval
+80  | model_to_boost.model.blocks.1.mlp       | MLP                    | 4.7 M  | eval
+81  | model_to_boost.model.blocks.1.mlp.fc1   | Linear                 | 2.4 M  | eval
+82  | model_to_boost.model.blocks.1.mlp.act   | GELU                   | 0      | eval
+83  | model_to_boost.model.blocks.1.mlp.fc2   | Linear                 | 2.4 M  | eval
+84  | model_to_boost.model.blocks.1.mlp.drop  | Dropout                | 0      | eval
+85  | model_to_boost.model.blocks.2           | Block                  | 5.0 M  | eval
+86  | model_to_boost.model.blocks.2.norm1     | LayerNorm              | 1.5 K  | eval
+87  | model_to_boost.model.blocks.2.filter    | AFNO3D                 | 297 K  | eval
+88  | model_to_boost.model.blocks.2.drop_path | Identity               | 0      | eval
+89  | model_to_boost.model.blocks.2.norm2     | LayerNorm              | 1.5 K  | eval
+90  | model_to_boost.model.blocks.2.mlp       | MLP                    | 4.7 M  | eval
+91  | model_to_boost.model.blocks.2.mlp.fc1   | Linear                 | 2.4 M  | eval
+92  | model_to_boost.model.blocks.2.mlp.act   | GELU                   | 0      | eval
+93  | model_to_boost.model.blocks.2.mlp.fc2   | Linear                 | 2.4 M  | eval
+94  | model_to_boost.model.blocks.2.mlp.drop  | Dropout                | 0      | eval
+95  | model_to_boost.model.blocks.3           | Block                  | 5.0 M  | eval
+96  | model_to_boost.model.blocks.3.norm1     | LayerNorm              | 1.5 K  | eval
+97  | model_to_boost.model.blocks.3.filter    | AFNO3D                 | 297 K  | eval
+98  | model_to_boost.model.blocks.3.drop_path | Identity               | 0      | eval
+99  | model_to_boost.model.blocks.3.norm2     | LayerNorm              | 1.5 K  | eval
+100 | model_to_boost.model.blocks.3.mlp       | MLP                    | 4.7 M  | eval
+101 | model_to_boost.model.blocks.3.mlp.fc1   | Linear                 | 2.4 M  | eval
+102 | model_to_boost.model.blocks.3.mlp.act   | GELU                   | 0      | eval
+103 | model_to_boost.model.blocks.3.mlp.fc2   | Linear                 | 2.4 M  | eval
+104 | model_to_boost.model.blocks.3.mlp.drop  | Dropout                | 0      | eval
+105 | model_to_boost.model.blocks.4           | Block                  | 5.0 M  | eval
+106 | model_to_boost.model.blocks.4.norm1     | LayerNorm              | 1.5 K  | eval
+107 | model_to_boost.model.blocks.4.filter    | AFNO3D                 | 297 K  | eval
+108 | model_to_boost.model.blocks.4.drop_path | Identity               | 0      | eval
+109 | model_to_boost.model.blocks.4.norm2     | LayerNorm              | 1.5 K  | eval
+110 | model_to_boost.model.blocks.4.mlp       | MLP                    | 4.7 M  | eval
+111 | model_to_boost.model.blocks.4.mlp.fc1   | Linear                 | 2.4 M  | eval
+112 | model_to_boost.model.blocks.4.mlp.act   | GELU                   | 0      | eval
+113 | model_to_boost.model.blocks.4.mlp.fc2   | Linear                 | 2.4 M  | eval
+114 | model_to_boost.model.blocks.4.mlp.drop  | Dropout                | 0      | eval
+115 | model_to_boost.model.norm               | LayerNorm              | 1.5 K  | eval
+116 | model_to_boost.model.head               | Linear                 | 9.2 M  | eval
+117 | model_to_boost.loss_fn                  | MSELoss                | 0      | eval
+118 | model_to_boost.loss_fn.masked_reduction | MaskedLossReducer      | 0      | eval
+119 | loss_fn                                 | MSELoss                | 0      | eval
+120 | loss_fn.masked_reduction                | MaskedLossReducer      | 0      | eval
+--------------------------------------------------------------------------------------------
+48.2 M    Trainable params
+38.9 M    Non-trainable params
+87.1 M    Total params
+348.414   Total estimated model params size (MB)
+0         Modules in train mode
+121       Modules in eval mode
+Metrics:   0%|          | 0/172 [00:00<?, ?it/s]Metrics:   1%|          | 1/172 [00:55<2:38:37, 55.66s/it]Metrics:   1%|          | 2/172 [00:55<1:05:25, 23.09s/it]Metrics:   2%|▏         | 3/172 [00:56<35:39, 12.66s/it]  Metrics:   2%|▏         | 4/172 [00:56<21:46,  7.78s/it]Metrics:   3%|▎         | 5/172 [00:56<14:08,  5.08s/it]Metrics:   3%|▎         | 6/172 [00:57<09:30,  3.44s/it]Metrics:   4%|▍         | 7/172 [00:57<06:35,  2.40s/it]Metrics:   5%|▍         | 8/172 [00:57<04:42,  1.72s/it]Metrics:   5%|▌         | 9/172 [00:57<03:25,  1.26s/it]Metrics:   6%|▌         | 10/172 [00:58<02:35,  1.04it/s]Metrics:   6%|▋         | 11/172 [00:58<02:00,  1.34it/s]Metrics:   7%|▋         | 12/172 [00:58<01:37,  1.65it/s]Metrics:   8%|▊         | 13/172 [00:58<01:19,  2.00it/s]Metrics:   8%|▊         | 14/172 [00:59<01:07,  2.33it/s]Metrics:   9%|▊         | 15/172 [00:59<01:01,  2.56it/s]Metrics:   9%|▉         | 16/172 [00:59<00:57,  2.72it/s]Metrics:  10%|▉         | 17/172 [01:03<03:50,  1.49s/it]Metrics:  10%|█         | 18/172 [01:04<02:53,  1.12s/it]Metrics:  11%|█         | 19/172 [01:04<02:11,  1.17it/s]Metrics:  12%|█▏        | 20/172 [01:04<01:43,  1.47it/s]Metrics:  12%|█▏        | 21/172 [01:04<01:24,  1.79it/s]Metrics:  13%|█▎        | 22/172 [01:05<01:08,  2.18it/s]Metrics:  13%|█▎        | 23/172 [01:05<00:58,  2.56it/s]Metrics:  14%|█▍        | 24/172 [01:05<00:52,  2.83it/s]Metrics:  15%|█▍        | 25/172 [01:05<00:47,  3.09it/s]Metrics:  15%|█▌        | 26/172 [01:06<00:44,  3.27it/s]Metrics:  16%|█▌        | 27/172 [01:06<00:42,  3.42it/s]Metrics:  16%|█▋        | 28/172 [01:06<00:40,  3.53it/s]Metrics:  17%|█▋        | 29/172 [01:06<00:38,  3.70it/s]Metrics:  17%|█▋        | 30/172 [01:07<00:36,  3.85it/s]Metrics:  18%|█▊        | 31/172 [01:07<00:37,  3.76it/s]Metrics:  19%|█▊        | 32/172 [01:07<00:37,  3.74it/s]Metrics:  19%|█▉        | 33/172 [01:28<15:08,  6.54s/it]Metrics:  20%|█▉        | 34/172 [01:29<10:41,  4.65s/it]Metrics:  20%|██        | 35/172 [01:29<07:35,  3.33s/it]Metrics:  21%|██        | 36/172 [01:29<05:26,  2.40s/it]Metrics:  22%|██▏       | 37/172 [01:29<03:57,  1.76s/it]Metrics:  22%|██▏       | 38/172 [01:31<03:38,  1.63s/it]Metrics:  23%|██▎       | 39/172 [01:45<12:12,  5.51s/it]Metrics:  23%|██▎       | 40/172 [01:46<08:39,  3.93s/it]Metrics:  24%|██▍       | 41/172 [01:46<06:12,  2.84s/it]Metrics:  24%|██▍       | 42/172 [01:46<04:30,  2.08s/it]Metrics:  25%|██▌       | 43/172 [01:46<03:19,  1.55s/it]Metrics:  26%|██▌       | 44/172 [01:47<02:30,  1.17s/it]Metrics:  26%|██▌       | 45/172 [01:47<01:57,  1.08it/s]Metrics:  27%|██▋       | 46/172 [01:47<01:34,  1.34it/s]Metrics:  27%|██▋       | 47/172 [01:48<01:17,  1.62it/s]Metrics:  28%|██▊       | 48/172 [01:48<01:04,  1.91it/s]Metrics:  28%|██▊       | 49/172 [01:48<00:55,  2.21it/s]Metrics:  29%|██▉       | 50/172 [01:49<00:49,  2.47it/s]Metrics:  30%|██▉       | 51/172 [01:49<00:44,  2.74it/s]Metrics:  30%|███       | 52/172 [01:49<00:40,  2.97it/s]Metrics:  31%|███       | 53/172 [01:49<00:37,  3.16it/s]Metrics:  31%|███▏      | 54/172 [01:50<00:35,  3.31it/s]Metrics:  32%|███▏      | 55/172 [01:50<00:33,  3.52it/s]Metrics:  33%|███▎      | 56/172 [01:50<00:31,  3.68it/s]Metrics:  33%|███▎      | 57/172 [01:50<00:30,  3.81it/s]Metrics:  34%|███▎      | 58/172 [01:51<00:29,  3.86it/s]Metrics:  34%|███▍      | 59/172 [01:51<00:29,  3.87it/s]Metrics:  35%|███▍      | 60/172 [01:51<00:28,  3.91it/s]Metrics:  35%|███▌      | 61/172 [01:51<00:28,  3.95it/s]Metrics:  36%|███▌      | 62/172 [01:52<00:27,  3.99it/s]Metrics:  37%|███▋      | 63/172 [01:52<00:27,  4.01it/s]Metrics:  37%|███▋      | 64/172 [01:52<00:26,  4.01it/s]Metrics:  38%|███▊      | 65/172 [01:52<00:26,  4.04it/s]Metrics:  38%|███▊      | 66/172 [02:11<10:10,  5.76s/it]Metrics:  39%|███▉      | 67/172 [02:17<10:04,  5.76s/it]Metrics:  40%|███▉      | 68/172 [02:17<07:06,  4.10s/it]Metrics:  40%|████      | 69/172 [02:17<05:02,  2.94s/it]Metrics:  41%|████      | 70/172 [02:17<03:37,  2.13s/it]Metrics:  41%|████▏     | 71/172 [02:18<02:37,  1.56s/it]Metrics:  42%|████▏     | 72/172 [02:18<01:55,  1.16s/it]Metrics:  42%|████▏     | 73/172 [02:18<01:27,  1.13it/s]Metrics:  43%|████▎     | 74/172 [02:29<06:31,  3.99s/it]Metrics:  44%|████▎     | 75/172 [02:30<04:37,  2.86s/it]Metrics:  44%|████▍     | 76/172 [02:30<03:19,  2.07s/it]Metrics:  45%|████▍     | 77/172 [02:30<02:24,  1.52s/it]Metrics:  45%|████▌     | 78/172 [02:30<01:46,  1.14s/it]Metrics:  46%|████▌     | 79/172 [02:31<01:21,  1.15it/s]Metrics:  47%|████▋     | 80/172 [02:31<01:02,  1.47it/s]Metrics:  47%|████▋     | 81/172 [02:31<00:49,  1.84it/s]Metrics:  48%|████▊     | 82/172 [02:31<00:40,  2.21it/s]Metrics:  48%|████▊     | 83/172 [02:32<00:34,  2.58it/s]Metrics:  49%|████▉     | 84/172 [02:32<00:30,  2.92it/s]Metrics:  49%|████▉     | 85/172 [02:32<00:27,  3.21it/s]Metrics:  50%|█████     | 86/172 [02:32<00:24,  3.46it/s]Metrics:  51%|█████     | 87/172 [02:33<00:23,  3.62it/s]Metrics:  51%|█████     | 88/172 [02:33<00:22,  3.67it/s]Metrics:  52%|█████▏    | 89/172 [02:33<00:23,  3.55it/s]Metrics:  52%|█████▏    | 90/172 [02:33<00:22,  3.60it/s]Metrics:  53%|█████▎    | 91/172 [02:34<00:22,  3.64it/s]Metrics:  53%|█████▎    | 92/172 [02:34<00:21,  3.71it/s]Metrics:  54%|█████▍    | 93/172 [02:34<00:20,  3.86it/s]Metrics:  55%|█████▍    | 94/172 [02:34<00:19,  3.98it/s]Metrics:  55%|█████▌    | 95/172 [02:35<00:18,  4.08it/s]Metrics:  56%|█████▌    | 96/172 [02:35<00:18,  4.18it/s]Metrics:  56%|█████▋    | 97/172 [02:35<00:17,  4.24it/s]Metrics:  57%|█████▋    | 98/172 [02:59<09:11,  7.45s/it]Metrics:  58%|█████▊    | 99/172 [03:13<11:16,  9.27s/it]Metrics:  58%|█████▊    | 100/172 [03:13<07:52,  6.56s/it]Metrics:  59%|█████▊    | 101/172 [03:13<05:30,  4.66s/it]Metrics:  59%|█████▉    | 102/172 [03:14<03:53,  3.33s/it]Metrics:  60%|█████▉    | 103/172 [03:14<02:46,  2.41s/it]Metrics:  60%|██████    | 104/172 [03:14<01:59,  1.76s/it]Metrics:  61%|██████    | 105/172 [03:14<01:27,  1.30s/it]Metrics:  62%|██████▏   | 106/172 [03:14<01:04,  1.02it/s]Metrics:  62%|██████▏   | 107/172 [03:15<00:49,  1.32it/s]Metrics:  63%|██████▎   | 108/172 [03:17<01:24,  1.33s/it]Metrics:  63%|██████▎   | 109/172 [03:18<01:03,  1.00s/it]Metrics:  64%|██████▍   | 110/172 [03:18<00:48,  1.28it/s]Metrics:  65%|██████▍   | 111/172 [03:19<00:46,  1.31it/s]Metrics:  65%|██████▌   | 112/172 [03:20<00:59,  1.01it/s]Metrics:  66%|██████▌   | 113/172 [03:20<00:45,  1.30it/s]Metrics:  66%|██████▋   | 114/172 [03:21<00:35,  1.63it/s]Metrics:  67%|██████▋   | 115/172 [03:21<00:29,  1.96it/s]Metrics:  67%|██████▋   | 116/172 [03:21<00:24,  2.33it/s]Metrics:  68%|██████▊   | 117/172 [03:21<00:20,  2.67it/s]Metrics:  69%|██████▊   | 118/172 [03:22<00:18,  2.99it/s]Metrics:  69%|██████▉   | 119/172 [03:22<00:16,  3.29it/s]Metrics:  70%|██████▉   | 120/172 [03:22<00:14,  3.51it/s]Metrics:  70%|███████   | 121/172 [03:22<00:13,  3.65it/s]Metrics:  71%|███████   | 122/172 [03:23<00:13,  3.74it/s]Metrics:  72%|███████▏  | 123/172 [03:23<00:12,  3.85it/s]Metrics:  72%|███████▏  | 124/172 [03:23<00:12,  3.99it/s]Metrics:  73%|███████▎  | 125/172 [03:23<00:11,  4.02it/s]Metrics:  73%|███████▎  | 126/172 [03:24<00:11,  4.15it/s]Metrics:  74%|███████▍  | 127/172 [03:24<00:10,  4.15it/s]Metrics:  74%|███████▍  | 128/172 [03:27<00:55,  1.26s/it]Metrics:  75%|███████▌  | 129/172 [03:28<00:41,  1.05it/s]Metrics:  76%|███████▌  | 130/172 [03:28<00:31,  1.35it/s]Metrics:  76%|███████▌  | 131/172 [03:28<00:24,  1.71it/s]Metrics:  77%|███████▋  | 132/172 [03:38<02:14,  3.37s/it]Metrics:  77%|███████▋  | 133/172 [03:38<01:34,  2.43s/it]Metrics:  78%|███████▊  | 134/172 [03:38<01:07,  1.77s/it]Metrics:  78%|███████▊  | 135/172 [03:39<00:48,  1.31s/it]Metrics:  79%|███████▉  | 136/172 [03:39<00:36,  1.01s/it]Metrics:  80%|███████▉  | 137/172 [03:52<02:37,  4.50s/it]Metrics:  80%|████████  | 138/172 [03:52<01:49,  3.23s/it]Metrics:  81%|████████  | 139/172 [03:52<01:16,  2.33s/it]Metrics:  81%|████████▏ | 140/172 [03:52<00:54,  1.70s/it]Metrics:  82%|████████▏ | 141/172 [04:14<03:57,  7.66s/it]Metrics:  83%|████████▎ | 142/172 [04:14<02:43,  5.44s/it]Metrics:  83%|████████▎ | 143/172 [04:14<01:52,  3.88s/it]Metrics:  84%|████████▎ | 144/172 [04:15<01:18,  2.80s/it]Metrics:  84%|████████▍ | 145/172 [04:15<00:54,  2.03s/it]Metrics:  85%|████████▍ | 146/172 [04:15<00:38,  1.49s/it]Metrics:  85%|████████▌ | 147/172 [04:15<00:27,  1.11s/it]Metrics:  86%|████████▌ | 148/172 [04:16<00:20,  1.18it/s]Metrics:  87%|████████▋ | 149/172 [04:16<00:15,  1.52it/s]Metrics:  87%|████████▋ | 150/172 [04:16<00:11,  1.89it/s]Metrics:  88%|████████▊ | 151/172 [04:16<00:09,  2.28it/s]Metrics:  88%|████████▊ | 152/172 [04:17<00:07,  2.66it/s]Metrics:  89%|████████▉ | 153/172 [04:17<00:06,  3.02it/s]Metrics:  90%|████████▉ | 154/172 [04:17<00:05,  3.35it/s]Metrics:  90%|█████████ | 155/172 [04:17<00:04,  3.63it/s]Metrics:  91%|█████████ | 156/172 [04:17<00:04,  3.85it/s]Metrics:  91%|█████████▏| 157/172 [04:18<00:03,  4.00it/s]Metrics:  92%|█████████▏| 158/172 [04:18<00:03,  4.08it/s]Metrics:  92%|█████████▏| 159/172 [04:18<00:03,  4.17it/s]Metrics:  93%|█████████▎| 160/172 [04:18<00:02,  4.23it/s]Metrics:  94%|█████████▎| 161/172 [04:19<00:02,  4.25it/s]Metrics:  94%|█████████▍| 162/172 [04:19<00:02,  4.32it/s]Metrics:  95%|█████████▍| 163/172 [04:19<00:02,  4.37it/s]Metrics:  95%|█████████▌| 164/172 [04:19<00:01,  4.38it/s]Metrics:  96%|█████████▌| 165/172 [04:19<00:01,  4.41it/s]Metrics:  97%|█████████▋| 166/172 [04:20<00:01,  4.45it/s]Metrics:  97%|█████████▋| 167/172 [04:20<00:01,  4.43it/s]Metrics:  98%|█████████▊| 168/172 [04:20<00:00,  4.36it/s]Metrics:  98%|█████████▊| 169/172 [04:20<00:00,  4.38it/s]Metrics:  99%|█████████▉| 170/172 [04:21<00:00,  4.40it/s]Metrics:  99%|█████████▉| 171/172 [04:21<00:00,  4.39it/s]Metrics: 100%|██████████| 172/172 [04:21<00:00,  4.36it/s]Metrics: 100%|██████████| 172/172 [04:21<00:00,  1.52s/it]
+mse_efield: 3506.33935546875
+mse_hfield: 0.015401999466121197
+mse_efield_space: 3751.98193359375
+mse_hfield_space: 0.01644943840801716
+mse_efield_subject: 2.3777685165405273
+mse_hfield_subject: 0.00046084579662419856
+rmse_efield_subject: 1.542001485824585
+rmse_hfield_subject: 0.021467318758368492
+mae_efield_subject: 0.8026876449584961
+mae_hfield_subject: 0.011152452789247036
+mad_efield_subject: 0.6823748350143433
+mad_hfield_subject: 0.019191665574908257
+r2_efield_subject: 0.9062156618334526
+r2_hfield_subject: 0.970733082571695
+sar_subject_gt: 0.09792684018611908
+sar_subject_pr: 0.10874181240797043
+rmse_div_subject_gt: 0.44454628229141235
+rmse_div_subject_pr: 4.0265092849731445
+rmse_far_subject_gt: 58.91659927368164
+rmse_far_subject_pr: 209.4025421142578
+ssim_mean: 0.969603955745697
+inf_median: 0.012901775124191772
+=== JOB_STATISTICS ===
+=== current date     : Wed May 21 10:24:57 CEST 2025
+= Job-ID             : 2677599 on alex
+= Job-Name           : mx_mrifield
+= Job-Command        : /home/hpc/b190cb/b190cb19/ma_bohn/mx_mrifield
+= Initial workdir    : /home/hpc/b190cb/b190cb19/ma_bohn
+= Queue/Partition    : a100
+= Slurm account      : b190cb with QOS=normal
+= Features           : a100_40
+= Requested resources:  for 00:10:00
+= Elapsed runtime    : 00:05:47
+= Total RAM usage    : 81.7 GiB of assigned  GiB (%)
+= Node list          : a0905
+= Subm/Elig/Start/End: 2025-05-21T10:18:30 / 2025-05-21T10:18:30 / 2025-05-21T10:19:10 / 2025-05-21T10:24:57
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           36.7G   104.9G   209.7G        N/A  47,838      500K   1,000K        N/A    
+    /home/vault         92.4G  1048.6G  2097.2G        N/A   3,370      200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A100-SXM4-40GB, 00000000:90:00.0, 1353664, 5 %, 1 %, 4654 MiB, 312018 ms

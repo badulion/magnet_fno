@@ -1,0 +1,156 @@
+### Starting TaskPrologue of job 2431645 on a0522 at Mi 5. Mär 15:32:27 CET 2025
+Running on cores 96-111 with governor ondemand
+Wed Mar  5 15:32:27 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.86.15              Driver Version: 570.86.15      CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A40                     On  |   00000000:C1:00.0 Off |                  Off |
+|  0%   33C    P8             21W /  300W |       1MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+   | Name                                                | Type                  | Params | Mode
+------------------------------------------------------------------------------------------------------
+0  | model                                               | UNet3D                | 16.3 M | eval
+1  | model.encoders                                      | ModuleList            | 7.0 M  | eval
+2  | model.encoders.0                                    | Encoder               | 59.7 K | eval
+3  | model.encoders.0.basic_module                       | DoubleConv            | 59.7 K | eval
+4  | model.encoders.0.basic_module.SingleConv1           | SingleConv            | 4.3 K  | eval
+5  | model.encoders.0.basic_module.SingleConv1.groupnorm | GroupNorm             | 10     | eval
+6  | model.encoders.0.basic_module.SingleConv1.conv      | Conv3d                | 4.3 K  | eval
+7  | model.encoders.0.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+8  | model.encoders.0.basic_module.SingleConv2           | SingleConv            | 55.4 K | eval
+9  | model.encoders.0.basic_module.SingleConv2.groupnorm | GroupNorm             | 64     | eval
+10 | model.encoders.0.basic_module.SingleConv2.conv      | Conv3d                | 55.3 K | eval
+11 | model.encoders.0.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+12 | model.encoders.1                                    | Encoder               | 332 K  | eval
+13 | model.encoders.1.pooling                            | MaxPool3d             | 0      | eval
+14 | model.encoders.1.basic_module                       | DoubleConv            | 332 K  | eval
+15 | model.encoders.1.basic_module.SingleConv1           | SingleConv            | 110 K  | eval
+16 | model.encoders.1.basic_module.SingleConv1.groupnorm | GroupNorm             | 128    | eval
+17 | model.encoders.1.basic_module.SingleConv1.conv      | Conv3d                | 110 K  | eval
+18 | model.encoders.1.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+19 | model.encoders.1.basic_module.SingleConv2           | SingleConv            | 221 K  | eval
+20 | model.encoders.1.basic_module.SingleConv2.groupnorm | GroupNorm             | 128    | eval
+21 | model.encoders.1.basic_module.SingleConv2.conv      | Conv3d                | 221 K  | eval
+22 | model.encoders.1.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+23 | model.encoders.2                                    | Encoder               | 1.3 M  | eval
+24 | model.encoders.2.pooling                            | MaxPool3d             | 0      | eval
+25 | model.encoders.2.basic_module                       | DoubleConv            | 1.3 M  | eval
+26 | model.encoders.2.basic_module.SingleConv1           | SingleConv            | 442 K  | eval
+27 | model.encoders.2.basic_module.SingleConv1.groupnorm | GroupNorm             | 256    | eval
+28 | model.encoders.2.basic_module.SingleConv1.conv      | Conv3d                | 442 K  | eval
+29 | model.encoders.2.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+30 | model.encoders.2.basic_module.SingleConv2           | SingleConv            | 884 K  | eval
+31 | model.encoders.2.basic_module.SingleConv2.groupnorm | GroupNorm             | 256    | eval
+32 | model.encoders.2.basic_module.SingleConv2.conv      | Conv3d                | 884 K  | eval
+33 | model.encoders.2.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+34 | model.encoders.3                                    | Encoder               | 5.3 M  | eval
+35 | model.encoders.3.pooling                            | MaxPool3d             | 0      | eval
+36 | model.encoders.3.basic_module                       | DoubleConv            | 5.3 M  | eval
+37 | model.encoders.3.basic_module.SingleConv1           | SingleConv            | 1.8 M  | eval
+38 | model.encoders.3.basic_module.SingleConv1.groupnorm | GroupNorm             | 512    | eval
+39 | model.encoders.3.basic_module.SingleConv1.conv      | Conv3d                | 1.8 M  | eval
+40 | model.encoders.3.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+41 | model.encoders.3.basic_module.SingleConv2           | SingleConv            | 3.5 M  | eval
+42 | model.encoders.3.basic_module.SingleConv2.groupnorm | GroupNorm             | 512    | eval
+43 | model.encoders.3.basic_module.SingleConv2.conv      | Conv3d                | 3.5 M  | eval
+44 | model.encoders.3.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+45 | model.decoders                                      | ModuleList            | 9.3 M  | eval
+46 | model.decoders.0                                    | Decoder               | 7.1 M  | eval
+47 | model.decoders.0.upsampling                         | InterpolateUpsampling | 0      | eval
+48 | model.decoders.0.basic_module                       | DoubleConv            | 7.1 M  | eval
+49 | model.decoders.0.basic_module.SingleConv1           | SingleConv            | 5.3 M  | eval
+50 | model.decoders.0.basic_module.SingleConv1.groupnorm | GroupNorm             | 1.5 K  | eval
+51 | model.decoders.0.basic_module.SingleConv1.conv      | Conv3d                | 5.3 M  | eval
+52 | model.decoders.0.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+53 | model.decoders.0.basic_module.SingleConv2           | SingleConv            | 1.8 M  | eval
+54 | model.decoders.0.basic_module.SingleConv2.groupnorm | GroupNorm             | 512    | eval
+55 | model.decoders.0.basic_module.SingleConv2.conv      | Conv3d                | 1.8 M  | eval
+56 | model.decoders.0.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+57 | model.decoders.1                                    | Decoder               | 1.8 M  | eval
+58 | model.decoders.1.upsampling                         | InterpolateUpsampling | 0      | eval
+59 | model.decoders.1.basic_module                       | DoubleConv            | 1.8 M  | eval
+60 | model.decoders.1.basic_module.SingleConv1           | SingleConv            | 1.3 M  | eval
+61 | model.decoders.1.basic_module.SingleConv1.groupnorm | GroupNorm             | 768    | eval
+62 | model.decoders.1.basic_module.SingleConv1.conv      | Conv3d                | 1.3 M  | eval
+63 | model.decoders.1.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+64 | model.decoders.1.basic_module.SingleConv2           | SingleConv            | 442 K  | eval
+65 | model.decoders.1.basic_module.SingleConv2.groupnorm | GroupNorm             | 256    | eval
+66 | model.decoders.1.basic_module.SingleConv2.conv      | Conv3d                | 442 K  | eval
+67 | model.decoders.1.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+68 | model.decoders.2                                    | Decoder               | 442 K  | eval
+69 | model.decoders.2.upsampling                         | InterpolateUpsampling | 0      | eval
+70 | model.decoders.2.basic_module                       | DoubleConv            | 442 K  | eval
+71 | model.decoders.2.basic_module.SingleConv1           | SingleConv            | 332 K  | eval
+72 | model.decoders.2.basic_module.SingleConv1.groupnorm | GroupNorm             | 384    | eval
+73 | model.decoders.2.basic_module.SingleConv1.conv      | Conv3d                | 331 K  | eval
+74 | model.decoders.2.basic_module.SingleConv1.ReLU      | ReLU                  | 0      | eval
+75 | model.decoders.2.basic_module.SingleConv2           | SingleConv            | 110 K  | eval
+76 | model.decoders.2.basic_module.SingleConv2.groupnorm | GroupNorm             | 128    | eval
+77 | model.decoders.2.basic_module.SingleConv2.conv      | Conv3d                | 110 K  | eval
+78 | model.decoders.2.basic_module.SingleConv2.ReLU      | ReLU                  | 0      | eval
+79 | model.final_conv                                    | Conv3d                | 780    | eval
+80 | train_input_normalizer                              | StandardNormalizer    | 0      | eval
+81 | train_target_normalizer                             | StandardNormalizer    | 0      | eval
+82 | val_input_normalizer                                | StandardNormalizer    | 0      | eval
+83 | val_target_normalizer                               | StandardNormalizer    | 0      | eval
+84 | loss_fn                                             | MSELoss               | 0      | eval
+85 | loss_fn.masked_reduction                            | MaskedLossReducer     | 0      | eval
+------------------------------------------------------------------------------------------------------
+16.3 M    Trainable params
+0         Non-trainable params
+16.3 M    Total params
+65.291    Total estimated model params size (MB)
+0         Modules in train mode
+86        Modules in eval mode
+Metrics:   0%|          | 0/174 [00:00<?, ?it/s]Metrics:   1%|          | 1/174 [00:06<19:03,  6.61s/it]Metrics:   1%|          | 2/174 [00:09<12:47,  4.46s/it]Metrics:   2%|▏         | 3/174 [00:10<07:45,  2.72s/it]Metrics:   2%|▏         | 4/174 [00:10<05:21,  1.89s/it]Metrics:   3%|▎         | 5/174 [00:11<03:56,  1.40s/it]Metrics:   3%|▎         | 6/174 [00:11<03:03,  1.09s/it]Metrics:   4%|▍         | 7/174 [00:12<02:30,  1.11it/s]Metrics:   5%|▍         | 8/174 [00:12<02:10,  1.27it/s]Metrics:   5%|▌         | 9/174 [00:13<01:56,  1.42it/s]Metrics:   6%|▌         | 10/174 [00:13<01:47,  1.53it/s]Metrics:   6%|▋         | 11/174 [00:14<01:38,  1.65it/s]Metrics:   7%|▋         | 12/174 [00:14<01:32,  1.75it/s]Metrics:   7%|▋         | 13/174 [00:15<01:29,  1.79it/s]Metrics:   8%|▊         | 14/174 [00:16<01:27,  1.84it/s]Metrics:   9%|▊         | 15/174 [00:16<01:23,  1.91it/s]Metrics:   9%|▉         | 16/174 [00:16<01:21,  1.95it/s]Metrics:  10%|▉         | 17/174 [00:17<01:18,  2.01it/s]Metrics:  10%|█         | 18/174 [00:17<01:15,  2.06it/s]Metrics:  11%|█         | 19/174 [00:18<01:13,  2.12it/s]Metrics:  11%|█▏        | 20/174 [00:18<01:11,  2.17it/s]Metrics:  12%|█▏        | 21/174 [00:19<01:09,  2.20it/s]Metrics:  13%|█▎        | 22/174 [00:19<01:08,  2.21it/s]Metrics:  13%|█▎        | 23/174 [00:20<01:07,  2.23it/s]Metrics:  14%|█▍        | 24/174 [00:20<01:06,  2.27it/s]Metrics:  14%|█▍        | 25/174 [00:20<01:04,  2.30it/s]Metrics:  15%|█▍        | 26/174 [00:21<01:03,  2.31it/s]Metrics:  16%|█▌        | 27/174 [00:21<01:03,  2.31it/s]Metrics:  16%|█▌        | 28/174 [00:22<01:02,  2.32it/s]Metrics:  17%|█▋        | 29/174 [00:22<01:02,  2.33it/s]Metrics:  17%|█▋        | 30/174 [00:23<01:01,  2.33it/s]Metrics:  18%|█▊        | 31/174 [00:23<01:01,  2.33it/s]Metrics:  18%|█▊        | 32/174 [00:23<01:01,  2.32it/s]Metrics:  19%|█▉        | 33/174 [00:24<01:01,  2.31it/s]Metrics:  20%|█▉        | 34/174 [00:24<01:01,  2.29it/s]Metrics:  20%|██        | 35/174 [00:25<01:01,  2.28it/s]Metrics:  21%|██        | 36/174 [00:25<01:01,  2.26it/s]Metrics:  21%|██▏       | 37/174 [00:26<01:02,  2.20it/s]Metrics:  22%|██▏       | 38/174 [00:26<01:02,  2.17it/s]Metrics:  22%|██▏       | 39/174 [00:27<01:02,  2.14it/s]Metrics:  23%|██▎       | 40/174 [00:27<01:03,  2.13it/s]Metrics:  24%|██▎       | 41/174 [00:28<01:03,  2.11it/s]Metrics:  24%|██▍       | 42/174 [00:28<01:03,  2.07it/s]Metrics:  25%|██▍       | 43/174 [00:29<01:03,  2.07it/s]Metrics:  25%|██▌       | 44/174 [00:29<01:01,  2.10it/s]Metrics:  26%|██▌       | 45/174 [00:30<01:01,  2.09it/s]Metrics:  26%|██▋       | 46/174 [00:30<01:02,  2.06it/s]Metrics:  27%|██▋       | 47/174 [00:31<01:01,  2.05it/s]Metrics:  28%|██▊       | 48/174 [00:31<01:01,  2.06it/s]Metrics:  28%|██▊       | 49/174 [00:31<01:00,  2.07it/s]Metrics:  29%|██▊       | 50/174 [00:32<00:59,  2.08it/s]Metrics:  29%|██▉       | 51/174 [00:32<00:59,  2.08it/s]Metrics:  30%|██▉       | 52/174 [00:33<00:58,  2.10it/s]Metrics:  30%|███       | 53/174 [00:33<00:56,  2.16it/s]Metrics:  31%|███       | 54/174 [00:34<00:54,  2.19it/s]Metrics:  32%|███▏      | 55/174 [00:34<00:53,  2.24it/s]Metrics:  32%|███▏      | 56/174 [00:35<00:52,  2.27it/s]Metrics:  33%|███▎      | 57/174 [00:35<00:51,  2.28it/s]Metrics:  33%|███▎      | 58/174 [00:36<00:51,  2.27it/s]Metrics:  34%|███▍      | 59/174 [00:36<00:50,  2.27it/s]Metrics:  34%|███▍      | 60/174 [00:36<00:49,  2.29it/s]Metrics:  35%|███▌      | 61/174 [00:37<00:49,  2.30it/s]Metrics:  36%|███▌      | 62/174 [00:37<00:48,  2.30it/s]Metrics:  36%|███▌      | 63/174 [00:38<00:48,  2.30it/s]Metrics:  37%|███▋      | 64/174 [00:38<00:47,  2.30it/s]Metrics:  37%|███▋      | 65/174 [00:39<00:49,  2.19it/s]Metrics:  38%|███▊      | 66/174 [00:39<00:49,  2.19it/s]Metrics:  39%|███▊      | 67/174 [00:40<00:48,  2.20it/s]Metrics:  39%|███▉      | 68/174 [00:40<00:48,  2.17it/s]Metrics:  40%|███▉      | 69/174 [00:40<00:48,  2.15it/s]Metrics:  40%|████      | 70/174 [00:41<00:49,  2.11it/s]Metrics:  41%|████      | 71/174 [00:41<00:49,  2.09it/s]Metrics:  41%|████▏     | 72/174 [00:42<00:49,  2.08it/s]Metrics:  42%|████▏     | 73/174 [00:42<00:49,  2.04it/s]Metrics:  43%|████▎     | 74/174 [00:43<00:49,  2.04it/s]Metrics:  43%|████▎     | 75/174 [00:43<00:48,  2.04it/s]Metrics:  44%|████▎     | 76/174 [00:44<00:48,  2.02it/s]Metrics:  44%|████▍     | 77/174 [00:44<00:48,  1.99it/s]Metrics:  45%|████▍     | 78/174 [00:45<00:48,  1.97it/s]Metrics:  45%|████▌     | 79/174 [00:45<00:47,  1.99it/s]Metrics:  46%|████▌     | 80/174 [00:46<00:47,  2.00it/s]Metrics:  47%|████▋     | 81/174 [00:46<00:46,  2.01it/s]Metrics:  47%|████▋     | 82/174 [00:47<00:45,  2.00it/s]Metrics:  48%|████▊     | 83/174 [00:47<00:44,  2.04it/s]Metrics:  48%|████▊     | 84/174 [00:48<00:43,  2.09it/s]Metrics:  49%|████▉     | 85/174 [00:48<00:41,  2.16it/s]Metrics:  49%|████▉     | 86/174 [00:49<00:39,  2.21it/s]Metrics:  50%|█████     | 87/174 [00:49<00:39,  2.22it/s]Metrics:  51%|█████     | 88/174 [00:50<00:38,  2.25it/s]Metrics:  51%|█████     | 89/174 [00:50<00:37,  2.27it/s]Metrics:  52%|█████▏    | 90/174 [00:51<00:36,  2.27it/s]Metrics:  52%|█████▏    | 91/174 [00:51<00:36,  2.27it/s]Metrics:  53%|█████▎    | 92/174 [00:51<00:35,  2.29it/s]Metrics:  53%|█████▎    | 93/174 [00:52<00:35,  2.29it/s]Metrics:  54%|█████▍    | 94/174 [00:52<00:34,  2.31it/s]Metrics:  55%|█████▍    | 95/174 [00:53<00:34,  2.31it/s]Metrics:  55%|█████▌    | 96/174 [00:53<00:34,  2.27it/s]Metrics:  56%|█████▌    | 97/174 [00:54<00:34,  2.20it/s]Metrics:  56%|█████▋    | 98/174 [00:54<00:34,  2.18it/s]Metrics:  57%|█████▋    | 99/174 [00:55<00:34,  2.17it/s]Metrics:  57%|█████▋    | 100/174 [00:55<00:34,  2.14it/s]Metrics:  58%|█████▊    | 101/174 [00:56<00:35,  2.08it/s]Metrics:  59%|█████▊    | 102/174 [00:56<00:35,  2.05it/s]Metrics:  59%|█████▉    | 103/174 [00:57<00:35,  2.03it/s]Metrics:  60%|█████▉    | 104/174 [00:57<00:34,  2.01it/s]Metrics:  60%|██████    | 105/174 [00:58<00:34,  2.01it/s]Metrics:  61%|██████    | 106/174 [00:58<00:34,  2.00it/s]Metrics:  61%|██████▏   | 107/174 [00:59<00:33,  1.99it/s]Metrics:  62%|██████▏   | 108/174 [00:59<00:33,  1.99it/s]Metrics:  63%|██████▎   | 109/174 [01:00<00:32,  2.00it/s]Metrics:  63%|██████▎   | 110/174 [01:00<00:31,  2.01it/s]Metrics:  64%|██████▍   | 111/174 [01:01<00:31,  2.00it/s]Metrics:  64%|██████▍   | 112/174 [01:01<00:30,  2.02it/s]Metrics:  65%|██████▍   | 113/174 [01:02<00:29,  2.04it/s]Metrics:  66%|██████▌   | 114/174 [01:02<00:29,  2.06it/s]Metrics:  66%|██████▌   | 115/174 [01:02<00:28,  2.07it/s]Metrics:  67%|██████▋   | 116/174 [01:03<00:27,  2.10it/s]Metrics:  67%|██████▋   | 117/174 [01:03<00:26,  2.15it/s]Metrics:  68%|██████▊   | 118/174 [01:04<00:25,  2.20it/s]Metrics:  68%|██████▊   | 119/174 [01:04<00:24,  2.24it/s]Metrics:  69%|██████▉   | 120/174 [01:05<00:23,  2.27it/s]Metrics:  70%|██████▉   | 121/174 [01:05<00:23,  2.28it/s]Metrics:  70%|███████   | 122/174 [01:06<00:22,  2.29it/s]Metrics:  71%|███████   | 123/174 [01:06<00:22,  2.30it/s]Metrics:  71%|███████▏  | 124/174 [01:06<00:21,  2.28it/s]Metrics:  72%|███████▏  | 125/174 [01:07<00:21,  2.28it/s]Metrics:  72%|███████▏  | 126/174 [01:07<00:20,  2.29it/s]Metrics:  73%|███████▎  | 127/174 [01:08<00:20,  2.30it/s]Metrics:  74%|███████▎  | 128/174 [01:08<00:19,  2.30it/s]Metrics:  74%|███████▍  | 129/174 [01:09<00:21,  2.05it/s]Metrics:  75%|███████▍  | 130/174 [01:09<00:21,  2.08it/s]Metrics:  75%|███████▌  | 131/174 [01:10<00:20,  2.11it/s]Metrics:  76%|███████▌  | 132/174 [01:10<00:19,  2.12it/s]Metrics:  76%|███████▋  | 133/174 [01:11<00:19,  2.11it/s]Metrics:  77%|███████▋  | 134/174 [01:11<00:19,  2.08it/s]Metrics:  78%|███████▊  | 135/174 [01:12<00:18,  2.06it/s]Metrics:  78%|███████▊  | 136/174 [01:12<00:18,  2.09it/s]Metrics:  79%|███████▊  | 137/174 [01:13<00:17,  2.11it/s]Metrics:  79%|███████▉  | 138/174 [01:13<00:16,  2.18it/s]Metrics:  80%|███████▉  | 139/174 [01:13<00:15,  2.24it/s]Metrics:  80%|████████  | 140/174 [01:14<00:14,  2.29it/s]Metrics:  81%|████████  | 141/174 [01:14<00:14,  2.32it/s]Metrics:  82%|████████▏ | 142/174 [01:15<00:13,  2.34it/s]Metrics:  82%|████████▏ | 143/174 [01:15<00:13,  2.35it/s]Metrics:  83%|████████▎ | 144/174 [01:15<00:12,  2.37it/s]Metrics:  83%|████████▎ | 145/174 [01:16<00:12,  2.38it/s]Metrics:  84%|████████▍ | 146/174 [01:16<00:11,  2.38it/s]Metrics:  84%|████████▍ | 147/174 [01:17<00:11,  2.37it/s]Metrics:  85%|████████▌ | 148/174 [01:17<00:11,  2.36it/s]Metrics:  86%|████████▌ | 149/174 [01:18<00:10,  2.35it/s]Metrics:  86%|████████▌ | 150/174 [01:18<00:10,  2.33it/s]Metrics:  87%|████████▋ | 151/174 [01:18<00:09,  2.34it/s]Metrics:  87%|████████▋ | 152/174 [01:19<00:09,  2.34it/s]Metrics:  88%|████████▊ | 153/174 [01:19<00:08,  2.36it/s]Metrics:  89%|████████▊ | 154/174 [01:20<00:08,  2.38it/s]Metrics:  89%|████████▉ | 155/174 [01:20<00:07,  2.39it/s]Metrics:  90%|████████▉ | 156/174 [01:21<00:07,  2.40it/s]Metrics:  90%|█████████ | 157/174 [01:21<00:07,  2.41it/s]Metrics:  91%|█████████ | 158/174 [01:21<00:06,  2.41it/s]Metrics:  91%|█████████▏| 159/174 [01:22<00:06,  2.41it/s]Metrics:  92%|█████████▏| 160/174 [01:22<00:05,  2.42it/s]Metrics:  93%|█████████▎| 161/174 [01:23<00:05,  2.41it/s]Metrics:  93%|█████████▎| 162/174 [01:23<00:04,  2.41it/s]Metrics:  94%|█████████▎| 163/174 [01:23<00:04,  2.41it/s]Metrics:  94%|█████████▍| 164/174 [01:24<00:04,  2.41it/s]Metrics:  95%|█████████▍| 165/174 [01:24<00:03,  2.41it/s]Metrics:  95%|█████████▌| 166/174 [01:25<00:03,  2.41it/s]Metrics:  96%|█████████▌| 167/174 [01:25<00:02,  2.41it/s]Metrics:  97%|█████████▋| 168/174 [01:26<00:02,  2.39it/s]Metrics:  97%|█████████▋| 169/174 [01:26<00:02,  2.40it/s]Metrics:  98%|█████████▊| 170/174 [01:26<00:01,  2.41it/s]Metrics:  98%|█████████▊| 171/174 [01:27<00:01,  2.41it/s]Metrics:  99%|█████████▉| 172/174 [01:27<00:00,  2.41it/s]Metrics:  99%|█████████▉| 173/174 [01:28<00:00,  2.41it/s]Metrics: 100%|██████████| 174/174 [01:28<00:00,  2.41it/s]Metrics: 100%|██████████| 174/174 [01:28<00:00,  1.97it/s]
+mse_efield: 1355.3350830078125
+mse_hfield: 0.010759735479950905
+mse_efield_space: 1439.6070556640625
+mse_hfield_space: 0.01141197420656681
+mse_efield_subject: 3.992915391921997
+mse_hfield_subject: 0.00030079393764026463
+rmse_efield_subject: 1.9982280731201172
+rmse_hfield_subject: 0.017343411222100258
+mae_efield_subject: 1.3400814533233643
+mae_hfield_subject: 0.009376966394484043
+mad_efield_subject: 1.113390326499939
+mad_hfield_subject: 0.022302959114313126
+ssim_mean: 0.9959616661071777
+inf_median: 0.06394692612229846
+=== JOB_STATISTICS ===
+=== current date     : Wed Mar  5 15:35:10 CET 2025
+= Job-ID             : 2431645 on alex
+= Job-Name           : mx_mrifield
+= Job-Command        : /home/hpc/b190cb/b190cb19/ma_bohn/mx_mrifield
+= Initial workdir    : /home/hpc/b190cb/b190cb19/ma_bohn
+= Queue/Partition    : a40
+= Slurm account      : b190cb with QOS=normal
+= Requested resources:  for 01:00:00
+= Elapsed runtime    : 00:02:43
+= Total RAM usage    : 53.9 GiB of assigned  GiB (%)
+= Node list          : a0522
+= Subm/Elig/Start/End: 2025-03-05T15:32:26 / 2025-03-05T15:32:26 / 2025-03-05T15:32:27 / 2025-03-05T15:35:10
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           59.4G   104.9G   209.7G        N/A  43,902      500K   1,000K        N/A    
+    /home/vault          0.0K  1048.6G  2097.2G        N/A       1      200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A40, 00000000:C1:00.0, 819553, 38 %, 20 %, 16524 MiB, 132601 ms

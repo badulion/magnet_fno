@@ -163,15 +163,4 @@ cython_debug/
 .vscode
 .DS_Store
 /data/
-/results/afno/
-/results/b1+/
-/results/base/
-/results/div/
-/results/far/
-/results/ffno/
-/results/fno/
-/results/old_data/
-/results/super/
-/results/tfno/
-/results/unet/
-/results/uno/
+*.ckpt

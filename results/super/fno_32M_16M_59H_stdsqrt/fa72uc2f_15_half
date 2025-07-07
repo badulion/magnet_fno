@@ -1,0 +1,139 @@
+### Starting TaskPrologue of job 2698569 on a0905 at Di 27. Mai 08:48:13 CEST 2025
+Running on cores 64-79 with governor ondemand
+Tue May 27 08:48:13 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.133.20             Driver Version: 570.133.20     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          On  |   00000000:90:00.0 Off |                    0 |
+| N/A   37C    P0             53W /  400W |       0MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+/home/hpc/b190cb/b190cb19/ma_bohn/.venv/lib64/python3.11/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+   | Name                                 | Type                   | Params | Mode
+----------------------------------------------------------------------------------------
+0  | model                                | FNO                    | 32.1 M | eval
+1  | model.fno_blocks                     | FNOBlocks              | 32.1 M | eval
+2  | model.fno_blocks.convs               | ModuleList             | 32.1 M | eval
+3  | model.fno_blocks.convs.0             | SpectralConv           | 8.0 M  | eval
+4  | model.fno_blocks.convs.0.weight      | DenseTensor            | 8.0 M  | eval
+5  | model.fno_blocks.convs.1             | SpectralConv           | 8.0 M  | eval
+6  | model.fno_blocks.convs.1.weight      | DenseTensor            | 8.0 M  | eval
+7  | model.fno_blocks.convs.2             | SpectralConv           | 8.0 M  | eval
+8  | model.fno_blocks.convs.2.weight      | DenseTensor            | 8.0 M  | eval
+9  | model.fno_blocks.convs.3             | SpectralConv           | 8.0 M  | eval
+10 | model.fno_blocks.convs.3.weight      | DenseTensor            | 8.0 M  | eval
+11 | model.fno_blocks.fno_skips           | ModuleList             | 13.9 K | eval
+12 | model.fno_blocks.fno_skips.0         | Flattened1dConv        | 3.5 K  | eval
+13 | model.fno_blocks.fno_skips.0.conv    | Conv1d                 | 3.5 K  | eval
+14 | model.fno_blocks.fno_skips.1         | Flattened1dConv        | 3.5 K  | eval
+15 | model.fno_blocks.fno_skips.1.conv    | Conv1d                 | 3.5 K  | eval
+16 | model.fno_blocks.fno_skips.2         | Flattened1dConv        | 3.5 K  | eval
+17 | model.fno_blocks.fno_skips.2.conv    | Conv1d                 | 3.5 K  | eval
+18 | model.fno_blocks.fno_skips.3         | Flattened1dConv        | 3.5 K  | eval
+19 | model.fno_blocks.fno_skips.3.conv    | Conv1d                 | 3.5 K  | eval
+20 | model.fno_blocks.channel_mlp         | ModuleList             | 14.5 K | eval
+21 | model.fno_blocks.channel_mlp.0       | ChannelMLP             | 3.6 K  | eval
+22 | model.fno_blocks.channel_mlp.0.fcs   | ModuleList             | 3.6 K  | eval
+23 | model.fno_blocks.channel_mlp.0.fcs.0 | Conv1d                 | 1.8 K  | eval
+24 | model.fno_blocks.channel_mlp.0.fcs.1 | Conv1d                 | 1.8 K  | eval
+25 | model.fno_blocks.channel_mlp.1       | ChannelMLP             | 3.6 K  | eval
+26 | model.fno_blocks.channel_mlp.1.fcs   | ModuleList             | 3.6 K  | eval
+27 | model.fno_blocks.channel_mlp.1.fcs.0 | Conv1d                 | 1.8 K  | eval
+28 | model.fno_blocks.channel_mlp.1.fcs.1 | Conv1d                 | 1.8 K  | eval
+29 | model.fno_blocks.channel_mlp.2       | ChannelMLP             | 3.6 K  | eval
+30 | model.fno_blocks.channel_mlp.2.fcs   | ModuleList             | 3.6 K  | eval
+31 | model.fno_blocks.channel_mlp.2.fcs.0 | Conv1d                 | 1.8 K  | eval
+32 | model.fno_blocks.channel_mlp.2.fcs.1 | Conv1d                 | 1.8 K  | eval
+33 | model.fno_blocks.channel_mlp.3       | ChannelMLP             | 3.6 K  | eval
+34 | model.fno_blocks.channel_mlp.3.fcs   | ModuleList             | 3.6 K  | eval
+35 | model.fno_blocks.channel_mlp.3.fcs.0 | Conv1d                 | 1.8 K  | eval
+36 | model.fno_blocks.channel_mlp.3.fcs.1 | Conv1d                 | 1.8 K  | eval
+37 | model.fno_blocks.channel_mlp_skips   | ModuleList             | 236    | eval
+38 | model.fno_blocks.channel_mlp_skips.0 | SoftGating             | 59     | eval
+39 | model.fno_blocks.channel_mlp_skips.1 | SoftGating             | 59     | eval
+40 | model.fno_blocks.channel_mlp_skips.2 | SoftGating             | 59     | eval
+41 | model.fno_blocks.channel_mlp_skips.3 | SoftGating             | 59     | eval
+42 | model.lifting                        | ChannelMLP             | 7.7 K  | eval
+43 | model.lifting.fcs                    | ModuleList             | 7.7 K  | eval
+44 | model.lifting.fcs.0                  | Conv1d                 | 708    | eval
+45 | model.lifting.fcs.1                  | Conv1d                 | 7.0 K  | eval
+46 | model.projection                     | ChannelMLP             | 8.5 K  | eval
+47 | model.projection.fcs                 | ModuleList             | 8.5 K  | eval
+48 | model.projection.fcs.0               | Conv1d                 | 7.1 K  | eval
+49 | model.projection.fcs.1               | Conv1d                 | 1.4 K  | eval
+50 | input_normalizer                     | StandardNormalizer     | 0      | eval
+51 | target_normalizer                    | StandardNormalizerSqrt | 0      | eval
+52 | loss_fn                              | MSELoss                | 0      | eval
+53 | loss_fn.masked_reduction             | MaskedLossReducer      | 0      | eval
+----------------------------------------------------------------------------------------
+32.1 M    Trainable params
+0         Non-trainable params
+32.1 M    Total params
+128.504   Total estimated model params size (MB)
+0         Modules in train mode
+54        Modules in eval mode
+Metrics:   0%|          | 0/172 [00:00<?, ?it/s]Metrics:   1%|          | 1/172 [00:08<22:50,  8.01s/it]Metrics:   1%|          | 2/172 [00:08<09:32,  3.37s/it]Metrics:   2%|▏         | 4/172 [00:08<03:40,  1.31s/it]Metrics:   3%|▎         | 6/172 [00:08<02:01,  1.37it/s]Metrics:   5%|▍         | 8/172 [00:08<01:16,  2.14it/s]Metrics:   6%|▌         | 10/172 [00:08<00:53,  3.04it/s]Metrics:   7%|▋         | 12/172 [00:09<00:40,  4.00it/s]Metrics:   8%|▊         | 14/172 [00:09<00:32,  4.93it/s]Metrics:   9%|▉         | 16/172 [00:09<00:26,  5.78it/s]Metrics:  10%|▉         | 17/172 [00:09<00:25,  6.13it/s]Metrics:  10%|█         | 18/172 [00:09<00:23,  6.54it/s]Metrics:  11%|█         | 19/172 [00:09<00:26,  5.80it/s]Metrics:  12%|█▏        | 20/172 [00:10<00:24,  6.22it/s]Metrics:  12%|█▏        | 21/172 [00:10<00:22,  6.79it/s]Metrics:  13%|█▎        | 22/172 [00:10<00:21,  7.13it/s]Metrics:  13%|█▎        | 23/172 [00:10<00:19,  7.50it/s]Metrics:  14%|█▍        | 24/172 [00:10<00:18,  7.85it/s]Metrics:  15%|█▍        | 25/172 [00:10<00:18,  8.02it/s]Metrics:  15%|█▌        | 26/172 [00:10<00:17,  8.21it/s]Metrics:  16%|█▌        | 27/172 [00:10<00:17,  8.19it/s]Metrics:  16%|█▋        | 28/172 [00:10<00:17,  8.22it/s]Metrics:  17%|█▋        | 29/172 [00:11<00:17,  8.32it/s]Metrics:  17%|█▋        | 30/172 [00:11<00:21,  6.74it/s]Metrics:  18%|█▊        | 31/172 [00:11<00:21,  6.64it/s]Metrics:  19%|█▊        | 32/172 [00:11<00:19,  7.10it/s]Metrics:  19%|█▉        | 33/172 [00:13<01:52,  1.24it/s]Metrics:  20%|█▉        | 34/172 [00:14<01:27,  1.57it/s]Metrics:  20%|██        | 35/172 [00:14<01:07,  2.03it/s]Metrics:  21%|██        | 36/172 [00:14<00:51,  2.65it/s]Metrics:  22%|██▏       | 37/172 [00:14<00:40,  3.30it/s]Metrics:  22%|██▏       | 38/172 [00:14<00:34,  3.90it/s]Metrics:  23%|██▎       | 39/172 [00:14<00:29,  4.51it/s]Metrics:  23%|██▎       | 40/172 [00:14<00:25,  5.18it/s]Metrics:  24%|██▍       | 41/172 [00:15<00:22,  5.83it/s]Metrics:  24%|██▍       | 42/172 [00:15<00:21,  5.97it/s]Metrics:  25%|██▌       | 43/172 [00:15<00:19,  6.56it/s]Metrics:  26%|██▌       | 44/172 [00:15<00:18,  6.92it/s]Metrics:  26%|██▌       | 45/172 [00:15<00:17,  7.29it/s]Metrics:  27%|██▋       | 46/172 [00:15<00:16,  7.78it/s]Metrics:  28%|██▊       | 48/172 [00:15<00:14,  8.60it/s]Metrics:  28%|██▊       | 49/172 [00:16<00:14,  8.56it/s]Metrics:  29%|██▉       | 50/172 [00:16<00:13,  8.73it/s]Metrics:  30%|██▉       | 51/172 [00:16<00:14,  8.64it/s]Metrics:  30%|███       | 52/172 [00:16<00:13,  8.90it/s]Metrics:  31%|███       | 53/172 [00:16<00:13,  8.72it/s]Metrics:  31%|███▏      | 54/172 [00:16<00:21,  5.56it/s]Metrics:  32%|███▏      | 55/172 [00:17<00:20,  5.69it/s]Metrics:  33%|███▎      | 56/172 [00:17<00:18,  6.44it/s]Metrics:  33%|███▎      | 57/172 [00:17<00:16,  7.10it/s]Metrics:  34%|███▎      | 58/172 [00:17<00:17,  6.51it/s]Metrics:  34%|███▍      | 59/172 [00:17<00:17,  6.39it/s]Metrics:  35%|███▍      | 60/172 [00:17<00:15,  7.08it/s]Metrics:  35%|███▌      | 61/172 [00:17<00:14,  7.54it/s]Metrics:  36%|███▌      | 62/172 [00:17<00:13,  7.95it/s]Metrics:  37%|███▋      | 63/172 [00:18<00:13,  8.23it/s]Metrics:  37%|███▋      | 64/172 [00:18<00:12,  8.33it/s]Metrics:  38%|███▊      | 65/172 [00:21<02:11,  1.23s/it]Metrics:  38%|███▊      | 66/172 [00:22<01:38,  1.08it/s]Metrics:  39%|███▉      | 67/172 [00:22<01:12,  1.45it/s]Metrics:  40%|███▉      | 68/172 [00:22<00:53,  1.93it/s]Metrics:  40%|████      | 69/172 [00:22<00:41,  2.50it/s]Metrics:  41%|████      | 70/172 [00:22<00:39,  2.56it/s]Metrics:  41%|████▏     | 71/172 [00:23<00:31,  3.23it/s]Metrics:  42%|████▏     | 72/172 [00:23<00:25,  3.92it/s]Metrics:  42%|████▏     | 73/172 [00:23<00:21,  4.67it/s]Metrics:  43%|████▎     | 74/172 [00:23<00:17,  5.52it/s]Metrics:  44%|████▎     | 75/172 [00:23<00:16,  5.91it/s]Metrics:  44%|████▍     | 76/172 [00:23<00:15,  6.33it/s]Metrics:  45%|████▍     | 77/172 [00:23<00:14,  6.70it/s]Metrics:  45%|████▌     | 78/172 [00:23<00:13,  7.08it/s]Metrics:  46%|████▌     | 79/172 [00:24<00:12,  7.53it/s]Metrics:  47%|████▋     | 80/172 [00:24<00:12,  7.66it/s]Metrics:  47%|████▋     | 81/172 [00:24<00:12,  7.43it/s]Metrics:  48%|████▊     | 82/172 [00:24<00:17,  5.14it/s]Metrics:  48%|████▊     | 83/172 [00:24<00:15,  5.79it/s]Metrics:  49%|████▉     | 84/172 [00:24<00:13,  6.59it/s]Metrics:  49%|████▉     | 85/172 [00:24<00:12,  6.90it/s]Metrics:  50%|█████     | 86/172 [00:25<00:11,  7.47it/s]Metrics:  51%|█████     | 87/172 [00:25<00:12,  6.97it/s]Metrics:  51%|█████     | 88/172 [00:25<00:11,  7.62it/s]Metrics:  52%|█████▏    | 89/172 [00:25<00:10,  7.67it/s]Metrics:  53%|█████▎    | 91/172 [00:25<00:10,  7.88it/s]Metrics:  53%|█████▎    | 92/172 [00:25<00:09,  8.15it/s]Metrics:  54%|█████▍    | 93/172 [00:25<00:09,  8.19it/s]Metrics:  55%|█████▍    | 94/172 [00:26<00:09,  8.21it/s]Metrics:  55%|█████▌    | 95/172 [00:26<00:09,  7.92it/s]Metrics:  56%|█████▌    | 96/172 [00:26<00:09,  8.26it/s]Metrics:  56%|█████▋    | 97/172 [00:30<01:33,  1.25s/it]Metrics:  57%|█████▋    | 98/172 [00:30<01:11,  1.04it/s]Metrics:  58%|█████▊    | 99/172 [00:30<00:54,  1.35it/s]Metrics:  58%|█████▊    | 100/172 [00:31<00:41,  1.74it/s]Metrics:  59%|█████▊    | 101/172 [00:31<00:33,  2.09it/s]Metrics:  59%|█████▉    | 102/172 [00:31<00:25,  2.70it/s]Metrics:  60%|█████▉    | 103/172 [00:31<00:20,  3.37it/s]Metrics:  60%|██████    | 104/172 [00:31<00:16,  4.13it/s]Metrics:  61%|██████    | 105/172 [00:31<00:13,  4.83it/s]Metrics:  62%|██████▏   | 106/172 [00:31<00:12,  5.39it/s]Metrics:  62%|██████▏   | 107/172 [00:32<00:10,  5.93it/s]Metrics:  63%|██████▎   | 108/172 [00:32<00:09,  6.62it/s]Metrics:  63%|██████▎   | 109/172 [00:32<00:09,  6.90it/s]Metrics:  64%|██████▍   | 110/172 [00:32<00:08,  7.19it/s]Metrics:  65%|██████▍   | 111/172 [00:32<00:08,  7.56it/s]Metrics:  65%|██████▌   | 112/172 [00:32<00:07,  7.81it/s]Metrics:  66%|██████▌   | 113/172 [00:32<00:07,  7.74it/s]Metrics:  66%|██████▋   | 114/172 [00:32<00:07,  7.57it/s]Metrics:  67%|██████▋   | 115/172 [00:32<00:07,  8.07it/s]Metrics:  67%|██████▋   | 116/172 [00:33<00:07,  7.38it/s]Metrics:  69%|██████▊   | 118/172 [00:33<00:06,  8.34it/s]Metrics:  69%|██████▉   | 119/172 [00:33<00:06,  8.57it/s]Metrics:  70%|██████▉   | 120/172 [00:33<00:05,  8.74it/s]Metrics:  70%|███████   | 121/172 [00:33<00:05,  8.82it/s]Metrics:  71%|███████   | 122/172 [00:33<00:06,  8.14it/s]Metrics:  72%|███████▏  | 123/172 [00:33<00:06,  7.50it/s]Metrics:  72%|███████▏  | 124/172 [00:34<00:05,  8.02it/s]Metrics:  73%|███████▎  | 125/172 [00:34<00:07,  6.28it/s]Metrics:  73%|███████▎  | 126/172 [00:34<00:06,  6.89it/s]Metrics:  74%|███████▍  | 127/172 [00:34<00:06,  7.39it/s]Metrics:  74%|███████▍  | 128/172 [00:34<00:06,  6.37it/s]Metrics:  75%|███████▌  | 129/172 [00:38<00:56,  1.32s/it]Metrics:  76%|███████▌  | 130/172 [00:39<00:41,  1.02it/s]Metrics:  76%|███████▌  | 131/172 [00:39<00:29,  1.38it/s]Metrics:  77%|███████▋  | 132/172 [00:39<00:23,  1.68it/s]Metrics:  78%|███████▊  | 134/172 [00:39<00:14,  2.71it/s]Metrics:  78%|███████▊  | 135/172 [00:39<00:11,  3.23it/s]Metrics:  79%|███████▉  | 136/172 [00:39<00:09,  3.73it/s]Metrics:  80%|███████▉  | 137/172 [00:40<00:08,  4.37it/s]Metrics:  80%|████████  | 138/172 [00:40<00:06,  4.99it/s]Metrics:  81%|████████  | 139/172 [00:40<00:06,  5.25it/s]Metrics:  81%|████████▏ | 140/172 [00:40<00:05,  5.82it/s]Metrics:  82%|████████▏ | 141/172 [00:40<00:05,  5.34it/s]Metrics:  83%|████████▎ | 142/172 [00:40<00:05,  5.96it/s]Metrics:  83%|████████▎ | 143/172 [00:40<00:04,  6.61it/s]Metrics:  84%|████████▎ | 144/172 [00:41<00:04,  6.86it/s]Metrics:  84%|████████▍ | 145/172 [00:41<00:03,  6.94it/s]Metrics:  85%|████████▍ | 146/172 [00:41<00:03,  7.51it/s]Metrics:  85%|████████▌ | 147/172 [00:41<00:03,  8.11it/s]Metrics:  86%|████████▌ | 148/172 [00:41<00:03,  6.70it/s]Metrics:  87%|████████▋ | 150/172 [00:41<00:02,  8.24it/s]Metrics:  88%|████████▊ | 151/172 [00:41<00:02,  8.61it/s]Metrics:  89%|████████▉ | 153/172 [00:42<00:01,  9.77it/s]Metrics:  90%|█████████ | 155/172 [00:42<00:01,  9.88it/s]Metrics:  91%|█████████▏| 157/172 [00:42<00:01, 10.44it/s]Metrics:  92%|█████████▏| 159/172 [00:42<00:01, 10.79it/s]Metrics:  94%|█████████▎| 161/172 [00:43<00:02,  4.16it/s]Metrics:  94%|█████████▍| 162/172 [00:43<00:02,  4.65it/s]Metrics:  95%|█████████▌| 164/172 [00:43<00:01,  6.12it/s]Metrics:  97%|█████████▋| 166/172 [00:44<00:00,  7.61it/s]Metrics:  98%|█████████▊| 168/172 [00:44<00:00,  4.89it/s]Metrics:  99%|█████████▉| 170/172 [00:44<00:00,  6.32it/s]Metrics: 100%|██████████| 172/172 [00:45<00:00,  7.93it/s]Metrics: 100%|██████████| 172/172 [00:45<00:00,  3.82it/s]
+/home/hpc/b190cb/b190cb19/ma_bohn/.venv/lib64/python3.11/site-packages/numpy/_core/fromnumeric.py:3860: RuntimeWarning: Mean of empty slice.
+  return _methods._mean(a, axis=axis, dtype=dtype,
+/home/hpc/b190cb/b190cb19/ma_bohn/.venv/lib64/python3.11/site-packages/numpy/_core/_methods.py:145: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+mse_efield: 4136.08203125
+mse_hfield: 0.023633098229765892
+mse_efield_space: 4425.7548828125
+mse_hfield_space: 0.02525528147816658
+mse_efield_subject: 3.174649238586426
+mse_hfield_subject: 0.0004882141947746277
+rmse_efield_subject: 1.781754493713379
+rmse_hfield_subject: 0.0220955703407526
+mae_efield_subject: 0.9578759074211121
+mae_hfield_subject: 0.012139972299337387
+mad_efield_subject: 0.38159552216529846
+mad_hfield_subject: 0.014364439062774181
+r2_efield_subject: 0.8883924823860789
+r2_hfield_subject: 0.9699543828881064
+sar_subject_gt: 0.09788275510072708
+sar_subject_pr: 0.11170291900634766
+rmse_div_subject_gt: 1.1928061246871948
+rmse_div_subject_pr: 4.936263561248779
+rmse_far_subject_gt: 317.97760009765625
+rmse_far_subject_pr: 372.228515625
+ssim_mean: nan
+inf_median: 0.007627538390806876
+=== JOB_STATISTICS ===
+=== current date     : Tue May 27 08:49:17 CEST 2025
+= Job-ID             : 2698569 on alex
+= Job-Name           : mx_mrifield
+= Job-Command        : /home/hpc/b190cb/b190cb19/ma_bohn/mx_mrifield
+= Initial workdir    : /home/hpc/b190cb/b190cb19/ma_bohn
+= Queue/Partition    : a100
+= Slurm account      : b190cb with QOS=normal
+= Features           : a100_40
+= Requested resources:  for 00:10:00
+= Elapsed runtime    : 00:01:05
+= Total RAM usage    : 86.6 GiB of assigned  GiB (%)
+= Node list          : a0905
+= Subm/Elig/Start/End: 2025-05-27T08:47:48 / 2025-05-27T08:47:48 / 2025-05-27T08:48:12 / 2025-05-27T08:49:17
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           46.1G   104.9G   209.7G        N/A  48,156      500K   1,000K        N/A    
+    /home/vault         92.6G  1048.6G  2097.2G        N/A   3,374      200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A100-SXM4-40GB, 00000000:90:00.0, 2052669, 12 %, 7 %, 2666 MiB, 52818 ms
