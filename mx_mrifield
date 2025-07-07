@@ -1,0 +1,13 @@
+#!/bin/bash -l
+#SBATCH --job-name=mx_mrifield
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=marius.bohn@stud-mail.uni-wuerzburg.de
+#SBATCH --gres=gpu:a100:1
+#SBATCH --time=00:10:00
+#SBATCH --output=/home/hpc/b190cb/b190cb19/ma_bohn/log_mx
+
+source /home/hpc/b190cb/b190cb19/ma_bohn/.venv/bin/activate
+export PYTHONPATH=$(pwd)/magnet-pinn:$PYTHONPATH
+export PYTHONPATH=$(pwd)/neuraloperator:$PYTHONPATH
+python3.11 -m mrifield.train.metrics
+deactivate
