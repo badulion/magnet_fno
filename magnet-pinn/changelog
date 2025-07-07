@@ -1,0 +1,52 @@
+# changelog
+
+## [0.0.1] -> Mar 28, 2024
+- setup project
+
+## [0.0.2] -> Aug 09, 2024
+- preprocessing module
+- grid preprocessing
+- graph preprocessing
+
+## [0.0.3] -> Oct 01, 2024
+- dataloader module
+- preprocessing precision (float16, float32, float64, complex64, complex128)
+- preprocessing normalization (min-max, z-score, loading)
+
+## [0.0.4] -> Nov 21, 2024
+- Fix masks when loading data
+- Data loaded in same dtype as saved
+- fast grid dataloader
+- fast point dataloader
+- fix normalization torch/numpy incompatibility
+- normalization saving as json
+- add unet model
+- add unet example
+- add tests for the preprocessing module
+
+## [0.0.5] -> Nov 21, 2024
+- Hotfix for unet model
+
+## [0.0.6] -> Dez 2, 2024
+- Add tests for point preprocessing
+- Preprocessing now possible over multiple batch directories
+- Preprocessing expects path to antenna
+- Added virtual directory class to iterate over multiple directories as one
+- Include testing workflow in github
+- include badges in readme
+- add transforms (cropping, phase shift, point sampling)
+- refactor grid and point dataloaders
+- adjust examples with transforms
+
+## [0.0.7] 
+- Hotfix: pass down sampling_method to child classes
+- Hotfix: np.float_ deprecated in numpy 2.0
+- Fix: positions not being returned in point phase shift
+- Fix: change wrong order of point phase shift
+- Fix: change wrong calculation of imag field during phase shift
+- Fix: point cloud axis rearranging and order of axis now fixed
+- Add tests for dataloading
+
+## [0.0.8]
+- Change voxelization to only consider the voxel center point to determine if voxel is part of mesh
+- Implements divergence physics loss function
