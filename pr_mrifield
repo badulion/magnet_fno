@@ -1,7 +1,5 @@
 #!/bin/bash -l
 #SBATCH --job-name=pr_mrifield
-#SBATCH --mail-type=END,FAIL
-#SBATCH --mail-user=marius.bohn@stud-mail.uni-wuerzburg.de
 #SBATCH --gres=gpu:a40:1
 #SBATCH --time=04:00:00
 #SBATCH --output=/home/hpc/b190cb/b190cb19/ma_bohn/log
