@@ -18,7 +18,7 @@ It comprises a collection of Fourier Neural Operator architectures from various 
     * **Spectral boosting** additionally requires to define a `model_to_boost` loaded from `BOOST_CKPT` and to uncomment `lit_model_to_boost`. The latter needs to be supplied to the `lit_model` to be trained via its `model_to_boost` parameter
     * **Physics-informed training** additionally requires to supply either `DivergenceLoss()` or `FaradaysLoss()` to `lit_model` via its `pi_loss` parameter
 * **Generate metrics**: `mrifield/train/metrics.py` allows to compute a variety of metrics on the test set for a trained model by (un)commenting it and supplying a checkpoint via `CKPT`
-    * **Spectral boosting** additionally requires to define a `model_to_boost` loaded from `BOOST_CKPT`. It needs to be supplied to the `trained_model` to be trained via its `model_to_boost` parameter
+    * **Spectral boosting** additionally requires to define a `model_to_boost` loaded from `BOOST_CKPT`. It needs to be supplied to the `trained_model` to be evaluated via its `model_to_boost` parameter
     * **Physics-informed models** do not require an argument for the `pi_loss` parameter. It needs to be supplied during training only
 * **Generate plots**: `mrifield/train/plots.py` allows to generate a variety of plots on the test set for a trained model in the same way as computing metrics
 * **Interactive inference**: `results/inference.ipynb` contains utilities used to visualize predictions and physics-informed losses on a local copy of the test set. It was used to generate certain figures and better understand neural operators
