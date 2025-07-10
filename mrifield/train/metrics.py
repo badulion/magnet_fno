@@ -192,8 +192,8 @@ for batch in tqdm(test_loader, desc="Metrics"):
 
         pad = ObjectMaskPadding(padding=1)
 
-        mse_far_subject_gt.append(far(y, zero, pad(subject.cpu().unsqueeze(1)).squeeze(1)).cpu().numpy())
-        mse_far_subject_pr.append(far(y_hat, zero, pad(subject.cpu().unsqueeze(1)).squeeze(1)).cpu().numpy())
+        mse_far_subject_gt.append(far(y, zero, pad(subject.unsqueeze(1)).squeeze(1)).cpu().numpy())
+        mse_far_subject_pr.append(far(y_hat, zero, pad(subject.unsqueeze(1)).squeeze(1)).cpu().numpy())
 
 print(f"mse_efield: {np.mean(mse_e)}")
 print(f"mse_hfield: {np.mean(mse_h)}")
