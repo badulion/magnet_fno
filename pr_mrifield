@@ -2,9 +2,9 @@
 #SBATCH --job-name=pr_mrifield
 #SBATCH --gres=gpu:a40:1
 #SBATCH --time=04:00:00
-#SBATCH --output=/home/hpc/b190cb/b190cb19/ma_bohn/log
+#SBATCH --output=log_%x
 
-source /home/hpc/b190cb/b190cb19/ma_bohn/.venv/bin/activate
+source .venv/bin/activate
 export PYTHONPATH=$(pwd)/magnet-pinn:$PYTHONPATH
 python3.11 mrifield/preprocessing/ts_preprocessing.py
 deactivate

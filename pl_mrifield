@@ -2,9 +2,9 @@
 #SBATCH --job-name=pl_mrifield
 #SBATCH --gres=gpu:a100:1
 #SBATCH --time=00:20:00
-#SBATCH --output=/home/hpc/b190cb/b190cb19/ma_bohn/log_pl
+#SBATCH --output=log_%x
 
-source /home/hpc/b190cb/b190cb19/ma_bohn/.venv/bin/activate
+source .venv/bin/activate
 export PYTHONPATH=$(pwd)/magnet-pinn:$PYTHONPATH
 export PYTHONPATH=$(pwd)/neuraloperator:$PYTHONPATH
 python3.11 -m mrifield.train.plots

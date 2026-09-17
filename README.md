@@ -1,26 +1,111 @@
-# Neural Operators for the Prediction of Electromagnetic Fields in a Simulated UHF MRI Environment
+# Physics-Informed Fourier Neural Operators for Electromagnetic Field Prediction in Ultra-High-Field MRI
 
-This repository contains all code required to generate and reproduce the results obtained throughout the Master's thesis of Marius Bohn.
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-Lightning-orange.svg)](https://lightning.ai/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-It comprises a collection of Fourier Neural Operator architectures from various authors. These models have been adapted as required in order to be compatible with the synthetic 3D UHF MRI dataset of the MAGNET4Cardiac7T project. A framework for training neural networks on the given task of predicting electromagnetic field distributions in a simulated UHF MRI environment was implemented as well.
+Companion code for the paper:
 
-## Contents
+> **Physics-Informed Fourier Neural Operators for Electromagnetic Field Prediction in Ultra-High-Field MRI**
+> Andrzej Dulny, Marius Bohn, Farzad Jabbarigargari, Andreas Hotho, Laura Maria Schreiber, Maxim Terekhov, Anna Krause
+> *ML4EMS Workshop, 2026 (to appear)*
 
-* The **`mrifield`** package contains own modules for training and evaluating arbitrary neural networks on the given task (`train`), scripts adapted from the magnet-pinn package for preprocessing and normalizing the data (`preprocessing`), and various (adapted) neural network architectures (`models`)
-* The **`results`** folder contains metrics and plots of all relevant trainings conducted throughout this work
-* A static version of the [**`magnet-pinn`**](https://github.com/MAGNET4Cardiac7T/magnet-pinn) package. It was decoupled from the corresponding repository in 05/2025 in order to obtain reproducible results and to have a stable version that continues to work with own code. It was extended to include Faraday's loss, a reworked divergence loss, and additional normalizers
-* The [**`neuraloperator`**](https://github.com/neuraloperator/neuraloperator/tree/ca69be5bbf47678aecf4a666075eb6c367aee58e) repository as a submodule at commit ca69be5
-* Various Slurm scripts used to process and normalize datasets, train models, and generate metrics and plots on the FAU HPC cluster
+Ultra-high-field (7 T) MRI requires patient-specific assessment of the specific absorption rate (SAR) to ensure safety, but conventional FDTD simulations are too slow for real-time clinical workflows. This repository evaluates **Fourier Neural Operator (FNO) variants** as fast surrogate models for predicting 3D electromagnetic field distributions in a simulated UHF MRI environment with eight transmit dipoles, and compares them against a 3D U-Net baseline. It further implements **physics-informed loss terms** derived from Maxwell's equations — the magnetic divergence constraint (∇·**B** = 0) and Faraday's law (∇×**E** + jω**B** = 0) — as well as **spectral boosting**, which together yield up to 15.5 % accuracy improvements at zero additional inference cost.
 
-## Main use cases
+The code was developed by [Marius Bohn](https://github.com/mariusbohn) as part of his Master's thesis at CAIDAS, University of Würzburg, within the [MAGNET4Cardiac7T](https://www.uni-wuerzburg.de/en/magnet4cardiac7t/) project.
 
-* **Training**: `mrifield/train/train.py` allows to select one of the available model architectures to train by (un)commenting it and setting the corresponding hyperparameters
-    * **Spectral boosting** additionally requires to define a `model_to_boost` loaded from `BOOST_CKPT` and to uncomment `lit_model_to_boost`. The latter needs to be supplied to the `lit_model` to be trained via its `model_to_boost` parameter
-    * **Physics-informed training** additionally requires to supply either `DivergenceLoss()` or `FaradaysLoss()` to `lit_model` via its `pi_loss` parameter
-* **Generate metrics**: `mrifield/train/metrics.py` allows to compute a variety of metrics on the test set for a trained model by (un)commenting it and supplying a checkpoint via `CKPT`
-    * **Spectral boosting** additionally requires to define a `model_to_boost` loaded from `BOOST_CKPT`. It needs to be supplied to the `trained_model` to be evaluated via its `model_to_boost` parameter
-    * **Physics-informed models** do not require an argument for the `pi_loss` parameter. It needs to be supplied during training only
-* **Generate plots**: `mrifield/train/plots.py` allows to generate a variety of plots on the test set for a trained model in the same way as computing metrics
-* **Interactive inference**: `results/inference.ipynb` contains utilities used to visualize predictions and physics-informed losses on a local copy of the test set. It was used to generate certain figures and better understand neural operators
+## Repository structure
 
-This repository is provided for internal review only and is **not** intended to be published as it contains copies of various neural network architectures that are property of their respective authors. References and licenses are provided where applicable.
+| Path | Description |
+|---|---|
+| `mrifield/` | Main package: training/evaluation framework (`train`), data preprocessing and normalization (`preprocessing`), and adapted neural network architectures (`models`) |
+| `mrifield/train/train.py` | Model training entry point |
+| `mrifield/train/metrics.py`, `metrics_sar.py` | Test-set metrics for field prediction and SAR estimation |
+| `mrifield/train/plots.py`, `plots_sar.py` | Plot generation for trained models |
+| `magnet-pinn/` | Static copy of the [magnet-pinn](https://github.com/MAGNET4Cardiac7T/magnet-pinn) package (decoupled 05/2025 for reproducibility), extended with Faraday's loss, a reworked divergence loss, and additional normalizers |
+| `neuraloperator/` | The [neuraloperator](https://github.com/neuraloperator/neuraloperator) library as a git submodule, pinned at commit `ca69be5` (provides FNO, TFNO, UNO) |
+| `results/` | Metrics and plots for all reported trainings, plus `inference.ipynb` for interactive visualization of predictions and physics-informed losses |
+| `tr_/mx_/pl_/pr_/nm_mrifield` | Slurm job scripts for training, metrics, plots, preprocessing, and normalization on an HPC cluster |
+
+## Installation
+
+```bash
+git clone --recurse-submodules https://github.com/badulion/fno_magnet.git
+cd fno_magnet
+python3.11 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+The `neuraloperator` and `magnet-pinn` directories are used directly via `PYTHONPATH` (see the Slurm scripts):
+
+```bash
+export PYTHONPATH=$(pwd)/magnet-pinn:$(pwd)/neuraloperator:$PYTHONPATH
+```
+
+## Usage
+
+### Training
+
+`mrifield/train/train.py` selects the model architecture to train by (un)commenting it and setting the corresponding hyperparameters:
+
+```bash
+python3.11 -m mrifield.train.train
+```
+
+- **Physics-informed training**: supply `DivergenceLoss()` or `FaradaysLoss()` to `lit_model` via its `pi_loss` parameter.
+- **Spectral boosting**: define a `model_to_boost` loaded from `BOOST_CKPT`, uncomment `lit_model_to_boost`, and pass it to the `lit_model` via its `model_to_boost` parameter.
+
+### Evaluation
+
+```bash
+python3.11 -m mrifield.train.metrics   # test-set metrics (set CKPT to the checkpoint)
+python3.11 -m mrifield.train.plots     # test-set plots
+```
+
+- Spectral-boosted models additionally need `model_to_boost` (from `BOOST_CKPT`) passed to the evaluated model.
+- Physics-informed models need `pi_loss` **only during training** — no argument is required for evaluation.
+
+### SLURM
+
+The extensionless scripts in the repository root submit the corresponding jobs on an HPC cluster (adjust the `#SBATCH` directives to your site):
+
+```bash
+sbatch tr_mrifield   # training
+sbatch mx_mrifield   # metrics
+sbatch pl_mrifield   # plots
+sbatch pr_mrifield   # test-set preprocessing
+sbatch nm_mrifield   # normalization
+```
+
+## Third-party code
+
+This repository bundles adapted model implementations that retain their original licenses:
+
+| Component | Source | License |
+|---|---|---|
+| `mrifield/models/unet3d` | [pytorch-3dunet](https://github.com/wolny/pytorch-3dunet) (A. Wolny) | MIT |
+| `mrifield/models/ffno` | [factorized-fno](https://github.com/alasdairtran/fourierflow) (A. Tran) | MIT |
+| `mrifield/models/afno` | [FourCastNet](https://github.com/NVlabs/FourCastNet) (NVIDIA) | BSD-3-Clause |
+| `magnet-pinn/` | [MAGNET4Cardiac7T/magnet-pinn](https://github.com/MAGNET4Cardiac7T/magnet-pinn) | GPL-3.0 |
+| `neuraloperator/` (submodule) | [neuraloperator](https://github.com/neuraloperator/neuraloperator) | MIT |
+
+U-FNO ([Wen et al., 2022](https://github.com/gegewen/ufno)) and the Convolutional Neural Operator ([Raonić et al., 2023](https://github.com/camlab-ethz/ConvolutionalNeuralOperator)) were explored during the thesis but are not part of the paper; their code is not redistributed here — please refer to the original repositories.
+
+## Citation
+
+If you use this code, please cite:
+
+```bibtex
+@inproceedings{dulny2026fno_magnet,
+  title     = {Physics-Informed Fourier Neural Operators for Electromagnetic Field Prediction in Ultra-High-Field {MRI}},
+  author    = {Dulny, Andrzej and Bohn, Marius and Jabbarigargari, Farzad and Hotho, Andreas and Schreiber, Laura Maria and Terekhov, Maxim and Krause, Anna},
+  booktitle = {ML4EMS Workshop},
+  year      = {2026},
+  note      = {to appear}
+}
+```
+
+## Acknowledgments
+
+The project underlying this publication was funded by the German Federal Ministry of Education and Research under the grant number 16DKWN0099B (MAGNET4Cardiac7T). The responsibility for the content of this publication lies with the authors.
